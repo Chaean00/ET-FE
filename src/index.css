@@ -1,11 +1,22 @@
 @import "tailwindcss";
+@layer base {
+  @font-face {
+    font-family: "TownFont";
+    src: url("/fonts/BMDOHYEON_ttf.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+  }
+}
+
+@layer utilities {
+  .font-town {
+    font-family: "TownFont", sans-serif;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
-}
-
-:root {
-  --vh: 1vh;
 }
 
 @media screen and (min-width: 1025px) {

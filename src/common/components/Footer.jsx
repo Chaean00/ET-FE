@@ -1,34 +1,37 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 import Home from "../../assets/tradetown/home.svg?react";
 import Quiz from "../../assets/tradetown/quiz.svg?react";
 import Trade from "../../assets/tradetown/trade.svg?react";
 import MyPage from "../../assets/tradetown/mypage.svg?react";
-import { useState } from "react";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const icons = [
-    { name: "home", component: Home },
-    { name: "quiz", component: Quiz },
-    { name: "trade", component: Trade },
-    { name: "mypage", component: MyPage },
+    { name: "home", component: Home, path: "/town" },
+    { name: "quiz", component: Quiz, path: "/quiz" },
+    { name: "trade", component: Trade, path: "/trade" },
+    { name: "mypage", component: MyPage, path: "/mypage" },
   ];
 
-  const [selectedIcon, setSelectedIcon] = useState("home");
-
   return (
-    <div className="fixed bottom-0 w-full bg-white border-none">
+    <div className="fixed bottom-0 w-full bg-white border-t border-gray-300">
       <div className="flex justify-around py-4">
         {icons.map((icon) => {
           const IconComponent = icon.component;
+          const isActive = location.pathname === icon.path;
 
           return (
             <button
               key={icon.name}
-              onClick={() => setSelectedIcon(icon.name)}
-              className="flex items-center focus:ouline-none"
+              onClick={() => navigate(icon.path)}
+              className="flex flex-col items-center focus:outline-none"
             >
               <IconComponent
-                className={`w-6 h-6 ${
-                  selectedIcon === icon.name ? "text-blue-500" : "text-gray-500"
+                className={`w-6.4 h-6.4 ${
+                  isActive ? "text-blue-500" : "text-gray-500"
                 }`}
               />
             </button>

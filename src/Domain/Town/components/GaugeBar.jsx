@@ -3,7 +3,7 @@ import styled from "styled-components";
 const ProgressContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 16px;
+  height: 14px;
   background-color: white;
   border-radius: 30px;
   overflow: hidden;
@@ -20,7 +20,7 @@ const ProgressFill = styled.div`
 
 const Marker = styled.div`
   position: absolute;
-  top: 1px;
+  top: 2px;
   transform: translateX(-50%);
   width: 25px;
   height: 25px;
