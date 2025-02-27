@@ -30,7 +30,7 @@ const Footer = () => {
               className="flex flex-col items-center focus:outline-none"
             >
               <IconComponent
-                className={`w-6.4 h-6.4 ${
+                className={`w-6.2 h-6.2 ${
                   isActive ? "text-blue-500" : "text-gray-500"
                 }`}
               />
