@@ -1,12 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-
 import CustomInput from "../components/CustomInput";
 import Button from "../components/Button";
 import SectionName from "../components/SectionName";
 import loginlogo from "../../assets/tradetown/loginlogo.png";
-
-import { useNavigate } from "react-router-dom";
 
 const LogInPage = () => {
   const navigate = useNavigate();

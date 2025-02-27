@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+
 import cow from "../../assets/animals/cow.png";
 import dragon from "../../assets/animals/dragon.png";
 import monkey from "../../assets/animals/monkey.png";

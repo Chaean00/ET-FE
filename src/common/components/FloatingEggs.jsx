@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+
 import egg1 from "../../assets/egg/egg1.png";
 import egg2 from "../../assets/egg/egg2.png";
 import egg3 from "../../assets/egg/egg3.png";

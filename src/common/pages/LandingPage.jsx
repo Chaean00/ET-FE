@@ -1,8 +1,9 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import landingLogo from "../../assets/tradetown/landingLogo.png";
 import FloatingEggs from "../components/FloatingEggs";
 import LandingCharacters from "../components/LandingCharacters";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const navigate = useNavigate();
