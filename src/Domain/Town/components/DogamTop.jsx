@@ -5,7 +5,7 @@ const DogamTop = ({ children }) => {
     <motion.div
       className="font-town text-6xl font-black text-center"
       style={{
-        WebkitTextStroke: "3.75px black",
+        WebkitTextStroke: "2.75px black",
         WebkitTextFillColor: "white",
       }}
       initial={{ opacity: 0, filter: "blur(10px)" }}

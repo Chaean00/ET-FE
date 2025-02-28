@@ -9,10 +9,12 @@ import DrawPage from "./Domain/Town/pages/DrawPage";
 import FriendPage from "./Domain/Town/pages/FriendPage";
 import FriendTownPage from "./Domain/Town/pages/FriendTownPage";
 import QuizMainPage from "./Domain/Quiz/pages/QuizMainPage";
-import TradeMainPage from "./Domain/Trade/pages/TradeMainPage";
-import QuizDonePage from "./Domain/Quiz/pages/QuizDonePage";
-import MyPageMain from "./Domain/User/pages/MyPageMain";
 import TodayQuizPage from "./Domain/Quiz/pages/TodayQuizPage";
+import QuizDonePage from "./Domain/Quiz/pages/QuizDonePage";
+import TradeMainPage from "./Domain/Trade/pages/TradeMainPage";
+import MyMainPage from "./Domain/User/pages/MyMainPage";
+import MyStockPage from "./Domain/User/pages/MyStockPage";
+import MyTradePage from "./Domain/User/pages/MyTradePage";
 
 function App() {
   return (
@@ -31,7 +33,9 @@ function App() {
         <Route path="/todayquiz" element={<TodayQuizPage />} />
         <Route path="/quizdone" element={<QuizDonePage />} />
         <Route path="/trade" element={<TradeMainPage />} />
-        <Route path="/mypage" element={<MyPageMain />} />
+        <Route path="/mypage" element={<MyMainPage />} />
+        <Route path="/mystock" element={<MyStockPage />} />
+        <Route path="/mytrade" element={<MyTradePage />} />
       </Routes>
     </div>
   );

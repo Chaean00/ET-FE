@@ -21,9 +21,9 @@ const SignUpPage = () => {
         <CustomInput
           type="text"
           name="email"
-          placeholder="이메일을 입력해주세요."
+          placeholder="아이디를 입력해주세요."
         >
-          이메일
+          아이디
         </CustomInput>
         <CustomInput
           type="password"

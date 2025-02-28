@@ -15,16 +15,16 @@ function PetAcqModal({ isOpen, onClose, petName }) {
         >
           &times;
         </button>
-
-        <motion.img
-          src={monkey}
-          alt="펫 이미지"
-          className="w-22 h-22 object-contain"
-          initial={{ opacity: 0, filter: "blur(5px)" }}
-          animate={{ opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 2, ease: "easeOut" }}
-        />
-
+        <div className="mt-5">
+          <motion.img
+            src={monkey}
+            alt="펫 이미지"
+            className="w-22 h-22 object-contain"
+            initial={{ opacity: 0, filter: "blur(5px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+        </div>
         <h2 className="text-xl font-bold mt-4">{petName} 획득!</h2>
       </div>
     </div>

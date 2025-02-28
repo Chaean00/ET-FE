@@ -1,19 +1,28 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import TownCharacters from "../components/TownCharacters";
 import GaugeBar from "../components/GaugeBar";
 import TownBottom from "../components/TownBottom";
 import Footer from "../../../common/components/Footer";
 import PetAcqModal from "../components/PetAcqModal";
+import LoadingScreen from "../components/LoadingScreen";
 
 const TownMainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    setIsModalOpen(true);
-  }, []);
+    if (location.state?.from === "/login") {
+      setLoading(true);
+      setTimeout(() => setLoading(false), 2800);
+    }
+  }, [location]);
 
   return (
     <div className="townbg relative w-full h-screen overflow-hidden">
+      {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
+
       {isModalOpen && (
         <PetAcqModal
           isOpen={isModalOpen}
@@ -22,7 +31,10 @@ const TownMainPage = () => {
         />
       )}
 
-      <div className="absolute top-12 left-0 w-full flex justify-center px-0 z-20 py-2">
+      <div
+        className="absolute top-12 left-0 w-full flex justify-center px-0 z-20 py-2"
+        onClick={() => setIsModalOpen(true)}
+      >
         <GaugeBar value={2} maxValue={35} className="w-full max-w-[90%]" />
       </div>
 

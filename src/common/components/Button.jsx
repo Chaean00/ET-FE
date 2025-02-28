@@ -6,14 +6,14 @@ const Button = ({
   ...props
 }) => {
   const sizeClasses = {
-    large: "w-[325px] rounded-[20px] font-semibold",
-    medium: "w-[150px] rounded-[12px]",
+    large: "w-[320px] rounded-[20px] text-md",
+    medium: "w-[165px] rounded-[50px]",
     small: "w-[100px] rounded-[8px]",
   };
 
   return (
     <button
-      className={`text-white p-2 cursor-pointer ${sizeClasses[variant]} ${className}`}
+      className={`text-white p-2.5 cursor-pointer ${sizeClasses[variant]} ${className}`}
       style={{ backgroundColor: color }}
       {...props}
     >
