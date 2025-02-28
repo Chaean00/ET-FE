@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StockAcqModal from "../components/StockAcqModal";
 import EggList from "../components/EggList";
@@ -11,12 +11,8 @@ const EggListPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    setIsModalOpen(true);
-  }, []);
-
   return (
-    <div className="townbg min-h-screen flex flex-col items-center">
+    <div className="townbg min-h-screen flex flex-col relative">
       {isModalOpen && (
         <StockAcqModal
           isOpen={isModalOpen}
@@ -26,27 +22,30 @@ const EggListPage = () => {
         />
       )}
 
-      <div className="flex flex-col items-center gap-4 w-full mt-4">
-        <span onClick={() => navigate(-1)}>
-          <BackButton className="w-8 h-8 object-contain cursor-pointer" />
-        </span>{" "}
-        <EggList />
+      <div className="absolute top-4 left-4 z-10" onClick={() => navigate(-1)}>
+        <BackButton className="w-8 h-8 object-contain cursor-pointer" />
       </div>
-
-      <div className="mt-4">
-        <span
-          onClick={() => {
-            navigate("/draw");
-          }}
-        >
-          <Button variant="large" color="black">
+      <div
+        className="mt-14 w-full flex flex-col items-center gap-0"
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        <EggList className="w-full max-w-md" />
+        <div className="w-full flex justify-center mt-10">
+          <Button
+            variant="medium"
+            color="black"
+            className="flex items-center justify-center gap-1"
+            onClick={() => navigate("/draw")}
+          >
             <span>알뽑으러 가기</span>
             <img src={egg} className="h-6 object-contain" />
           </Button>
-        </span>
+        </div>
       </div>
 
-      <div className="mt-auto w-full">
+      <div className="w-full mt-auto">
         <Footer />
       </div>
     </div>

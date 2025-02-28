@@ -4,9 +4,9 @@ const DrawTop = ({ point }) => {
   return (
     <div className="flex flex-col items-center">
       <motion.div
-        className="font-town text-7xl font-black text-center"
+        className="font-town text-6xl font-black text-center"
         style={{
-          WebkitTextStroke: "5px black",
+          WebkitTextStroke: "2.75px black",
           WebkitTextFillColor: "yellow",
         }}
         initial={{ scale: 1 }}
@@ -18,7 +18,7 @@ const DrawTop = ({ point }) => {
       <div
         className="font-town mt-2 text-3xl font-black text-center"
         style={{
-          WebkitTextStroke: "2.4px black",
+          WebkitTextStroke: "1.9px black",
           WebkitTextFillColor: "yellow",
         }}
       >

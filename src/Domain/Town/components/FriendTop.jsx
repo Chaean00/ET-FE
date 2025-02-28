@@ -1,7 +1,7 @@
 const FriendTop = ({ name }) => {
   return (
-    <div className="w-[90%] bg-white font-extrabold text-center py-3 rounded-xl">
-      {name}님의 목장이에요.
+    <div className="mt-3 w-full bg-white font-extrabold text-center px-8 py-3 rounded-xl">
+      {name}님의 목장
     </div>
   );
 };

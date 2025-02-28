@@ -9,6 +9,10 @@ import loginlogo from "../../assets/tradetown/loginlogo.png";
 const LogInPage = () => {
   const navigate = useNavigate();
 
+  const handleLogin = () => {
+    navigate("/town", { state: { from: "/login" } });
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-between items-center p-5">
       <SectionName className="text-lg font-bold w-[90%] flex justify-between items-center">
@@ -31,9 +35,9 @@ const LogInPage = () => {
         <CustomInput
           type="text"
           name="name"
-          placeholder="이메일을 입력해주세요."
+          placeholder="아이디를 입력해주세요."
         >
-          이메일
+          아이디
         </CustomInput>
         <CustomInput
           type="password"
@@ -45,7 +49,7 @@ const LogInPage = () => {
       </div>
 
       <div className="w-full flex flex-col items-center mt-1 mb-5 gap-2 p-5 bg-white">
-        <Button variant="large" color="blue" onClick={() => navigate("/town")}>
+        <Button variant="large" color="blue" onClick={handleLogin}>
           로그인
         </Button>
         <Link to="/signup" className="text-xs text-blue-500 no-underline">

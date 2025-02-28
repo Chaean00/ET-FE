@@ -12,36 +12,37 @@ const DrawPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="townbg">
+    <div className="townbg min-h-screen flex flex-col items-center">
       {isModalOpen && (
         <EggAcqModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
       )}
-      <div>
-        <span
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          <BackButton />
-        </span>
+
+      <div className="absolute top-4 left-4 z-10" onClick={() => navigate(-1)}>
+        <BackButton className="w-8 h-8 object-contain cursor-pointer" />
       </div>
-      <div>
+
+      <div className="mt-10">
         <DrawTop point={2000000}>알뽑기</DrawTop>
       </div>
-      <div>
-        <img src={draweggs} />
+
+      <div className="flex justify-center w-full">
+        <img
+          src={draweggs}
+          className="w-auto max-w-lg transform scale-125 transition-transform duration-300"
+        />
       </div>
-      <div>
+      <div className="mt-10 mb-auto">
         <span onClick={() => setIsModalOpen(true)}>
           <Button variant={"large"} color={"black"}>
             10,000포인트로 뽑기
           </Button>
         </span>
       </div>
-      <div className="mt-auto w-full">
+
+      <div className="w-full">
         <Footer />
       </div>
     </div>

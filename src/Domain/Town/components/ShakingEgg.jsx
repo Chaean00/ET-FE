@@ -24,11 +24,11 @@ const ShakingEgg = () => {
       };
 
   return (
-    <div className="relative w-18 h-18">
+    <div className="relative w-20 h-20 flex items-center justify-center">
       {[...Array(EGG_COUNT)].map((_, i) => {
         const transitionOptions = isShaking
           ? {
-              duration: 0.15,
+              duration: 0.2,
               repeat: Infinity,
               repeatType: "mirror",
               delay: i * 0.02,
@@ -45,10 +45,9 @@ const ShakingEgg = () => {
             key={i}
             src={egg}
             alt="egg"
-            className="absolute top-0 left-0 w-14 h-14"
+            className="absolute w-14 h-14"
             style={{
               opacity: 1 - i * 0.3,
-
               zIndex: EGG_COUNT - i,
             }}
             initial={{ rotate: -8, x: -3 }}
