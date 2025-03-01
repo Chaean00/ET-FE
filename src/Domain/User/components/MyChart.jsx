@@ -48,7 +48,7 @@ const MyChart = () => {
         options={options}
         series={dummyStockData.series}
         type="donut"
-        width="350"
+        width="250"
       />
     </div>
   );

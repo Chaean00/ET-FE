@@ -6,9 +6,9 @@ const Button = ({
   ...props
 }) => {
   const sizeClasses = {
-    large: "w-[320px] rounded-[20px] text-md",
+    large: "w-[90%] rounded-[25px] text-md",
     medium: "w-[165px] rounded-[50px]",
-    small: "w-[100px] rounded-[8px]",
+    small: "w-[125px] rounded-2xl font-bold",
   };
 
   return (

@@ -31,7 +31,7 @@ const MyTable = () => {
   ];
 
   return (
-    <div className="space-y-3 py-10 bg-white shadow-md rounded-xl p-4 w-full max-w-xs">
+    <div className="space-y-3 py-6 bg-white  p-4 w-full max-w-xs">
       {stocks.map((stock) => (
         <div key={stock.id} className="flex justify-between items-center">
           <span className="text-sm text-black">{stock.name}</span>

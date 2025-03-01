@@ -11,11 +11,11 @@ const QuizLevel = () => {
   ];
 
   return (
-    <div className="w-full space-y-5.5">
+    <div className="w-full space-y-3.5">
       {quizLevels.map((level) => (
         <div
           key={level.id}
-          className="bg-blue-600 text-white rounded-xl p-6 flex justify-between items-center"
+          className="bg-blue-600 text-white rounded-xl px-5 py-7.5 flex justify-between items-center"
           onClick={() => {
             navigate("/todayquiz");
           }}

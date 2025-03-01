@@ -14,7 +14,3 @@ const LevelPoint = ({ level, levelColor, points }) => {
   );
 };
 export default LevelPoint;
-
-{
-  /* 메모: 나중에 서버 연결할 때 난이도에 맞춰서 포인트 매핑하기 */
-}

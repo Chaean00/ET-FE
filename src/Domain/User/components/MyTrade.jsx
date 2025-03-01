@@ -1,4 +1,5 @@
 import MyTradeEach from "./MyTradeEach";
+import samsung from "../../../assets/trade/samsung.png";
 
 const MyTrade = () => {
   const tradesData = [
@@ -7,21 +8,21 @@ const MyTrade = () => {
       company: "삼성전자",
       type: "구매",
       price: "56,700",
-      logo: "/images/samsung-logo.png",
+      logo: samsung,
     },
     {
       id: 2,
       company: "삼성전자",
       type: "구매",
       price: "56,700",
-      logo: "/images/samsung-logo.png",
+      logo: samsung,
     },
     {
       id: 3,
       company: "삼성전자",
       type: "구매",
       price: "56,700",
-      logo: "/images/samsung-logo.png",
+      logo: samsung,
     },
   ];
 
