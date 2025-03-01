@@ -34,10 +34,10 @@ const DrawPage = () => {
           className="w-auto max-w-lg transform scale-125 transition-transform duration-300"
         />
       </div>
-      <div className="mt-10 mb-auto">
+      <div className="w-full text-center font-bold mt-10 mb-auto">
         <span onClick={() => setIsModalOpen(true)}>
           <Button variant={"large"} color={"black"}>
-            10,000포인트로 뽑기
+            10,000 포인트로 뽑기!
           </Button>
         </span>
       </div>

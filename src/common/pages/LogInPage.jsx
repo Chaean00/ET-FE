@@ -48,7 +48,7 @@ const LogInPage = () => {
         </CustomInput>
       </div>
 
-      <div className="w-full flex flex-col items-center mt-1 mb-5 gap-2 p-5 bg-white">
+      <div className="w-full flex flex-col items-center mt-1 mb-5 gap-2 py-5 bg-white">
         <Button variant="large" color="blue" onClick={handleLogin}>
           로그인
         </Button>

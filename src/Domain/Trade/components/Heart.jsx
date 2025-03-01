@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { AiFillHeart } from "react-icons/ai";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
-const Heart = () => {
+const Heart = ({ className }) => {
   const [heart, setHeart] = useState(false);
 
   const handleHeart = () => {
     setHeart(!heart);
   };
+
   return (
-    <div className="border-2" onClick={handleHeart}>
+    <div
+      className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded-xl cursor-pointer ${className}`}
+      onClick={handleHeart}
+    >
       {heart ? (
-        <AiFillHeart color="red" fontSize={"40px"} />
+        <AiFillHeart color="red" size={32} />
       ) : (
-        <AiOutlineHeart fontSize={"40px"} />
+        <AiOutlineHeart size={32} />
       )}
     </div>
   );

@@ -6,7 +6,7 @@ const DrawTop = ({ point }) => {
       <motion.div
         className="font-town text-6xl font-black text-center"
         style={{
-          WebkitTextStroke: "2.75px black",
+          WebkitTextStroke: "2.2px black",
           WebkitTextFillColor: "yellow",
         }}
         initial={{ scale: 1 }}
@@ -18,7 +18,7 @@ const DrawTop = ({ point }) => {
       <div
         className="font-town mt-2 text-3xl font-black text-center"
         style={{
-          WebkitTextStroke: "1.9px black",
+          WebkitTextStroke: "2px black",
           WebkitTextFillColor: "yellow",
         }}
       >

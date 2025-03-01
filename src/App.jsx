@@ -15,6 +15,9 @@ import TradeMainPage from "./Domain/Trade/pages/TradeMainPage";
 import MyMainPage from "./Domain/User/pages/MyMainPage";
 import MyStockPage from "./Domain/User/pages/MyStockPage";
 import MyTradePage from "./Domain/User/pages/MyTradePage";
+import OrderBookPage from "./Domain/Trade/pages/OrderBookPage";
+import StockPage from "./Domain/Trade/pages/StockPage";
+import StockTradePage from "./Domain/Trade/pages/StockTradePage";
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
         <Route path="/mypage" element={<MyMainPage />} />
         <Route path="/mystock" element={<MyStockPage />} />
         <Route path="/mytrade" element={<MyTradePage />} />
+        <Route path="/orderbook" element={<OrderBookPage />} />
+        <Route path="/stock" element={<StockPage />} />
+        <Route path="/stocktrade" element={<StockTradePage />} />
       </Routes>
     </div>
   );
