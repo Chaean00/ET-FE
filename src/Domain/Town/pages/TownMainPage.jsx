@@ -20,16 +20,13 @@ const TownMainPage = () => {
   }, [location]);
 
   return (
-    <div
-      className="townbg relative w-full h-screen overflow-hidden"
-      style={{ cursor: "url('/img/custom-cursor.png'), auto" }}
-    >
+    <div className="custom-cursor townbg relative w-full h-screen overflow-hidden">
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
 
       {isModalOpen && (
         <PetAcqModal
           isOpen={isModalOpen}
-          petName={"젖소"}
+          petName={"원숭이"}
           onClose={() => setIsModalOpen(false)}
         />
       )}

@@ -12,10 +12,7 @@ const EggListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div
-      className="townbg min-h-screen flex flex-col relative"
-      style={{ cursor: "url('/img/custom-cursor.png'), auto" }}
-    >
+    <div className="custom-cursor townbg min-h-screen flex flex-col relative">
       {isModalOpen && (
         <StockAcqModal
           isOpen={isModalOpen}

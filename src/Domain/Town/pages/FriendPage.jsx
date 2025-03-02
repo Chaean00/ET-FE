@@ -7,10 +7,7 @@ import Footer from "../../../common/components/Footer";
 const FriendPage = () => {
   const navigate = useNavigate();
   return (
-    <div
-      className="townbg min-h-screen flex flex-col"
-      style={{ cursor: "url('/img/custom-cursor.png'), auto" }}
-    >
+    <div className="custom-cursor townbg min-h-screen flex flex-col">
       <div className="absolute top-4 left-4 right-4 z-10 flex items-center">
         <span onClick={() => navigate(-1)}>
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />

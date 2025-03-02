@@ -19,7 +19,7 @@ const LandingPage = () => {
   return (
     <div
       id="landing"
-      className="flex justify-center items-center h-screen"
+      className="custom-cursor flex justify-center items-center h-screen"
       onClick={() => navigate("/login")}
     >
       <img

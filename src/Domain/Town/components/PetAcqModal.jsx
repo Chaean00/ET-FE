@@ -1,19 +1,18 @@
 import { motion } from "framer-motion";
-import cow from "../../../assets/animals/cow.png";
-import star from "../../../assets/town/star.png";
+import monkey from "../../../assets/animals/human.png";
+import heart from "../../../assets/town/heart.png";
 
 function PetAcqModal({ isOpen, onClose, petName }) {
   if (!isOpen) return null;
 
   const starVariants = {
-    initial: { opacity: 0, scale: 0.5, rotate: 0 },
+    initial: { opacity: 0.1, scale: 1, rotate: 0 },
     animate: (i) => ({
-      opacity: [0, 1, 0],
-      scale: [0.7, 1, 0.7],
+      opacity: [1, 0.6],
+      scale: [1],
       x: [Math.cos((i / 8) * Math.PI * 2) * 60],
       y: [Math.sin((i / 8) * Math.PI * 2) * 60],
-      rotate: 360,
-      transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+      transition: { duration: 1, repeat: Infinity, ease: "easeInOut" },
     }),
   };
 
@@ -33,12 +32,12 @@ function PetAcqModal({ isOpen, onClose, petName }) {
           {Array.from({ length: 8 }).map((_, i) => (
             <motion.img
               key={i}
-              src={star}
-              alt="별 이미지"
-              className="absolute mt-1.2 w-4.5 h-4.5 object-contain"
+              src={heart}
+              alt="heart"
+              className="absolute mt-[-5px] w-7 h-7 object-contain"
               style={{
-                left: "44%",
-                top: "38%",
+                left: "38%",
+                top: "42%",
                 transform: "translate(-50%, -50%)",
               }}
               variants={starVariants}
@@ -49,9 +48,9 @@ function PetAcqModal({ isOpen, onClose, petName }) {
           ))}
 
           <motion.img
-            src={cow}
-            alt="펫 이미지"
-            className="w-22 h-22 object-contain"
+            src={monkey}
+            alt="animal"
+            className="w-20 h-20 object-contain"
             initial={{ opacity: 0, filter: "blur(5px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 2, ease: "easeOut" }}
