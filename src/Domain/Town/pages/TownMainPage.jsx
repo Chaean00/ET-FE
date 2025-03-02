@@ -29,7 +29,7 @@ const TownMainPage = () => {
       {isModalOpen && (
         <PetAcqModal
           isOpen={isModalOpen}
-          petName={"원숭이"}
+          petName={"젖소"}
           onClose={() => setIsModalOpen(false)}
         />
       )}
