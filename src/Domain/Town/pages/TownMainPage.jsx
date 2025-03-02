@@ -20,7 +20,10 @@ const TownMainPage = () => {
   }, [location]);
 
   return (
-    <div className="townbg relative w-full h-screen overflow-hidden">
+    <div
+      className="townbg relative w-full h-screen overflow-hidden"
+      style={{ cursor: "url('/img/custom-cursor.png'), auto" }}
+    >
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
 
       {isModalOpen && (

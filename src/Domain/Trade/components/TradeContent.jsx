@@ -68,7 +68,7 @@ const TradeContent = ({ type, price }) => {
           <p className="text-4xl font-bold">{price.toLocaleString()}원</p>
 
           <button
-            className="border border-blue-700 text-blue-500 px-3 py-1 rounded-4xl text-md font-black font-[#0046FF]"
+            className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 border-2 border-blue-700 text-blue-500 px-3 py-1 rounded-4xl text-md font-black font-[#0046FF]"
             onClick={() => navigate("/orderbook")}
           >
             호가보기
@@ -109,7 +109,7 @@ const TradeContent = ({ type, price }) => {
 
         <div className="absolute bottom-[-50px] left-0 w-full flex space-x-2 mt-4">
           <button
-            className="bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
+            className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
             onClick={() => {
               handleQuantityChange("10");
               setIsEditing(false);
@@ -118,7 +118,7 @@ const TradeContent = ({ type, price }) => {
             10주
           </button>
           <button
-            className="bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
+            className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
             onClick={() => {
               handleQuantityChange("50");
               setIsEditing(false);
@@ -127,7 +127,7 @@ const TradeContent = ({ type, price }) => {
             50주
           </button>
           <button
-            className="bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
+            className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
             onClick={() => {
               handleQuantityChange("100");
               setIsEditing(false);

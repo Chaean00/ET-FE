@@ -14,9 +14,16 @@ const Heart = ({ className }) => {
       onClick={handleHeart}
     >
       {heart ? (
-        <AiFillHeart color="red" size={32} />
+        <AiFillHeart
+          color="red"
+          size={32}
+          className="transition-transform duration-400 ease-in-out scale-100 hover:scale-110"
+        />
       ) : (
-        <AiOutlineHeart size={32} />
+        <AiOutlineHeart
+          size={32}
+          className="transition-transform duration-400 ease-in-out scale-100 hover:scale-110"
+        />
       )}
     </div>
   );

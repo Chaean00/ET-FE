@@ -15,7 +15,7 @@ const QuizLevel = () => {
       {quizLevels.map((level) => (
         <div
           key={level.id}
-          className="bg-blue-600 text-white rounded-xl px-5 py-7.5 flex justify-between items-center"
+          className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-105 bg-blue-600 text-white rounded-xl px-5 py-7.5 flex justify-between items-center"
           onClick={() => {
             navigate("/todayquiz");
           }}

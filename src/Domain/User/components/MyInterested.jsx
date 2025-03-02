@@ -14,7 +14,7 @@ const MyInterested = ({ interests }) => {
         >
           <div>
             <p
-              className="cursor-pointer text-sm font-semibold"
+              className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 text-sm font-semibold"
               onClick={() => {
                 navigate("/stock");
               }}

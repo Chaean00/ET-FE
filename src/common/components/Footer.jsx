@@ -27,7 +27,7 @@ const Footer = () => {
             <button
               key={icon.name}
               onClick={() => navigate(icon.path)}
-              className="flex flex-col items-center focus:outline-none"
+              className="cursor-pointer flex flex-col items-center focus:outline-none"
             >
               <IconComponent
                 className={`w-6.2 h-6.2 ${

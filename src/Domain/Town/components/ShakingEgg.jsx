@@ -45,7 +45,7 @@ const ShakingEgg = () => {
             key={i}
             src={egg}
             alt="egg"
-            className="absolute w-14 h-14"
+            className="absolute w-14 h-14 scale-120"
             style={{
               opacity: 1 - i * 0.3,
               zIndex: EGG_COUNT - i,
