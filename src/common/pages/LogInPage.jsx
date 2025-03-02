@@ -14,13 +14,13 @@ const LogInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between items-center p-5">
-      <SectionName className="text-lg font-bold w-[90%] flex justify-between items-center">
+    <div className="min-h-screen flex flex-col  items-center p-5">
+      <SectionName className="text-lg font-bold w-full items-center">
         로그인
       </SectionName>
 
       <motion.div
-        className="mt-10 scale-125"
+        className="mt-16 scale-135"
         initial={{ y: 0 }}
         animate={{ y: [0, -20, 0, -35, 0, -18, 0] }}
         transition={{
@@ -48,7 +48,7 @@ const LogInPage = () => {
         </CustomInput>
       </div>
 
-      <div className="w-full flex flex-col items-center mt-1 mb-5 gap-2 py-5 bg-white">
+      <div className="w-full flex flex-col items-center gap-1 fixed bottom-[20px]">
         <Button variant="large" color="blue" onClick={handleLogin}>
           로그인
         </Button>

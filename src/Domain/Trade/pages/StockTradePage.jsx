@@ -68,7 +68,7 @@ const StockTradePage = () => {
 
       <TradeContent type={tradeInfo.type} price={tradeInfo.price} />
 
-      <div className="fixed bottom-[65px] w-full px-4">
+      <div className="fixed bottom-[75px] w-full px-4">
         <Button
           variant="large"
           color="#0046FF"

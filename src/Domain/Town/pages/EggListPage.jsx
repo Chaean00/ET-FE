@@ -12,7 +12,10 @@ const EggListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="townbg min-h-screen flex flex-col relative">
+    <div
+      className="townbg min-h-screen flex flex-col relative"
+      style={{ cursor: "url('/img/custom-cursor.png'), auto" }}
+    >
       {isModalOpen && (
         <StockAcqModal
           isOpen={isModalOpen}
@@ -26,13 +29,14 @@ const EggListPage = () => {
         <BackButton className="w-8 h-8 object-contain cursor-pointer" />
       </div>
       <div
-        className="mt-14 w-full flex flex-col items-center gap-0"
+        className="mt-2 w-full flex flex-col items-center gap-0"
         onClick={() => {
           setIsModalOpen(true);
         }}
       >
         <EggList className="w-full max-w-md" />
-        <div className="w-full flex justify-center mt-10">
+
+        <div className="w-full flex justify-center fixed bottom-[75px]">
           <Button
             variant="medium"
             color="black"

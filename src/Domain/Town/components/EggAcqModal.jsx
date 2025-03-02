@@ -14,7 +14,7 @@ function EggAcqModal({ isOpen, onClose }) {
         >
           &times;
         </button>
-        <div className="mt-5">
+        <div className="mt-5 scale-125">
           <ShakingEgg />
         </div>
         <h2 className="text-blue-700 text-xl font-bold mt-4">알 획득!</h2>

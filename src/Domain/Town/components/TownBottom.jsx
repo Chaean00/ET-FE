@@ -8,7 +8,7 @@ const TownBottom = () => {
 
   return (
     <div className="flex justify-around items-center w-full">
-      <div className="w-16 h-16">
+      <div className="cursor-pointer w-16 h-16">
         <img
           src={draw}
           onClick={() => {
@@ -17,7 +17,7 @@ const TownBottom = () => {
           className="w-full h-full object-cover rounded-lg"
         />
       </div>
-      <div className="w-16 h-16">
+      <div className="cursor-pointer w-16 h-16">
         <img
           src={friend}
           onClick={() => {
@@ -26,7 +26,7 @@ const TownBottom = () => {
           className="w-full h-full object-cover rounded-lg"
         />
       </div>
-      <div className="w-16 h-16">
+      <div className="cursor-pointer w-16 h-16">
         <img
           src={dogam}
           onClick={() => {

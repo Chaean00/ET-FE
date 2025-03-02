@@ -5,16 +5,16 @@ import SectionName from "../components/SectionName";
 
 const SignUpPage = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-between items-center p-5">
-      <SectionName className="text-lg font-bold w-[90%] flex justify-between items-center mt-5">
+    <div className="min-h-screen flex flex-col items-center p-5">
+      <SectionName className="text-lg font-bold w-[100%] flex items-center">
         회원가입
       </SectionName>
 
-      <div className="text-md font-bold w-[90%] mt-2 mb-5 text-left">
+      <div className="text-lg font-bold w-[100%] mt-2 mb-5 text-left">
         회원정보를 입력해주세요.
       </div>
 
-      <div className="flex flex-col gap-2 w-[100%]">
+      <div className="mt-2 flex flex-col gap-2 w-[100%]">
         <CustomInput type="text" name="name" placeholder="이름을 입력해주세요.">
           이름
         </CustomInput>
@@ -40,8 +40,7 @@ const SignUpPage = () => {
           비밀번호 확인
         </CustomInput>
       </div>
-
-      <div className="w-full flex flex-col items-center mt-auto mb-5 gap-2 p-5 bg-white">
+      <div className="w-full flex flex-col items-center gap-1 fixed bottom-[20px]">
         <Button variant="large" color="blue">
           회원가입
         </Button>

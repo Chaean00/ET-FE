@@ -10,7 +10,7 @@ const MyHeld = ({ stocks }) => {
       {stocks.slice(0, 3).map((stock) => (
         <div
           key={stock.id}
-          className="cursor-pointer bg-white rounded-2xl shadow-md p-4 flex items-center space-x-3 mb-2 "
+          className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 bg-white rounded-2xl shadow-md p-4 flex items-center space-x-3 mb-2 "
           onClick={() => {
             navigate("/stock");
           }}
@@ -42,7 +42,7 @@ const MyHeld = ({ stocks }) => {
 
       <div className="text-center">
         <button
-          className="w-[50%] mt-3 py-2 text-gray-400 font-medium bg-white border-1 rounded-3xl"
+          className="w-[45%] mt-3 py-1.5 text-gray-400 text-sm font-medium bg-white border-1 rounded-3xl"
           onClick={() => navigate("/mystock")}
         >
           보유상품 더 보기 &gt;
