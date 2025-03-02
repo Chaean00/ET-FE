@@ -14,7 +14,7 @@ const LogInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col  items-center p-5">
+    <div className="custom-cursor min-h-screen flex flex-col  items-center p-5">
       <SectionName className="text-lg font-bold w-full items-center">
         로그인
       </SectionName>

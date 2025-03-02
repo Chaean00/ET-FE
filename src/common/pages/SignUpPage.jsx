@@ -5,7 +5,7 @@ import SectionName from "../components/SectionName";
 
 const SignUpPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center p-5">
+    <div className="custom-cursor min-h-screen flex flex-col items-center p-5">
       <SectionName className="text-lg font-bold w-[100%] flex items-center">
         회원가입
       </SectionName>

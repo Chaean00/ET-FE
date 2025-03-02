@@ -95,3 +95,7 @@ body {
   display: grid;
   place-items: center;
 }
+
+.custom-cursor {
+  cursor: url("/img/heart_purple.png"), auto;
+}

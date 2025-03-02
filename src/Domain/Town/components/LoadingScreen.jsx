@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import loading from "../../../assets/tradetown/loading.png";
 
 const LoadingScreen = ({ onFinish }) => {
-  const message = "TradeTown으로 이동중...";
+  const message = "TradeTown으로 이동 중...";
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const LoadingScreen = ({ onFinish }) => {
 
     const timer = setTimeout(() => {
       onFinish();
-    }, 3300);
+    }, 3450);
 
     return () => {
       clearInterval(interval);
