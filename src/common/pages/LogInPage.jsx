@@ -20,7 +20,7 @@ const LogInPage = () => {
       </SectionName>
 
       <motion.div
-        className="mt-16 scale-135"
+        className="mt-12.5 mb-4 scale-84"
         initial={{ y: 0 }}
         animate={{ y: [0, -20, 0, -35, 0, -18, 0] }}
         transition={{

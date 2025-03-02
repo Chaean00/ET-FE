@@ -42,7 +42,7 @@ const MyHeld = ({ stocks }) => {
 
       <div className="text-center">
         <button
-          className="w-[45%] mt-3 py-1.5 text-gray-400 text-sm font-medium bg-white border-1 rounded-3xl"
+          className="cursor-pointer w-[45%] mt-3 py-1.5 text-gray-400 text-sm font-medium bg-white border-1 rounded-3xl"
           onClick={() => navigate("/mystock")}
         >
           보유상품 더 보기 &gt;
