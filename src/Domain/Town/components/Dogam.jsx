@@ -5,7 +5,7 @@ import dogamframe from "../../../assets/town/dogamframe.png";
 const Dogam = () => {
   return (
     <div className="grid grid-cols-3 gap-4 w-full max-w-md mx-auto place-items-center">
-      {[...Array(12)].map((_, index) => (
+      {[...Array(30)].map((_, index) => (
         <div
           key={index}
           className="w-24 h-24 flex items-center justify-center bg-contain bg-center bg-no-repeat"

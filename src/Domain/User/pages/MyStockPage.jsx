@@ -8,7 +8,7 @@ const MyStockPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center min-h-screen px-4 pt-6 pb-20">
+    <div className="scrollbar-custom flex-1 overflow-y-auto flex flex-col items-center h-screen px-4 pt-6 pb-28">
       <div className="w-full max-w-md flex items-center relative">
         <span onClick={() => navigate(-1)} className="absolute left-0">
           <BackButton className="w-8 h-8" />

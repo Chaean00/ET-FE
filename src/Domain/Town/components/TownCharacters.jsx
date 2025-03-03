@@ -27,10 +27,18 @@ const characterImages = [
   tomato,
 ];
 
-const getRandomPosition = () => ({
-  x: Math.random() * window.innerWidth - 50,
-  y: Math.random() * window.innerHeight - 50,
-});
+const getRandomPosition = () => {
+  const container = document.querySelector(".townbg");
+  if (!container) return { x: 0, y: 0 };
+
+  const maxWidth = container.clientWidth;
+  const maxHeight = container.clientHeight;
+
+  return {
+    x: Math.max(0, Math.random() * maxWidth),
+    y: Math.max(0, Math.random() * maxHeight),
+  };
+};
 
 export default function TownCharacters() {
   const [charList, setCharList] = useState([]);
@@ -47,7 +55,7 @@ export default function TownCharacters() {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden">
       {charList.map(({ id, image, position }) => (
         <TownCharacter key={id} image={image} startPos={position} />
       ))}
