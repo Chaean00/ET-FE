@@ -32,10 +32,15 @@ const TownMainPage = () => {
       )}
 
       <div
-        className="absolute top-12 left-0 w-full flex justify-center px-0 z-20 py-2"
+        className="absolute top-1 left-0 w-full flex justify-center px-0 z-20 py-2"
         onClick={() => setIsModalOpen(true)}
       >
-        <GaugeBar value={2} maxValue={35} className="w-full max-w-[90%]" />
+        <GaugeBar
+          value={40}
+          maxValue={100}
+          level={1}
+          className="w-full max-w-[90%]"
+        />
       </div>
 
       <TownCharacters />

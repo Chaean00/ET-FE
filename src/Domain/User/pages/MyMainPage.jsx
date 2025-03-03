@@ -5,8 +5,8 @@ import Footer from "../../../common/components/Footer";
 const MyMainPage = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center">
-      <div className="w-[85%] max-w-md flex-grow">
-        <h1 className="font-bold text-2xl mt-12 mb-4">마이페이지</h1>
+      <div className="w-[90%] max-w-md flex-grow">
+        <h1 className="font-bold text-2xl mt-3 b-4">마이페이지</h1>
         <MyProfile name="이나민" username="nm0922" />
         <div className="mt-2">
           <MyCategory />

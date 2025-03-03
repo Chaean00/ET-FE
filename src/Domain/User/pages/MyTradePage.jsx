@@ -13,7 +13,7 @@ const MyTradePage = () => {
         </span>
       </div>
 
-      <h1 className="font-bold text-2xl ml-2 mt-10 mb-[-35px] w-full max-w-md self-start">
+      <h1 className="font-bold text-2xl ml-2 mt-8 mb-[-35px] w-full max-w-md self-start">
         거래 내역
       </h1>
 
