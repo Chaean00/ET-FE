@@ -5,8 +5,8 @@ const ProgressContainer = styled.div`
   position: absolute;
   margin-top: 1.55em;
   width: 98.5%;
-  height: 14px;
-  background-color: transparent;
+  height: 13.2px;
+  background-color: white;
   border-radius: 50px;
   overflow: hidden;
   border: none;
@@ -14,7 +14,7 @@ const ProgressContainer = styled.div`
 `;
 
 const ProgressFill = styled.div`
-  background-color: #e81f1c;
+  background-color: red;
   width: ${({ progress }) => progress}%;
   height: 100%;
   transition: width 0.3s ease-in-out;

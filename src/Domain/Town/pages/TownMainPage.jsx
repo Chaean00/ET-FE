@@ -36,7 +36,7 @@ const TownMainPage = () => {
         onClick={() => setIsModalOpen(true)}
       >
         <GaugeBar
-          value={40}
+          value={80}
           maxValue={100}
           level={1}
           className="w-full max-w-[90%]"
