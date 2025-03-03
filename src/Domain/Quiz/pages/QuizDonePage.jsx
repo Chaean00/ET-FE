@@ -1,19 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import Footer from "../../../common/components/Footer";
 import QuizDone from "../components/QuizDone";
 import LevelPoint from "../components/LevelPoint";
-import BackButton from "../../../common/components/BackButton";
 
 const QuizDonePage = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen flex flex-col items-center">
-      <div className="absolute top-4 left-4">
-        <span onClick={() => navigate(-1)}>
-          <BackButton className="w-8 h-8 object-contain" />
-        </span>
-      </div>
       <div className="px-6">
         <div className="m-auto mt-24 flex justify-between w-full max-w-xs">
           <LevelPoint level="매우어려움" levelColor="bg-red-500" points={200} />
