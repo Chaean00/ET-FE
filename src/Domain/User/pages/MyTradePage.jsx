@@ -5,23 +5,26 @@ import BackButton from "../../../common/components/BackButton";
 
 const MyTradePage = () => {
   const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col items-center min-h-screen px-4 pt-6 pb-20">
-      <div className="w-full max-w-md flex items-center relative">
+    <div className="scrollbar-custom overflow-y-auto overflow-x-hidden h-screen flex flex-col items-center pb-6">
+      <div className="w-full max-w-md mx-auto flex items-center relative pt-6">
         <span onClick={() => navigate(-1)} className="absolute left-0">
           <BackButton className="w-8 h-8" />
         </span>
       </div>
 
-      <h1 className="font-bold text-2xl ml-2 mt-8 mb-[-35px] w-full max-w-md self-start">
+      <h1 className="font-bold text-2xl ml-2 mt-8 w-full max-w-md mx-auto">
         거래 내역
       </h1>
 
-      <div className="w-full max-w-md px-2 space-y-4 mt-4">
+      <div className="w-full max-w-md px-2 space-y-4 mx-auto mb-28">
         <MyTrade />
       </div>
 
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
+      <div className="fixed bottom-0 left-0 w-full max-w-md mx-auto bg-white border-t">
+        <Footer />
+      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import samsung from "../../../assets/trade/samsung.png";
 
 const TradeMainPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
   const stocks = [
     {
       id: 1,
@@ -60,31 +61,35 @@ const TradeMainPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="scrollbar-custom overflow-y-auto relative w-full h-screen flex flex-col pb-15">
       <div className="max-w-md mx-auto flex justify-between items-center mt-3 space-x-14">
         <div className="text-3xl font-bold">투자</div>
         <SearchCompany onSearch={handleSearch} />
       </div>
 
-      <div className="bg-white rounded-lg ">
-        <MyAccount
-          accountNumber="212-23-565655"
-          evaluationAmount={1222333}
-          profit={935}
-          profitRate={4.31}
-          availableAmount={110}
-        />
+      <div className="flex-1 w-full max-w-md mx-auto">
+        <div className="bg-white rounded-lg">
+          <MyAccount
+            accountNumber="212-23-565655"
+            evaluationAmount={1222333}
+            profit={935}
+            profitRate={4.31}
+            availableAmount={110}
+          />
+        </div>
+
+        <div className="mb-6">
+          <MyHeld stocks={stocks} />
+        </div>
+
+        <div className="mb-12">
+          <MyInterested interests={interests} />
+        </div>
       </div>
 
-      <div className="mb-6">
-        <MyHeld stocks={stocks} />
+      <div className="fixed bottom-0 left-0 w-full bg-white border-t z-50">
+        <Footer />
       </div>
-
-      <div className="mb-12">
-        <MyInterested interests={interests} />
-      </div>
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

@@ -3,9 +3,9 @@ import gauge from "../../../assets/town/gauge.png";
 
 const ProgressContainer = styled.div`
   position: absolute;
-  margin-top: 1.6em;
+  margin-top: 1.55em;
   width: 98.5%;
-  height: 14.5px;
+  height: 14px;
   background-color: transparent;
   border-radius: 50px;
   overflow: hidden;
@@ -14,7 +14,7 @@ const ProgressContainer = styled.div`
 `;
 
 const ProgressFill = styled.div`
-  background-color: red;
+  background-color: #e81f1c;
   width: ${({ progress }) => progress}%;
   height: 100%;
   transition: width 0.3s ease-in-out;
