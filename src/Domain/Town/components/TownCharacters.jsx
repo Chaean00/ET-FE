@@ -31,8 +31,8 @@ const getRandomPosition = () => {
   const container = document.querySelector(".townbg");
   if (!container) return { x: 0, y: 0 };
 
-  const maxWidth = container.clientWidth;
-  const maxHeight = container.clientHeight;
+  const maxWidth = container.clientWidth - 5;
+  const maxHeight = container.clientHeight - 5;
 
   return {
     x: Math.max(0, Math.random() * maxWidth),
