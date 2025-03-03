@@ -18,7 +18,7 @@ const TodayQuizPage = () => {
       </div>
 
       <div className="flex flex-col items-center">
-        <div className="w-full flex justify-center mt-24">
+        <div className="w-full flex justify-center mt-14">
           <LevelPoint level="매우어려움" levelColor="bg-red-500" points={100} />
         </div>
 

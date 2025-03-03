@@ -2,11 +2,20 @@ import { motion } from "framer-motion";
 
 const DrawTop = ({ point }) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center space-y-2">
+      <div
+        className="font-town mt-2 text-3xl font-black text-center"
+        style={{
+          WebkitTextStroke: "2.25px black",
+          WebkitTextFillColor: "yellow",
+        }}
+      >
+        {point.toLocaleString()}P
+      </div>
       <motion.div
         className="font-town text-6xl font-black text-center"
         style={{
-          WebkitTextStroke: "2.2px black",
+          WebkitTextStroke: "2.8px black",
           WebkitTextFillColor: "yellow",
         }}
         initial={{ scale: 1 }}
@@ -15,15 +24,6 @@ const DrawTop = ({ point }) => {
       >
         알뽑기
       </motion.div>
-      <div
-        className="font-town mt-2 text-3xl font-black text-center"
-        style={{
-          WebkitTextStroke: "2px black",
-          WebkitTextFillColor: "yellow",
-        }}
-      >
-        {point.toLocaleString()}P
-      </div>
     </div>
   );
 };

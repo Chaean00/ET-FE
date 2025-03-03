@@ -1,64 +1,56 @@
 import styled from "styled-components";
+import gauge from "../../../assets/town/gauge.png";
 
 const ProgressContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 14px;
-  background-color: white;
-  border-radius: 30px;
+  position: absolute;
+  margin-top: 1.6em;
+  width: 98.5%;
+  height: 14.5px;
+  background-color: transparent;
+  border-radius: 50px;
   overflow: hidden;
   border: none;
   z-index: 1;
 `;
 
 const ProgressFill = styled.div`
-  background-color: yellow;
+  background-color: red;
   width: ${({ progress }) => progress}%;
   height: 100%;
   transition: width 0.3s ease-in-out;
 `;
 
-const Marker = styled.div`
+const LevelText = styled.div`
   position: absolute;
-  top: 2px;
-  transform: translateX(-50%);
-  width: 25px;
-  height: 25px;
-  background-color: yellow;
-  color: white;
-  font-size: 15px;
+  top: 5px;
+  right: 0px;
+  font-size: 18px;
   font-weight: bold;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
-    1px 1px 0 black;
-  z-index: 3;
+  color: black;
+  border-radius: 5px;
 `;
 
 const GaugeWrapper = styled.div`
   position: relative;
-  width: 300px;
-  min-height: 30px;
+  width: 90%;
+  min-height: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-image: url(${gauge});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
-const GaugeBar = ({ value, maxValue }) => {
+const GaugeBar = ({ value, maxValue, level }) => {
   const progress = Math.floor((value / maxValue) * 100);
   const markers = [5, 10, 15, 20];
 
   return (
     <GaugeWrapper>
-      {markers.map((mark, index) => (
-        <Marker key={index} style={{ left: `${(mark / maxValue) * 100}%` }}>
-          {mark}
-        </Marker>
-      ))}
+      <LevelText>Lv. {level}</LevelText>
       <ProgressContainer>
         <ProgressFill progress={progress} />
       </ProgressContainer>

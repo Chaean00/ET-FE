@@ -96,6 +96,19 @@ body {
   place-items: center;
 }
 
+.drawbg {
+  background-image: url("./assets/town/drawbg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
 .custom-cursor {
   cursor: url("/img/heart_purple.png"), auto;
 }

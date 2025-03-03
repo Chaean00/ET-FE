@@ -15,7 +15,7 @@ const MyStockPage = () => {
         </span>
       </div>
 
-      <h1 className="font-bold text-2xl mt-10 w-full max-w-md self-start ml-2 ">
+      <h1 className="font-bold text-2xl mt-8 w-full max-w-md self-start ml-2 ">
         보유 주식
       </h1>
 

@@ -14,7 +14,7 @@ const DrawPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="custom-cursor townbg min-h-screen flex flex-col items-center">
+    <div className="custom-cursor drawbg min-h-screen flex flex-col items-center">
       {isModalOpen && (
         <EggAcqModal
           isOpen={isModalOpen}
@@ -24,15 +24,15 @@ const DrawPage = () => {
       <div className="absolute top-4 left-4 z-10" onClick={() => navigate(-1)}>
         <BackButton className="w-8 h-8 object-contain cursor-pointer" />
       </div>
-      <div className="mt-10">
-        <DrawTop point={2000000}>알뽑기</DrawTop>
+      <div className="mt-16">
+        <DrawTop point={200000}>알뽑기</DrawTop>
       </div>
       <img
         src={twinkle}
         alt="star"
         className="absolute left-[-50px] w-10 h-10"
       />
-      <div className="flex justify-center w-full mb-25 relative items-center">
+      <div className="flex justify-center w-full mb-62 relative items-center">
         <img
           src={draweggs}
           className="w-auto max-w-lg transform scale-135 transition-transform duration-300 z-10"
