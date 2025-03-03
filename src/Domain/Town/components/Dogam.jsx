@@ -16,7 +16,7 @@ const Dogam = () => {
             className="w-12 h-12 object-contain"
             initial={{ opacity: 0, filter: "blur(10px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.5, ease: "easeOut", delay: index * 0.1 }}
+            transition={{ duration: 1, ease: "easeOut", delay: index * 0.1 }}
           />
         </div>
       ))}

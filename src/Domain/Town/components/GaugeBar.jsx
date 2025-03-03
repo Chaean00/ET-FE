@@ -22,12 +22,21 @@ const ProgressFill = styled.div`
 
 const LevelText = styled.div`
   position: absolute;
-  top: 5px;
-  right: 0px;
+  top: 2.5px;
+  left: 28.5px;
   font-size: 18px;
+  font-weight: light;
+  color: black;
+`;
+
+const ClickText = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 5.5px;
+  right: 2.5px;
+  font-size: 16px;
   font-weight: bold;
   color: black;
-  border-radius: 5px;
 `;
 
 const GaugeWrapper = styled.div`
@@ -50,7 +59,8 @@ const GaugeBar = ({ value, maxValue, level }) => {
 
   return (
     <GaugeWrapper>
-      <LevelText>Lv. {level}</LevelText>
+      <LevelText>lv. {level}</LevelText>
+      <ClickText>click!</ClickText>
       <ProgressContainer>
         <ProgressFill progress={progress} />
       </ProgressContainer>
