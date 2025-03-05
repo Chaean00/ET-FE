@@ -1,5 +1,21 @@
 import api from "./api";
 
+export const signup = async (uid, pwd, name) => {
+  try {
+    const response = await api.post("/auth/signup", {
+      uid,
+      pwd,
+      name,
+    });
+
+    console.log("회원가입 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("회원가입 실패:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const login = async (uid, password) => {
   try {
     const response = await api.post("/auth/login", {
