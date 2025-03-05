@@ -12,12 +12,7 @@ const ChatbotPage = () => {
 
   const chatContainerRef = useRef(null);
 
-  // 메시지가 추가될 때 자동으로 스크롤
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
+
 
   // 메시지 전송 함수
   const handleSendMessage = () => {
@@ -26,17 +21,17 @@ const ChatbotPage = () => {
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
     
-    
-    setTimeout(() => {
-      const botResponse = getBotResponse(input);
+   
+    const botResponse = getBotResponse(input);
       setMessages((prev) => [...prev, botResponse]);
-    }, );
+ 
 
     setInput("");
   };
 
   // 챗봇 응답 로직
   const getBotResponse = (question) => {
+    //추후 여기를 GPT 응답으로 변경. 
     let response = "잘 모르겠어. 다른 질문 해볼래?";
     if (question.includes("GDP")) response = "GDP(국내총생산)는 한 나라에서 일정 기간 동안 생산된 모든 최종 재화와 서비스의 가치를 의미해!";
     return { sender: "bot", text: response };
