@@ -6,7 +6,7 @@ import BackButton from "../../../common/components/BackButton";
 const ChatbotPage = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "안녕! 나와 함께 경제공부를 도와줄 선생이야~ 뭐가 궁금하니?" },
+    { sender: "bot", text: "안녕! 나는 경제공부를 도와줄 선생이야~ 뭐가 궁금하니?" },
   ]);
   const [input, setInput] = useState("");
 
@@ -47,7 +47,7 @@ const ChatbotPage = () => {
       </div>
 
       {/* 헤더 */}
-      <header className="text-xl font-bold text-left p-4 bg-white shadow-md">
+      <header className="text-xl font-bold text-center p-4 bg-white shadow-md">
         AI 챗봇과 공부하기
       </header>
 
@@ -57,7 +57,8 @@ const ChatbotPage = () => {
           <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} mb-2`}>
             <div
               className={`px-4 py-2 rounded-lg ${
-                msg.sender === "user" ? "bg-blue-500 text-white" : "bg-blue-200 text-black"
+                msg.sender === "user" ? "bg-blue-500 text-white rounded-t-2xl rounded-bl-2xl rounded-br-none"  
+                : "bg-blue-200 text-black rounded-t-2xl rounded-br-2xl rounded-bl-none"
               } max-w-xs`}
             >
               {msg.text}
