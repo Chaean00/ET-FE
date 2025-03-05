@@ -43,7 +43,7 @@ function App() {
         <Route path="/orderbook" element={<OrderBookPage />} />
         <Route path="/stock" element={<StockPage />} />
         <Route path="/stocktrade" element={<StockTradePage />} />
-        <Route path="/ChatbotPage" element={<ChatbotPage />} />
+        <Route path="/ChatbotPage" element={<ChatbotPage />} /> 
       </Routes>
     </div>
   );
