@@ -13,7 +13,7 @@ const QuizMainPage = () => {
             src={GPTlogo}
             alt="GPT Logo"
             className="w-15 h-15 cursor-pointer"
-            onClick={() => navigate("/target-page")} // 클릭하면 이동
+            onClick={() => navigate("/ChatbotPage")} // 클릭하면 이동
           />
       </div>
       <div className="px-6">

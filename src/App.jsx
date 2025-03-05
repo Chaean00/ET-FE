@@ -18,6 +18,7 @@ import MyTradePage from "./Domain/User/pages/MyTradePage";
 import OrderBookPage from "./Domain/Trade/pages/OrderBookPage";
 import StockPage from "./Domain/Trade/pages/StockPage";
 import StockTradePage from "./Domain/Trade/pages/StockTradePage";
+import ChatbotPage from "./Domain/Quiz/pages/ChatbotPage";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/orderbook" element={<OrderBookPage />} />
         <Route path="/stock" element={<StockPage />} />
         <Route path="/stocktrade" element={<StockTradePage />} />
+        <Route path="/ChatbotPage" element={<ChatbotPage />} />
       </Routes>
     </div>
   );
