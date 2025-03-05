@@ -25,11 +25,12 @@ const ChatbotPage = () => {
 
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
-
+    
+    
     setTimeout(() => {
       const botResponse = getBotResponse(input);
       setMessages((prev) => [...prev, botResponse]);
-    }, 1000);
+    }, );
 
     setInput("");
   };
@@ -77,6 +78,7 @@ const ChatbotPage = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+    
           className="flex-1 border rounded-lg p-2 outline-none"
           placeholder="대화를 입력해주세요"
         />
