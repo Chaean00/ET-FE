@@ -3,9 +3,11 @@ import QuizDone from "../components/QuizDone";
 import LevelPoint from "../components/LevelPoint";
 import smart from "../../../assets/tradetown/smart.png";
 
+
 const QuizDonePage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center">
+      
       <div className="px-6">
         <div className="m-auto mt-14 flex justify-between w-full max-w-xs">
           <LevelPoint level="매우어려움" levelColor="bg-red-500" points={200} />
