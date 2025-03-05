@@ -1,20 +1,19 @@
 import Footer from "../../../common/components/Footer";
 import QuizLevel from "../components/QuizLevel";
-import GPTlogo from "../../../assets/animals/GPTlogo.png"
-import { useNavigate } from "react-router-dom"
+import GPTlogo from "../../../assets/animals/GPTlogo.png";
+import { useNavigate } from "react-router-dom";
 const QuizMainPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 우측 상단 GPTLOGO 이미지 추가 */}
       <div className="absolute top-10 right-10">
-      <img
-            src={GPTlogo}
-            alt="GPT Logo"
-            className="w-15 h-15 cursor-pointer"
-            onClick={() => navigate("/ChatbotPage")} // 클릭하면 이동
-          />
+        <img
+          src={GPTlogo}
+          alt="GPT Logo"
+          className="w-15 h-15 cursor-pointer"
+          onClick={() => navigate("/ChatbotPage")}
+        />
       </div>
       <div className="px-6">
         <div className="mt-3 mb-4 space-y-2">
