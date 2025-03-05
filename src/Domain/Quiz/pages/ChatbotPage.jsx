@@ -55,44 +55,41 @@ const ChatbotPage = () => {
         AI 챗봇과 공부하기
       </header>
 
-      {/* 메인 컨텐츠 (채팅 영역 + 입력창) */}
-      <div className="flex flex-col flex-1">
-        {/* 채팅 메시지 영역 */}
-        <div className="flex-1 overflow-y-auto p-4" ref={chatContainerRef}>
-          {messages.map((msg, index) => (
-            <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} mb-2`}>
-              <div
-                className={`px-4 py-2 rounded-lg ${
-                  msg.sender === "user" ? "bg-blue-500 text-white" : "bg-blue-200 text-black"
-                } max-w-xs`}
-              >
-                {msg.text}
-              </div>
+      {/* 채팅 메시지 영역 (푸터와 입력창을 고려해 padding-bottom 추가) */}
+      <div className="flex-1 overflow-y-auto p-4 pb-36" ref={chatContainerRef}>
+        {messages.map((msg, index) => (
+          <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} mb-2`}>
+            <div
+              className={`px-4 py-2 rounded-lg ${
+                msg.sender === "user" ? "bg-blue-500 text-white" : "bg-blue-200 text-black"
+              } max-w-xs`}
+            >
+              {msg.text}
             </div>
-          ))}
-        </div>
-
-        {/* 입력창 */}
-        <div className="flex items-center p-2 bg-white border-t flex-shrink-0">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            className="flex-1 border rounded-lg p-2 outline-none"
-            placeholder="대화를 입력해주세요"
-          />
-          <button
-            onClick={handleSendMessage}
-            className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            전송
-          </button>
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* Footer (고정된 높이 유지) */}
-      <div className="h-16 bg-white border-t flex items-center justify-center flex-shrink-0">
+      {/* 입력창 - 푸터 위에 고정 */}
+      <div className="fixed bottom-16 w-full bg-white border-t p-2 flex items-center h-14">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          className="flex-1 border rounded-lg p-2 outline-none"
+          placeholder="대화를 입력해주세요"
+        />
+        <button
+          onClick={handleSendMessage}
+          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          전송
+        </button>
+      </div>
+
+      {/* Footer - 화면 하단 고정 */}
+      <div className="fixed bottom-0 w-full h-16 bg-white border-t flex items-center justify-center">
         <Footer />
       </div>
     </div>
