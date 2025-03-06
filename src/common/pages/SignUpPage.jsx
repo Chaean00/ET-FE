@@ -53,6 +53,11 @@ const SignUpPage = () => {
       return;
     }
 
+    if (isUidAvailable === null) {
+      setError("아이디 중복체크는 필수입니다.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("비밀번호가 일치하지 않습니다.");
       return;

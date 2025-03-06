@@ -10,19 +10,19 @@ import { getUserHistory } from "../../../utils/history";
 const TownMainPage = () => {
   const [loading, setLoading] = useState(false);
   // const [tradeCount, setTradeCount] = useState(5);
-  const [tradeCount, setTradeCount] = useState(0);
+  const [tradeCount, setTradeCount] = useState(5);
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.from === "/login") {
-      setLoading(true);
-      setTimeout(() => setLoading(false), 2800);
-    }
-    const fetchTradeHistory = async () => {
-      const count = await getUserHistory();
-      setTradeCount(count);
-    };
-    fetchTradeHistory();
+    // if (location.state?.from === "/login") {
+    //   setLoading(true);
+    //   setTimeout(() => setLoading(false), 2800);
+    // }
+    // const fetchTradeHistory = async () => {
+    //   const count = await getUserHistory();
+    //   setTradeCount(count);
+    // };
+    // fetchTradeHistory();
   }, [location]);
 
   return (

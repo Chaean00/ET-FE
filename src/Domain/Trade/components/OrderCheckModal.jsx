@@ -36,11 +36,17 @@ const OrderCheckModal = ({ type, companyName, quantity, price, onClose }) => {
         </div>
 
         <hr className="my-5 border-gray-300" />
-        <div className="grid grid-cols-2 gap-y-5 text-sm">
-          <span className="font-medium text-gray-600">계좌정보</span>
-          <span className="text-right">212-85-656556</span>
-        </div>
 
+        <div className="grid gap-y-5">
+          <div className="grid grid-cols-2 gap-y-5 text-sm">
+            <span className="font-medium text-gray-600">계좌정보</span>
+            <span className="text-right">212-85-656556</span>
+          </div>
+          <div className="grid grid-cols-2 gap-y-5 text-sm">
+            <span className="font-medium text-gray-600">예치금</span>
+            <span className="text-right">560,000원</span>
+          </div>
+        </div>
         <div className="w-full flex justify-center mt-10">
           <Button
             className="w-full text-lg"
