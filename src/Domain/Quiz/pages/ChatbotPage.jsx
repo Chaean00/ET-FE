@@ -15,6 +15,13 @@ const ChatbotPage = () => {
 
   const chatContainerRef = useRef(null);
 
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const handleSendMessage = () => {
     if (!input.trim()) return;
 
@@ -36,7 +43,7 @@ const ChatbotPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="flex flex-col bg-gray-100 h-screen">
       <div className="absolute top-4 left-4">
         <span onClick={() => navigate(-1)}>
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />
@@ -47,7 +54,10 @@ const ChatbotPage = () => {
         AI 챗봇과 공부하기
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 pb-36" ref={chatContainerRef}>
+      <div
+        className="scrollbar-custom flex-1 overflow-y-auto p-4 pb-30"
+        ref={chatContainerRef}
+      >
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -68,7 +78,7 @@ const ChatbotPage = () => {
         ))}
       </div>
 
-      <div className="fixed bottom-16 w-full bg-white border-t p-2 flex items-center h-14">
+      <div className="fixed bottom-0 w-full bg-white border-t p-2 flex items-center h-14">
         <input
           type="text"
           value={input}
@@ -83,10 +93,6 @@ const ChatbotPage = () => {
         >
           전송
         </button>
-      </div>
-
-      <div className="fixed bottom-0 w-full h-16 bg-white border-t flex items-center justify-center">
-        <Footer />
       </div>
     </div>
   );

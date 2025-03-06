@@ -1,5 +1,7 @@
+import { useState } from "react";
 import styled from "styled-components";
 import gauge from "../../../assets/town/gauge.png";
+import PetAcqModal from "../components/PetAcqModal";
 
 const ProgressContainer = styled.div`
   position: absolute;
@@ -30,13 +32,15 @@ const LevelText = styled.div`
 `;
 
 const ClickText = styled.div`
-  cursor: pointer;
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
   position: absolute;
   top: 5.5px;
   right: 2.5px;
   font-size: 16px;
   font-weight: bold;
-  color: black;
+  color: ${({ clickable }) =>
+    clickable ? "black" : "rgb(255,255,255); opacity : 0.45"};
+  pointer-events: ${({ clickable }) => (clickable ? "auto" : "none")};
 `;
 
 const GaugeWrapper = styled.div`
@@ -55,12 +59,22 @@ const GaugeWrapper = styled.div`
 
 const GaugeBar = ({ value, maxValue, level }) => {
   const progress = Math.floor((value / maxValue) * 100);
-  const markers = [5, 10, 15, 20];
+  const isClickable = value == maxValue;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <GaugeWrapper>
+      {isModalOpen && (
+        <PetAcqModal
+          isOpen={isModalOpen}
+          petName={"원숭이"}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
       <LevelText>lv. {level}</LevelText>
-      <ClickText>click!</ClickText>
+      <ClickText clickable={isClickable} onClick={() => setIsModalOpen(true)}>
+        click!
+      </ClickText>
       <ProgressContainer>
         <ProgressFill progress={progress} />
       </ProgressContainer>
