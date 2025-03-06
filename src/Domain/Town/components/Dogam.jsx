@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import tomato from "../../../assets/animals/tomato.png";
 import dogamframe from "../../../assets/town/dogamframe.png";
 
 const Dogam = () => {

@@ -1,6 +1,6 @@
 import Footer from "../../../common/components/Footer";
 import QuizLevel from "../components/QuizLevel";
-import GPTlogo from "../../../assets/animals/GPTlogo.png";
+import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
 import { useNavigate } from "react-router-dom";
 const QuizMainPage = () => {
   const navigate = useNavigate();
