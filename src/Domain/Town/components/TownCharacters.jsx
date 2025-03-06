@@ -27,24 +27,24 @@ const initialCharList = [
 ];
 
 export default function TownCharacters() {
-  // const [charList, setCharList] = useState(initialCharList);
-  const [charList, setCharList] = useState([]);
+  const [charList, setCharList] = useState(initialCharList);
+  // const [charList, setCharList] = useState([]);
 
   useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        const pets = await getPets();
-        const newChars = pets.map((pet) => ({
-          id: pet.pet_id,
-          image: pet.image_url,
-          position: getRandomPosition(),
-        }));
-        setCharList(newChars);
-      } catch (error) {
-        console.error("펫 데이터 불러오기 실패:", error);
-      }
-    };
-    fetchPets();
+    // const fetchPets = async () => {
+    //   try {
+    //     const pets = await getPets();
+    //     const newChars = pets.map((pet) => ({
+    //       id: pet.pet_id,
+    //       image: pet.image_url,
+    //       position: getRandomPosition(),
+    //     }));
+    //     setCharList(newChars);
+    //   } catch (error) {
+    //     console.error("펫 데이터 불러오기 실패:", error);
+    //   }
+    // };
+    // fetchPets();
   }, []);
 
   return (

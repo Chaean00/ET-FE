@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import dogamframe from "../../../assets/town/dogamframe.png";
+import monkey from "../../../assets/animals/monkey.png";
 
 const Dogam = () => {
   return (
@@ -11,7 +12,7 @@ const Dogam = () => {
           style={{ backgroundImage: `url(${dogamframe})` }}
         >
           <motion.img
-            src={tomato}
+            src={monkey}
             className="w-12 h-12 object-contain"
             initial={{ opacity: 0, filter: "blur(10px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
