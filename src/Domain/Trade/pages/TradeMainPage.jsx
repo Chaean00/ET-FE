@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../../utils/api";
 import SearchCompany from "../components/SearchCompany";
 import MyAccount from "../../User/components/MyAccount";
 import MyHeld from "../../User/components/MyHeld";
@@ -8,6 +9,7 @@ import samsung from "../../../assets/trade/samsung.png";
 
 const TradeMainPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const stocks = [
     {
@@ -60,14 +62,32 @@ const TradeMainPage = () => {
     setSearchQuery(query);
   };
 
+  useEffect(() => {
+    if (!searchQuery) {
+      setSearchResults([]);
+      return;
+    }
+
+    const fetchStocks = async () => {
+      try {
+        const response = await api.get(`/stocks/search?query=${searchQuery}`);
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error("주식 검색 실패:", error);
+      }
+    };
+
+    fetchStocks();
+  }, [searchQuery]);
+
   return (
     <div className="scrollbar-custom overflow-y-auto relative w-full h-screen flex flex-col pb-15">
       <div className="max-w-md mx-auto flex justify-between items-center mt-3 space-x-14">
-        <div className="text-3xl font-bold">투자</div>
-        <SearchCompany onSearch={handleSearch} />
-      </div>
+        <div className="text-3xl font-bold mb-2">투자</div>
 
-      <div className="flex-1 w-full max-w-md mx-auto">
+        <SearchCompany onSearch={handleSearch} searchResults={searchResults} />
+      </div>
+      <div className="flex-1 w-full max-w-md mx-auto mt-6">
         <div className="bg-white rounded-lg">
           <MyAccount
             accountNumber="212-23-565655"

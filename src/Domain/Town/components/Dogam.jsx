@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import dogamframe from "../../../assets/town/dogamframe.png";
-import monkey from "../../../assets/animals/monkey.png";
+import monkey from "../../../assets/animals/monkey1.png";
 
 const Dogam = () => {
   return (

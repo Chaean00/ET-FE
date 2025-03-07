@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import monkey from "../../../assets/animals/monkey.png";
+import monkey from "../../../assets/animals/monkey1.png";
 import api from "../../../utils/api";
 
 const FriendList = ({ friends = [] }) => {
   const navigate = useNavigate();
-  const [friendList, setFriendList] = useState(friends); // 상태로 관리
+  const [friendList, setFriendList] = useState(friends);
 
   useEffect(() => {
-    setFriendList(friends); // props가 변경될 때 상태도 업데이트
+    setFriendList(friends);
   }, [friends]);
 
   const handleAddFriend = async (friendId) => {
@@ -18,7 +18,6 @@ const FriendList = ({ friends = [] }) => {
       });
 
       if (response.status === 200) {
-        // UI 업데이트: 친구 상태를 변경
         setFriendList((prev) =>
           prev.map((friend) =>
             friend.id === friendId ? { ...friend, isFriend: true } : friend

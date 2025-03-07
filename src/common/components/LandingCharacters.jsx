@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-import cow from "../../assets/animals/cow.png";
-import dragon from "../../assets/animals/dragon.png";
-import monkey from "../../assets/animals/monkey.png";
-import human from "../../assets/animals/human.png";
-import rabbit from "../../assets/animals/rabbit.png";
-import siba from "../../assets/animals/siba.png";
-import tiger from "../../assets/animals/tiger.png";
+import cow from "../../assets/animals/cow1.png";
+import dragon from "../../assets/animals/dragon2.png";
+import monkey from "../../assets/animals/monkey1.png";
+import human from "../../assets/animals/monkey2.png";
+import rabbit from "../../assets/animals/rabbit3.png";
+import siba from "../../assets/animals/dog2.png";
+import tiger from "../../assets/animals/tiger2.png";
 
 const characterImages = [tiger, cow, dragon, monkey, human, rabbit, siba];
 
@@ -63,7 +63,7 @@ function ZigzagWalkingCharacter({ img, y, delay, isMobile }) {
       className="absolute"
       style={{
         width: "auto",
-        height: "60px",
+        height: "50px",
         maxWidth: "80px",
         maxHeight: "80px",
         objectFit: "contain",
