@@ -1,6 +1,6 @@
-const API_BASE_URL = "http://localhost:8080/api";
-const API_TIMEOUT = 10000;
-const AUTH_HEADER_KEY = "Authorization";
-const AUTH_HEADER_PREFIX = "Bearer";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT) || 10000;
+const AUTH_HEADER_KEY = import.meta.env.VITE_AUTH_HEADER_KEY;
+const AUTH_HEADER_PREFIX = import.meta.env.VITE_AUTH_HEADER_PREFIX;
 
 export { API_BASE_URL, API_TIMEOUT, AUTH_HEADER_KEY, AUTH_HEADER_PREFIX };

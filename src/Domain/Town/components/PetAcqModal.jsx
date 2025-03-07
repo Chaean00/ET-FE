@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import monkey from "../../../assets/animals/human.png";
+import monkey from "../../../assets/animals/monkey1.png";
 import heart from "../../../assets/town/heart.png";
 
 function PetAcqModal({ isOpen, onClose, petName }) {
