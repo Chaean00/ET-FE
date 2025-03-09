@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../../common/components/Button";
@@ -6,16 +6,61 @@ import DrawTop from "../components/DrawTop";
 import EggAcqModal from "../components/EggAcqModal";
 import BackButton from "../../../common/components/BackButton";
 import Footer from "../../../common/components/Footer";
+import api from "../../../utils/api";
 import draweggs from "../../../assets/egg/draweggs.png";
 import twinkle from "../../../assets/town/twinkle.png";
 
 const DrawPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [point, setPoint] = useState(0);
+  const [eggData, setEggData] = useState(null);
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        const response = await api.get("/users/points");
+
+        if (response.data && typeof response.data.point === "number") {
+          setPoint(response.data.point);
+        } else {
+          console.warn("⚠ 포인트 데이터 없음");
+        }
+      } catch (error) {
+        console.error(
+          "포인트 불러오기 실패:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    fetchPoints();
+  }, []);
+
+  const handleDrawEgg = async () => {
+    if (point < 500) {
+      alert("포인트가 부족합니다!");
+      return;
+    }
+
+    try {
+      const response = await api.post("/eggs");
+
+      if (response.status === 201 && response.data) {
+        setEggData(response.data);
+        setIsModalOpen(true);
+        setPoint((prev) => prev - 500);
+      } else {
+        console.warn("알 뽑기 실패");
+      }
+    } catch (error) {
+      console.error("알 뽑기 실패:", error.response?.data || error.message);
+    }
+  };
 
   return (
     <div className="custom-cursor drawbg min-h-screen flex flex-col items-center">
-      {isModalOpen && (
+      {isModalOpen && eggData && (
         <EggAcqModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -25,7 +70,7 @@ const DrawPage = () => {
         <BackButton className="w-8 h-8 object-contain cursor-pointer" />
       </div>
       <div className="mt-16">
-        <DrawTop point={200000}>알뽑기</DrawTop>
+        <DrawTop point={point}>알뽑기</DrawTop>
       </div>
       <img
         src={twinkle}
@@ -39,9 +84,9 @@ const DrawPage = () => {
         />
       </div>
       <div className="w-full text-center font-bold fixed bottom-[75px]">
-        <span onClick={() => setIsModalOpen(true)}>
+        <span onClick={handleDrawEgg}>
           <Button variant={"large"} color={"black"}>
-            10,000 포인트로 뽑기!
+            500 포인트로 뽑기!
           </Button>
         </span>
       </div>
