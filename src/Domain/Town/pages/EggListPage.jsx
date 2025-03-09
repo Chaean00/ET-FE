@@ -53,10 +53,10 @@ const EggListPage = () => {
 
         setIsModalOpen(true);
       } else {
-        console.warn("⚠ 부화 실패");
+        console.warn("부화 실패");
       }
     } catch (error) {
-      console.error("❌ 알 부화 실패:", error.response?.data || error.message);
+      console.error("알 부화 실패:", error.response?.data || error.message);
     }
   };
 

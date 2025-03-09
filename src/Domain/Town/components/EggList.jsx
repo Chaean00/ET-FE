@@ -31,28 +31,32 @@ const EggList = ({ eggs = [], onHatchEgg }) => {
     return () => clearInterval(timer);
   }, []);
 
+  if (eggTimers.length === 0) {
+    return (
+      <div className="mt-[10em] flex justify-center items-center h-full w-full">
+        <p className="text-gray-700 text-center text-lg">아직 알이 없습니다.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-3 gap-x-4 gap-y-16 w-full max-w-md mx-auto place-items-center">
-      {eggTimers.length === 0 ? (
-        <p className="text-gray-500 text-center w-full">아직 알이 없습니다.</p>
-      ) : (
-        eggTimers.map((egg) => (
-          <div
-            key={egg.eggId}
-            className={`w-23 h-23 flex flex-col justify-center items-center ${
-              egg.isHatched ? "cursor-pointer" : ""
-            }`}
-            onClick={() => egg.isHatched && onHatchEgg(egg)}
-          >
-            <div className="flex-grow flex justify-center items-center w-full h-full">
-              <ShakingEgg />
-            </div>
-            <p className="text-base font-bold">
-              {egg.isHatched ? "부화 완료!" : formatTime(egg.timeRemaining)}
-            </p>
+      {eggTimers.map((egg) => (
+        <div
+          key={egg.eggId}
+          className={`w-23 h-23 flex flex-col justify-center items-center ${
+            egg.isHatched ? "cursor-pointer" : ""
+          }`}
+          onClick={() => egg.isHatched && onHatchEgg(egg)}
+        >
+          <div className="flex-grow flex justify-center items-center w-full h-full">
+            <ShakingEgg />
           </div>
-        ))
-      )}
+          <p className="text-base font-bold">
+            {egg.isHatched ? "부화 완료!" : formatTime(egg.timeRemaining)}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

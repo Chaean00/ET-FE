@@ -8,7 +8,7 @@ import EggListPage from "./Domain/Town/pages/EggListPage";
 import DrawPage from "./Domain/Town/pages/DrawPage";
 import FriendPage from "./Domain/Town/pages/FriendPage";
 import FriendTownPage from "./Domain/Town/pages/FriendTownPage";
-import QuizMainPage from "./Domain/Quiz/pages/QuizMainPage";
+import QuizPage from "./Domain/Quiz/pages/QuizPage";
 import TodayQuizPage from "./Domain/Quiz/pages/TodayQuizPage";
 import QuizDonePage from "./Domain/Quiz/pages/QuizDonePage";
 import TradeMainPage from "./Domain/Trade/pages/TradeMainPage";
@@ -33,9 +33,9 @@ function App() {
         <Route path="/draw" element={<DrawPage />} />
         <Route path="/friend" element={<FriendPage />} />
         <Route path="/friendtown" element={<FriendTownPage />} />
-        <Route path="/quiz" element={<QuizMainPage />} />
+        <Route path="/quiz" element={<QuizPage />} />\ -
         <Route path="/todayquiz" element={<TodayQuizPage />} />
-        <Route path="/quizdone" element={<QuizDonePage />} />
+        {/* <Route path="/quizdone" element={<QuizDonePage />} /> */}
         <Route path="/trade" element={<TradeMainPage />} />
         <Route path="/mypage" element={<MyMainPage />} />
         <Route path="/mystock" element={<MyStockPage />} />
@@ -43,7 +43,7 @@ function App() {
         <Route path="/orderbook" element={<OrderBookPage />} />
         <Route path="/stock" element={<StockPage />} />
         <Route path="/stocktrade" element={<StockTradePage />} />
-        <Route path="/chatbot" element={<ChatbotPage />} />
+        <Route path="/ChatbotPage" element={<ChatbotPage />} />
       </Routes>
     </div>
   );
