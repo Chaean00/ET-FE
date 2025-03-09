@@ -2,16 +2,19 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
+import getChatBotResponse from "../../../utils/chatbot";
 
 const ChatbotPage = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "안녕! 나는 경제공부를 도와줄 선생이야~ 뭐가 궁금하니?",
-    },
+      text: "안녕! 나는 경제공부를 도와줄 선생이야~ 뭐가 궁금하니?"
+    }
   ]);
   const [input, setInput] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const chatContainerRef = useRef(null);
 
@@ -22,24 +25,26 @@ const ChatbotPage = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!input.trim()) return;
+  const handleSendMessage = async () => {
+    if (!input.trim() || isLoading) return; // 전송 중이면 return
 
+    setIsLoading(true);
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const botResponse = getBotResponse(input);
-    setMessages((prev) => [...prev, botResponse]);
+    try {
+      const botResponseText = await getChatBotResponse(input);
+      const botResponse = { sender: "bot", text: botResponseText };
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "서버 응답이 없습니다. 다시 시도해주세요." }
+      ]);
+    }
 
     setInput("");
-  };
-
-  const getBotResponse = (question) => {
-    let response = "잘 모르겠어. 다른 질문 해볼래?";
-    if (question.includes("GDP"))
-      response =
-        "GDP(국내총생산)는 한 나라에서 일정 기간 동안 생산된 모든 최종 재화와 서비스의 가치를 의미해!";
-    return { sender: "bot", text: response };
+    setIsLoading(false);
   };
 
   return (
@@ -83,10 +88,17 @@ const ChatbotPage = () => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.repeat) {
+              // e.repeat 체크 추가
+              e.preventDefault();
+              handleSendMessage();
+            }
+          }}
           className="flex-1 border rounded-lg p-2 outline-none"
           placeholder="대화를 입력해주세요"
         />
+
         <button
           onClick={handleSendMessage}
           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
