@@ -25,7 +25,7 @@ const StockPage = () => {
         const response = await api.get(`/charts/${stockId}`);
         setStockInfo(response.data);
       } catch (error) {
-        console.error("🚨 주식 정보 요청 실패:", error);
+        console.error("주식 정보 요청 실패:", error);
       }
     };
 
@@ -34,7 +34,7 @@ const StockPage = () => {
         const response = await api.get("/users/stocks");
         setOwnedStocks(response.data);
       } catch (error) {
-        console.error("🚨 보유 주식 요청 실패:", error);
+        console.error("보유 주식 요청 실패:", error);
       }
     };
 
@@ -73,7 +73,7 @@ const StockPage = () => {
             <StockInfo stockCode={stockId} companyName={stockName} />
           </div>
 
-          <div className="w-full max-w-md mt-1.5 h-[51.5vh] flex justify-center items-center">
+          <div className="w-full max-w-md mt-5 h-[51.5vh] flex justify-center items-center">
             <LineChart stockId={stockId} />
           </div>
 
