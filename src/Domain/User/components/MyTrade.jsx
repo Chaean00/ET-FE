@@ -38,6 +38,25 @@ const MyTrade = () => {
     fetchTradeHistory();
   }, []);
 
+  const handleCancelTrade = async (trade) => {
+    try {
+      await api.post("/trades/cancel", {
+        tradeId: trade.id,
+        position: trade.position,
+        stockCode: trade.stockCode,
+        price: trade.price,
+      });
+
+      setTradeHistory((prevTrades) =>
+        prevTrades.map((t) =>
+          t.id === trade.id ? { ...t, tradeStatus: "CANCELLED" } : t
+        )
+      );
+    } catch (error) {
+      console.error("거래 취소 실패:", error.response?.data || error.message);
+    }
+  };
+
   return (
     <div className="w-full max-w-md space-y-4">
       {tradeHistory.length > 0 ? (
@@ -70,7 +89,7 @@ const MyTrade = () => {
                     ? tradeHistory[index - 1].createdAt
                     : tradeHistory[index - 1].updatedAt
                 ).format("M월 D일 dddd") ? (
-                <h2 className="text-gray-500 text-md font-semibold">
+                <h2 className="text-gray-700 text-md font-bold">
                   {formattedDate}
                 </h2>
               ) : null}
@@ -78,15 +97,22 @@ const MyTrade = () => {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-bold text-black">{trade.stockName}</p>
-                    <p className={`text-sm ${textColor}`}>{statusText}</p>
+                    <p className={`text-sm font-light ${textColor}`}>
+                      {statusText}
+                    </p>
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <p className={`font-medium text-md ${textColor}`}>
+                    <p className={`font-bold text-md ${textColor}`}>
                       {trade.price.toLocaleString()}원
                     </p>
                     {isPending && (
-                      <button className="cursor-pointer underline">취소</button>
+                      <button
+                        onClick={() => handleCancelTrade(trade)}
+                        className="cursor-pointer underline text-sm"
+                      >
+                        취소
+                      </button>
                     )}
                   </div>
                 </div>
