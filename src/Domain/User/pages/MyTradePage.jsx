@@ -18,7 +18,7 @@ const MyTradePage = () => {
         거래 내역
       </h1>
 
-      <div className="w-full max-w-md px-2 space-y-4 mx-auto mb-28">
+      <div className="mt-5 w-full max-w-md px-2 space-y-4 mx-auto mb-28">
         <MyTrade />
       </div>
 
