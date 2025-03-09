@@ -9,11 +9,18 @@ const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const activePaths = {
+    home: ["/town", "/dogam", "/egglist", "/draw", "/friend", "/friendtown"],
+    quiz: ["/quiz", "/todayquiz", "/quizdone"],
+    trade: ["/trade", "/stock", "/stocktrade", "/orderbook", "/chatbotpage"],
+    mypage: ["/mypage", "/mystock", "/mytrade"],
+  };
+
   const icons = [
-    { name: "home", component: Home, path: "/town" },
-    { name: "quiz", component: Quiz, path: "/quiz" },
-    { name: "trade", component: Trade, path: "/trade" },
-    { name: "mypage", component: MyPage, path: "/mypage" },
+    { name: "home", component: Home, paths: activePaths.home },
+    { name: "quiz", component: Quiz, paths: activePaths.quiz },
+    { name: "trade", component: Trade, paths: activePaths.trade },
+    { name: "mypage", component: MyPage, paths: activePaths.mypage },
   ];
 
   return (
@@ -21,12 +28,12 @@ const Footer = () => {
       <div className="flex justify-around py-4">
         {icons.map((icon) => {
           const IconComponent = icon.component;
-          const isActive = location.pathname === icon.path;
+          const isActive = icon.paths.includes(location.pathname);
 
           return (
             <button
               key={icon.name}
-              onClick={() => navigate(icon.path)}
+              onClick={() => navigate(icon.paths[0])}
               className="cursor-pointer flex flex-col items-center focus:outline-none"
             >
               <IconComponent

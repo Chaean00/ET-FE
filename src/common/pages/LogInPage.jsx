@@ -23,6 +23,7 @@ const LogInPage = () => {
     }
 
     try {
+      sessionStorage.removeItem("loadingShown");
       setLoading(true);
       await login(uid, password);
       console.log("로그인 성공");

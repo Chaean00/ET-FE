@@ -14,7 +14,7 @@ const FriendList = ({ friends = [] }) => {
   const handleAddFriend = async (friendId) => {
     try {
       const response = await api.post("/users/subscription", {
-        subscribedId: 12345,
+        subscribedId: friendId,
       });
 
       if (response.status === 200) {
@@ -50,14 +50,18 @@ const FriendList = ({ friends = [] }) => {
                 <span className="text-md text-gray-800 font-bold">
                   {friend.name}
                 </span>
-                <p className="text-sm text-gray-500">{friend.id}</p>
+                <p className="text-sm text-gray-500">{friend.uid}</p>
               </div>
             </div>
 
             {friend.isFriend ? (
               <button
                 className="cursor-pointer text-sm font-semibold bg-blue-500 text-white px-4 py-1 rounded-2xl hover:bg-blue-600"
-                onClick={() => navigate("/friendtown")}
+                onClick={() =>
+                  navigate("/friendtown", {
+                    state: { name: friend.name, id: friend.id },
+                  })
+                }
               >
                 목장 보기
               </button>
