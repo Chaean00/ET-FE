@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export default function TownCharacters({ charList }) {
+export default function FriendTownCharacters({ charList }) {
   return (
     <div className="absolute inset-0 overflow-hidden">
       {charList.map(({ id, image, position }) => (
