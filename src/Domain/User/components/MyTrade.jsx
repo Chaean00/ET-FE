@@ -1,38 +1,102 @@
-import MyTradeEach from "./MyTradeEach";
-import samsung from "../../../assets/trade/samsung.png";
+import { useEffect, useState } from "react";
+import api from "../../../utils/api";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+
+dayjs.locale("ko");
 
 const MyTrade = () => {
-  const tradesData = [
-    {
-      id: 1,
-      company: "삼성전자",
-      type: "구매",
-      price: "56,700",
-      state: "체결",
-      logo: samsung,
-    },
-    {
-      id: 2,
-      company: "삼성전자",
-      type: "판매",
-      price: "55,200",
-      state: "취소",
-      logo: samsung,
-    },
-    {
-      id: 3,
-      company: "삼성전자",
-      type: "구매",
-      price: "57,000",
-      state: "대기",
-      logo: samsung,
-    },
-  ];
+  const [tradeHistory, setTradeHistory] = useState([]);
+
+  useEffect(() => {
+    const fetchTradeHistory = async () => {
+      try {
+        const response = await api.get("/users/history");
+        let data = response.data;
+
+        data.sort((a, b) => {
+          const dateA =
+            a.tradeStatus === "PENDING"
+              ? new Date(a.createdAt)
+              : new Date(a.updatedAt);
+          const dateB =
+            b.tradeStatus === "PENDING"
+              ? new Date(b.createdAt)
+              : new Date(b.updatedAt);
+          return dateB - dateA;
+        });
+
+        setTradeHistory(data);
+      } catch (error) {
+        console.error(
+          "거래 내역 불러오기 실패:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    fetchTradeHistory();
+  }, []);
 
   return (
-    <div>
-      <MyTradeEach date="2월 25일 화요일" trades={tradesData} />
-      <MyTradeEach date="2월 24일 월요일" trades={tradesData} />
+    <div className="w-full max-w-md space-y-4">
+      {tradeHistory.length > 0 ? (
+        tradeHistory.map((trade, index) => {
+          const date =
+            trade.tradeStatus === "PENDING" ? trade.createdAt : trade.updatedAt;
+          const formattedDate = dayjs(date).format("M월 D일 dddd");
+
+          const isBuy = trade.position === "BUY";
+          const isExecuted = trade.tradeStatus === "EXECUTED";
+          const isCancelled = trade.tradeStatus === "CANCELLED";
+          const isPending = trade.tradeStatus === "PENDING";
+
+          let statusText = "";
+          if (isExecuted) statusText = isBuy ? "구매 체결" : "판매 체결";
+          if (isCancelled) statusText = isBuy ? "구매 취소" : "판매 취소";
+          if (isPending) statusText = isBuy ? "구매 대기" : "판매 대기";
+
+          let textColor = "text-black";
+          if (isExecuted) textColor = isBuy ? "text-red-500" : "text-blue-500";
+          if (isCancelled) textColor = "text-black line-through";
+          if (isPending) textColor = "text-gray-400";
+
+          return (
+            <div key={index} className="space-y-3">
+              {index === 0 ||
+              formattedDate !==
+                dayjs(
+                  tradeHistory[index - 1].tradeStatus === "PENDING"
+                    ? tradeHistory[index - 1].createdAt
+                    : tradeHistory[index - 1].updatedAt
+                ).format("M월 D일 dddd") ? (
+                <h2 className="text-gray-500 text-md font-semibold">
+                  {formattedDate}
+                </h2>
+              ) : null}
+              <div className="bg-white shadow-md rounded-lg p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-bold text-black">{trade.stockName}</p>
+                    <p className={`text-sm ${textColor}`}>{statusText}</p>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <p className={`font-medium text-md ${textColor}`}>
+                      {trade.price.toLocaleString()}원
+                    </p>
+                    {isPending && (
+                      <button className="cursor-pointer underline">취소</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
+      )}
     </div>
   );
 };
