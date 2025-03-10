@@ -62,12 +62,16 @@ const FriendPage = () => {
         setFriends(searchedFriends);
       } else {
         console.warn("검색 결과 없음");
-        setFriends([]);
+        fetchFriends();
       }
     } catch (error) {
       console.error("검색 실패:", error.response?.data || error.message);
-      setFriends([]);
+      fetchFriends();
     }
+  };
+
+  const handleFriendAdded = () => {
+    fetchFriends();
   };
 
   useEffect(() => {
@@ -86,7 +90,7 @@ const FriendPage = () => {
       </div>
 
       <div className="scrollbar-custom absolute top-20 left-0 right-0 bottom-20 overflow-y-auto px-4">
-        <FriendList friends={friends} />
+        <FriendList friends={friends} onFriendAdded={handleFriendAdded} />
       </div>
 
       <div className="fixed bottom-0 left-0 w-full bg-white border-t z-50">
