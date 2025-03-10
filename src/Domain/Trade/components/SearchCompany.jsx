@@ -5,12 +5,16 @@ import { FiSearch } from "react-icons/fi";
 const DEFAULT_IMAGE =
   "https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png";
 
-const SearchCompany = ({ onSearch, searchResults }) => {
+const SearchCompany = ({ onSearch, searchResults = [] }) => {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("🔍 검색 결과 데이터:", searchResults);
+  }, [searchResults]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -35,15 +39,26 @@ const SearchCompany = ({ onSearch, searchResults }) => {
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (selectedIndex !== -1) {
-        setQuery(searchResults[selectedIndex].name);
-        handleNavigate(searchResults[selectedIndex].code);
+        const selectedStock = searchResults[selectedIndex];
+
+        if (!selectedStock || !selectedStock.code) {
+          console.warn("선택한 주식 데이터 없음:", selectedStock);
+          return;
+        }
+
+        setQuery(selectedStock.name);
+        handleNavigate(selectedStock.code, selectedStock.name);
       }
     }
   };
 
   const handleNavigate = (stockCode, stockName) => {
-    if (!stockCode) return;
-    navigate(`/stock?code=${stockCode}&name=${encodeURIComponent(stockName)}`); // 🔥 /stock 페이지로 이동 + 쿼리 추가
+    if (!stockCode || !stockName) {
+      console.error("잘못된 주식 정보:", stockCode, stockName);
+      return;
+    }
+
+    navigate(`/stock?code=${stockCode}&name=${encodeURIComponent(stockName)}`);
   };
 
   const handleClickOutside = (event) => {
@@ -73,7 +88,11 @@ const SearchCompany = ({ onSearch, searchResults }) => {
         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-lg cursor-pointer"
         onClick={() => {
           const stock = searchResults.find((s) => s.name === query);
-          if (stock) handleNavigate(stock.code);
+          if (stock && stock.code) {
+            handleNavigate(stock.code, stock.name);
+          } else {
+            console.warn("검색 결과 없음");
+          }
         }}
       />
 
@@ -88,20 +107,25 @@ const SearchCompany = ({ onSearch, searchResults }) => {
                 }`}
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => {
+                  if (!stock.code || !stock.name) {
+                    console.warn("잘못된 주식 데이터:", stock);
+                    return;
+                  }
+
                   setQuery(stock.name);
                   setIsDropdownVisible(false);
                   handleNavigate(stock.code, stock.name);
                 }}
               >
                 <img
-                  src={stock.name === "삼성전자우" ? DEFAULT_IMAGE : stock.img}
+                  src={stock.img || DEFAULT_IMAGE}
                   alt={stock.name}
                   className="w-6 h-6 mr-2"
                 />
-                <span>
-                  {stock.name}
-                  <div className="text-xs text-gray-400">{stock.code}</div>
-                </span>
+                <div>
+                  <span className="block">{stock.name}</span>
+                  <span className="text-xs text-gray-400">{stock.code}</span>
+                </div>
               </li>
             ))}
           </ul>

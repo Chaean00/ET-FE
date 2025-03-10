@@ -1,19 +1,25 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TradeContent = ({ type, price }) => {
+const TradeContent = ({ type, price: initialPrice }) => {
   const navigate = useNavigate();
   const isSell = type === "판매";
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [isEditing, setIsEditing] = useState(true);
+  const [isPriceEditing, setIsPriceEditing] = useState(false);
+  const [price, setPrice] = useState(initialPrice);
   const textareaRef = useRef(null);
   const inputTimeout = useRef(null);
+  const priceInputRef = useRef(null);
+
+  useEffect(() => {
+    setTotalPrice(quantity && price ? quantity * price : 0);
+  }, [price, quantity]);
 
   const handleQuantityChange = (value) => {
     const numValue = Number(value.replace(/[^0-9]/g, ""));
     setQuantity(numValue || "");
-    setTotalPrice(numValue ? numValue * price : "");
 
     if (inputTimeout.current) {
       clearTimeout(inputTimeout.current);
@@ -47,6 +53,21 @@ const TradeContent = ({ type, price }) => {
     }, 10);
   };
 
+  const handlePriceClick = () => {
+    setIsPriceEditing(true);
+    setTimeout(() => priceInputRef.current?.focus(), 10);
+  };
+
+  const handlePriceChange = (e) => {
+    const newPrice = e.target.value.replace(/[^0-9]/g, "");
+    setPrice(newPrice ? Number(newPrice) : "");
+  };
+
+  const handlePriceBlur = () => {
+    setIsPriceEditing(false);
+    if (!price) setPrice(initialPrice);
+  };
+
   return (
     <div className="relative">
       <style>
@@ -64,11 +85,31 @@ const TradeContent = ({ type, price }) => {
         <div>
           <p className="text-gray-500 text-md">{type}할 가격</p>
         </div>
-        <div className="flex justify-between">
-          <p className="text-4xl font-bold">{price.toLocaleString()}원</p>
+
+        <div className="flex justify-between items-center">
+          {isPriceEditing ? (
+            <input
+              ref={priceInputRef}
+              type="text"
+              className="text-4xl font-bold text-center border-blue rounded-lg px-2 py-1 w-36 focus:border-none"
+              value={price}
+              onChange={handlePriceChange}
+              onBlur={handlePriceBlur}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handlePriceBlur();
+              }}
+            />
+          ) : (
+            <p
+              className="text-4xl font-bold cursor-pointer"
+              onClick={handlePriceClick}
+            >
+              {price.toLocaleString()}원
+            </p>
+          )}
 
           <button
-            className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 border-2 border-blue-700 text-blue-500 px-3 py-1 rounded-4xl text-md font-black font-[#0046FF]"
+            className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 border-2 border-blue-700 text-blue-500 px-3 py-1 rounded-4xl text-md font-black"
             onClick={() => navigate("/orderbook")}
           >
             호가보기

@@ -73,7 +73,7 @@ const StockPage = () => {
             <StockInfo stockCode={stockId} companyName={stockName} />
           </div>
 
-          <div className="w-full max-w-md mt-9 h-[51.5vh] flex justify-center items-center">
+          <div className="w-full max-w-md mt-6.5 h-[51.5vh] flex justify-center items-center">
             <LineChart stockId={stockId} />
           </div>
 
