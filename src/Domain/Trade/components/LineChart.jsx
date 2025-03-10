@@ -60,7 +60,7 @@ const LineChart = ({ stockId }) => {
       options={options}
       series={series}
       width={350}
-      height={430}
+      height={440}
       type="line"
     />
   );
