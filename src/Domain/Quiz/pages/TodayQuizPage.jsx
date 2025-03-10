@@ -7,6 +7,7 @@ import QuizContent from "../components/QuizContent";
 import Answer from "../components/Answer";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
+import useQuiz from "../../../hooks/useQuiz";
 
 const TodayQuizPage = () => {
   const navigate = useNavigate();
@@ -14,23 +15,24 @@ const TodayQuizPage = () => {
   const queryParams = new URLSearchParams(location.search);
   const difficulty = queryParams.get("difficulty");
 
-  const [quiz, setQuiz] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    userUid,
+    quizData,
+    setQuizData,
+    loading,
+    setLoading,
+    submitted,
+    setSubmitted,
+  } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [answerVisible, setAnswerVisible] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         const response = await api.get(`/quizs?difficulty=${difficulty}`);
-        setQuiz(response.data);
-
-        const savedAnswer = JSON.parse(sessionStorage.getItem("quiz_answer"));
-        if (savedAnswer && savedAnswer.quizId === response.data.id) {
-          setSubmitted(true);
-        }
+        setQuizData(response.data);
       } catch (error) {
         console.error("퀴즈 로딩 오류:", error.response?.data || error.message);
         alert("퀴즈 데이터를 가져오는 중 오류가 발생했습니다.");
@@ -46,26 +48,26 @@ const TodayQuizPage = () => {
       alert("퀴즈 난이도가 없습니다.");
       navigate("/quiz");
     }
-  }, [difficulty, navigate]);
+  }, [difficulty, navigate, setQuizData, setLoading]);
 
   const handleAnswerSubmit = async (answer) => {
-    if (!quiz || submitted) return;
+    if (!quizData || submitted) return;
 
     setSelectedAnswer(answer);
     setSubmitted(true);
 
     try {
       const response = await api.post("/quizs", {
-        quizId: quiz.id,
+        quizId: quizData.id,
         userAnswer: answer,
       });
 
       setFeedback(response.data);
       setAnswerVisible(true);
 
-      sessionStorage.setItem(
-        "quiz_answer",
-        JSON.stringify({ quizId: quiz.id, userAnswer: answer })
+      localStorage.setItem(
+        `${userUid}_quiz_answer`,
+        JSON.stringify({ quizId: quizData.id, userAnswer: answer })
       );
 
       setTimeout(() => {
@@ -96,7 +98,7 @@ const TodayQuizPage = () => {
             <p className="text-center text-lg font-bold">퀴즈 로딩 중...</p>
           ) : (
             <QuizContent>
-              {quiz?.title || "퀴즈를 불러오지 못했습니다."}
+              {quizData?.title || "퀴즈를 불러오지 못했습니다."}
             </QuizContent>
           )}
         </div>
@@ -106,7 +108,6 @@ const TodayQuizPage = () => {
             text={feedback?.correct ? "정답!" : "땡!"}
             visible={answerVisible}
           />
-
           <div className="fixed bottom-20 w-full mt-24">
             <OXButton onAnswer={handleAnswerSubmit} disabled={submitted} />
           </div>

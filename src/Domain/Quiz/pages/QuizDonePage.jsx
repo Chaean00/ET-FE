@@ -1,28 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Footer from "../../../common/components/Footer";
 import QuizDone from "../components/QuizDone";
 import LevelPoint from "../components/LevelPoint";
 import smart from "../../../assets/tradetown/smart.png";
 import api from "../../../utils/api";
+import useQuiz from "../../../hooks/useQuiz";
 
 const QuizDonePage = () => {
-  const [quizData, setQuizData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { userUid, quizData, setQuizData, loading, setLoading } = useQuiz();
 
   useEffect(() => {
+    if (!userUid) return;
+
     const fetchSolvedQuiz = async () => {
       try {
-        const storedAnswer = JSON.parse(sessionStorage.getItem("quiz_answer"));
+        setLoading(true);
 
-        if (!storedAnswer || !storedAnswer.quizId) {
-          console.error("저장된 퀴즈 데이터가 없습니다.");
+        const savedAnswer = JSON.parse(
+          localStorage.getItem(`${userUid}_quiz_answer`)
+        );
+
+        if (!savedAnswer || !savedAnswer.quizId) {
+          console.warn("저장된 퀴즈 데이터 없음");
+          setQuizData(null);
+          setLoading(false);
           return;
         }
 
         const response = await api.get("/quizs/solved", {
           params: {
-            quizId: storedAnswer.quizId,
-            userAnswer: storedAnswer.userAnswer,
+            quizId: savedAnswer.quizId,
+            userAnswer: savedAnswer.userAnswer,
           },
         });
 
@@ -38,7 +46,7 @@ const QuizDonePage = () => {
     };
 
     fetchSolvedQuiz();
-  }, []);
+  }, [userUid, setQuizData, setLoading]);
 
   if (loading) {
     return (
@@ -65,7 +73,7 @@ const QuizDonePage = () => {
 
         <div className="flex justify-center text-2xl font-bold text-center mt-7">
           <div className="text-center self-end">오늘의 퀴즈를 푸셨어요.</div>
-          <img src={smart} className="w-9 h-9" />
+          <img src={smart} className="w-9 h-9" alt="quiz result" />
         </div>
 
         <div className="m-auto w-[90%] bg-white px-4.5 rounded-3xl shadow-lg mt-8">

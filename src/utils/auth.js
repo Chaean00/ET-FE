@@ -25,6 +25,7 @@ export const login = async (uid, password) => {
 
     if (response.data?.token) {
       localStorage.setItem("Authorization", response.data.token);
+      localStorage.setItem("userUid", uid);
       return response.data;
     } else {
       throw new Error("로그인 실패: 토큰이 없습니다.");
@@ -37,5 +38,6 @@ export const login = async (uid, password) => {
 
 export const logout = () => {
   localStorage.removeItem("Authorization");
+  localStorage.removeItem("userUid");
   window.location.href = "/login";
 };
