@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import getChatBotResponse from "../../../utils/chatbot";
 
@@ -9,8 +8,8 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "안녕! 나는 경제공부를 도와줄 선생이야~ 뭐가 궁금하니?"
-    }
+      text: `안녕하세요! 저는 주식공부를 도와줄 트레이드타운봇이에요. 어떤 것이 궁금하세요? 저에게 뭐든 물어보세요! 제가 중간에 말이 끊기면 "이어서 얘기해줘"라고 해주세요.🤗`,
+    },
   ]);
   const [input, setInput] = useState("");
 
@@ -39,7 +38,7 @@ const ChatbotPage = () => {
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "서버 응답이 없습니다. 다시 시도해주세요." }
+        { sender: "bot", text: "서버 응답이 없습니다. 다시 시도해주세요." },
       ]);
     }
 

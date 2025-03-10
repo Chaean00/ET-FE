@@ -10,7 +10,6 @@ import FriendPage from "./Domain/Town/pages/FriendPage";
 import FriendTownPage from "./Domain/Town/pages/FriendTownPage";
 import QuizPage from "./Domain/Quiz/pages/QuizPage";
 import TodayQuizPage from "./Domain/Quiz/pages/TodayQuizPage";
-import QuizDonePage from "./Domain/Quiz/pages/QuizDonePage";
 import TradeMainPage from "./Domain/Trade/pages/TradeMainPage";
 import MyMainPage from "./Domain/User/pages/MyMainPage";
 import MyStockPage from "./Domain/User/pages/MyStockPage";
@@ -35,7 +34,6 @@ function App() {
         <Route path="/friendtown" element={<FriendTownPage />} />
         <Route path="/quiz" element={<QuizPage />} />\ -
         <Route path="/todayquiz" element={<TodayQuizPage />} />
-        {/* <Route path="/quizdone" element={<QuizDonePage />} /> */}
         <Route path="/trade" element={<TradeMainPage />} />
         <Route path="/mypage" element={<MyMainPage />} />
         <Route path="/mystock" element={<MyStockPage />} />

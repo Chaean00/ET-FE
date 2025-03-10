@@ -16,12 +16,21 @@ const TodayQuizPage = () => {
 
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [answerVisible, setAnswerVisible] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         const response = await api.get(`/quizs?difficulty=${difficulty}`);
         setQuiz(response.data);
+
+        const savedAnswer = JSON.parse(sessionStorage.getItem("quiz_answer"));
+        if (savedAnswer && savedAnswer.quizId === response.data.id) {
+          setSubmitted(true);
+        }
       } catch (error) {
         console.error("퀴즈 로딩 오류:", error.response?.data || error.message);
         alert("퀴즈 데이터를 가져오는 중 오류가 발생했습니다.");
@@ -39,6 +48,36 @@ const TodayQuizPage = () => {
     }
   }, [difficulty, navigate]);
 
+  const handleAnswerSubmit = async (answer) => {
+    if (!quiz || submitted) return;
+
+    setSelectedAnswer(answer);
+    setSubmitted(true);
+
+    try {
+      const response = await api.post("/quizs", {
+        quizId: quiz.id,
+        userAnswer: answer,
+      });
+
+      setFeedback(response.data);
+      setAnswerVisible(true);
+
+      sessionStorage.setItem(
+        "quiz_answer",
+        JSON.stringify({ quizId: quiz.id, userAnswer: answer })
+      );
+
+      setTimeout(() => {
+        setAnswerVisible(false);
+        navigate("/quiz");
+      }, 1500);
+    } catch (error) {
+      console.error("정답 제출 오류:", error.response?.data || error.message);
+      alert("정답 제출 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="absolute top-4 left-4">
@@ -49,11 +88,7 @@ const TodayQuizPage = () => {
 
       <div className="flex flex-col items-center">
         <div className="w-full flex justify-center mt-14">
-          <LevelPoint
-            level={difficulty}
-            levelColor="bg-red-500"
-            points={quiz?.earnedPoints || 0}
-          />
+          <LevelPoint level={difficulty} />
         </div>
 
         <div className="w-[85%] mt-8">
@@ -66,10 +101,14 @@ const TodayQuizPage = () => {
           )}
         </div>
 
-        <div className="relative w-full flex flex-col items-center mt-12">
-          <Answer />
-          <div className="w-full mt-24" onClick={() => navigate("/quizdone")}>
-            <OXButton />
+        <div className="fixed bottom-20 w-full mt-24 relative w-full flex flex-col items-center mt-12">
+          <Answer
+            text={feedback?.correct ? "정답!" : "땡!"}
+            visible={answerVisible}
+          />
+
+          <div className="fixed bottom-20 w-full mt-24">
+            <OXButton onAnswer={handleAnswerSubmit} disabled={submitted} />
           </div>
         </div>
       </div>

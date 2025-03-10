@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 
-const Answer = () => {
+const Answer = ({ text, visible }) => {
+  if (!visible) return null;
+
   return (
     <motion.div
       initial={{ x: 200, y: -100, opacity: 0, scale: 0.5, rotate: 0 }}
@@ -14,8 +16,8 @@ const Answer = () => {
       }}
       className="absolute top-0 left-1/2 transform -translate-x-1/2"
     >
-      <div className="text-red-600 px-6 py-1 rounded-lg text-[44px] font-bold">
-        정답!
+      <div className="px-6 py-1 rounded-lg text-[44px] font-bold text-red-600">
+        {text}
       </div>
     </motion.div>
   );
