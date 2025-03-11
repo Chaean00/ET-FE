@@ -73,7 +73,6 @@ const MyHeld = ({
 
     fetchStockData();
   }, []);
-
   useEffect(() => {
     if (!sseData) return;
 
@@ -97,25 +96,7 @@ const MyHeld = ({
         return stock;
       })
     );
-
-    const totalAccountValue = stocks.reduce(
-      (acc, stock) => acc + (stock.totalValue || 0),
-      0
-    );
-
-    const totalProfit = stocks.reduce(
-      (acc, stock) =>
-        acc + ((stock.totalValue || 0) - stock.averagePrice * stock.amount),
-      0
-    );
-
-    const totalProfitRate =
-      totalAccountValue > 0 ? (totalProfit / totalAccountValue) * 100 : 0;
-
-    setTotalAccount(totalAccountValue);
-    setTotalProfit(totalProfit);
-    setTotalProfitRate(totalProfitRate.toFixed(2));
-  }, [sseData, stocks]);
+  }, [sseData]);
 
   return (
     <div className="w-full max-w-md p-4">

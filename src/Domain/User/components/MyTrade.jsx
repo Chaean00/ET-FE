@@ -97,7 +97,7 @@ const MyTrade = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-3">
                     <img
-                      src="https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png"
+                      src={trade.img}
                       className="w-12 h-12 object-contain rounded-4xl"
                     />
                     <div className="flex flex-col">
