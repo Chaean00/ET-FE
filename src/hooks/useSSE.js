@@ -13,6 +13,7 @@ const useSSE = (endpoint) => {
 
     const sseUrl = `${BASE_SSE_URL}${endpoint}`;
     const controller = new AbortController();
+    console.log("JWT 토큰:", jwtToken);
 
     fetchEventSource(sseUrl, {
       method: "GET",

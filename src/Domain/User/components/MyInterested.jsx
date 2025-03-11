@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import Heart from "../../Trade/components/Heart";
 import useSSE from "../../../hooks/useSSE";
+
 const MyInterested = () => {
   const navigate = useNavigate();
   const [interests, setInterests] = useState([]);
@@ -39,9 +40,9 @@ const MyInterested = () => {
         stock.stockCode === sseData.stockCode
           ? {
               ...stock,
-              currentPrice: sseData.currentPrice,
-              priceChange: sseData.priceChange,
-              changeRate: sseData.changeRate,
+              currentPrice: Number(sseData.currentPrice),
+              priceChange: Number(sseData.priceChange),
+              changeRate: Number(sseData.changeRate),
             }
           : stock
       )
@@ -72,15 +73,20 @@ const MyInterested = () => {
                   ? `${Number(stock.currentPrice).toLocaleString()}원`
                   : "-"}
               </p>
-              {stock.priceChange && (
+              {stock.priceChange !== null && stock.changeRate !== null && (
                 <p
                   className={`text-sm font-medium ${
-                    stock.priceChange.startsWith("+")
-                      ? "text-red-500"
-                      : "text-blue-500"
+                    stock.priceChange > 0 ? "text-red-500" : "text-blue-500"
                   }`}
                 >
-                  {stock.priceChange} ({stock.changeRate}%)
+                  {stock.priceChange > 0
+                    ? `+${stock.priceChange.toLocaleString()}`
+                    : stock.priceChange.toLocaleString()}
+                  (
+                  {stock.changeRate > 0
+                    ? `+${stock.changeRate}`
+                    : stock.changeRate}
+                  %)
                 </p>
               )}
             </div>
