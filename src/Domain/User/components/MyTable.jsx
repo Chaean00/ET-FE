@@ -11,23 +11,51 @@ const MyTable = () => {
     const fetchStockData = async () => {
       try {
         const response = await api.get("/users/stocks");
-
+  
         // 종목별 총 금액과 종목별 총 수익률 키 추가
         const updatedStocks = response.data.map((stock) => ({
           ...stock,
           totalValue: stock.amount * stock.averagePrice, // 초기 총 금액
           totalReturn: 0, // 초기 총 수익률 (SSE 데이터 들어오면 계산됨)
         }));
-
+  
         setStocks(updatedStocks);
+  
+        // 두 번째 API 요청 (전날 종가 가져와서 값 업데이트)
+        const closingPriceResponse = await api.get("/users/stocks/closing-price");
+  
+        const updatedStocksWithClosing = updatedStocks.map((stock) => {
+          const closingStock = closingPriceResponse.data.find(
+            (s) => s.stockCode === stock.stockCode
+          );
+  
+          if (closingStock) {
+            const totalValue = stock.amount * closingStock.closingPrice; // 새로운 총 금액
+            const totalReturn =
+              ((closingStock.closingPrice - stock.averagePrice) /
+                stock.averagePrice) *
+              100; // 수익률 계산
+  
+            return {
+              ...stock,
+              closingPrice: closingStock.closingPrice,
+              totalValue,
+              totalReturn: totalReturn.toFixed(2), // 소수점 2자리까지 표시
+            };
+          }
+  
+          return stock;
+        });
+  
+        setStocks(updatedStocksWithClosing);
       } catch (error) {
         console.error(
-          "테이블 데이터 불러오기 실패:",
+          "데이터 불러오기 실패:",
           error.response?.data || error.message
         );
       }
     };
-
+  
     fetchStockData();
   }, []);
 
