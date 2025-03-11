@@ -1,8 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-const TradeContent = ({ type, price: initialPrice }) => {
+const TradeContent = ({ price: initialPrice }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const stockCode = searchParams.get("code");
+  const stockName = searchParams.get("name");
+  const stockCurPrice = searchParams.get("price");
+  const type = searchParams.get("type") === "sell" ? "판매" : "구매";
   const isSell = type === "판매";
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
@@ -68,6 +74,12 @@ const TradeContent = ({ type, price: initialPrice }) => {
     if (!price) setPrice(initialPrice);
   };
 
+  const handleNavigateToOrderBook = () => {
+    navigate(
+      `/orderbook?code=${stockCode}&name=${encodeURIComponent(stockName)}`
+    );
+  };
+
   return (
     <div className="relative">
       <style>
@@ -104,13 +116,13 @@ const TradeContent = ({ type, price: initialPrice }) => {
               className="text-4xl font-bold cursor-pointer"
               onClick={handlePriceClick}
             >
-              {price.toLocaleString()}원
+              {Number(stockCurPrice).toLocaleString()}원
             </p>
           )}
 
           <button
             className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 border-2 border-blue-700 text-blue-500 px-3 py-1 rounded-4xl text-md font-black"
-            onClick={() => navigate("/orderbook")}
+            onClick={handleNavigateToOrderBook}
           >
             호가보기
           </button>

@@ -19,6 +19,7 @@ const MyInterested = () => {
             currentPrice: null,
             priceChange: null,
             changeRate: null,
+            isFavorite: true,
           }));
           setInterests(formattedData);
         }
@@ -49,6 +50,14 @@ const MyInterested = () => {
     );
   }, [sseData]);
 
+  const handleFavoriteChange = (stockCode, isFavorite) => {
+    setInterests((prevInterests) =>
+      prevInterests.map((stock) =>
+        stock.stockCode === stockCode ? { ...stock, isFavorite } : stock
+      )
+    );
+  };
+
   return (
     <div className="w-full max-w-md p-4">
       <h2 className="text-lg font-bold mb-2">나의 관심종목</h2>
@@ -59,15 +68,17 @@ const MyInterested = () => {
         interests.map((stock) => (
           <div
             key={stock.stockCode}
-            className="bg-white rounded-2xl shadow-md px-4 py-2 flex items-center justify-between mb-2"
+            className="bg-white rounded-2xl shadow-md px-4 py-2 flex items-center justify-between mb-2 cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102"
+            onClick={() =>
+              navigate(
+                `/stock?code=${stock.stockCode}&name=${encodeURIComponent(
+                  stock.stockName
+                )}`
+              )
+            }
           >
             <div>
-              <p
-                className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 text-sm font-semibold"
-                onClick={() => navigate(`/stock/${stock.stockCode}`)}
-              >
-                {stock.stockName}
-              </p>
+              <p className="text-sm font-semibold">{stock.stockName}</p>
               <p className="text-sm text-gray-400 font-light">
                 {stock.currentPrice
                   ? `${Number(stock.currentPrice).toLocaleString()}원`
@@ -91,8 +102,16 @@ const MyInterested = () => {
               )}
             </div>
 
-            <div className="flex items-center">
-              <Heart className="w-11 h-11" />
+            <div
+              className="flex items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Heart
+                className="w-11 h-11"
+                stockCode={stock.stockCode}
+                initialFavorite={stock.isFavorite}
+                onFavoriteChange={handleFavoriteChange}
+              />
             </div>
           </div>
         ))
