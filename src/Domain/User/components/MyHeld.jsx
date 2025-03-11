@@ -89,9 +89,11 @@ const MyHeld = () => {
     </div>
   );
 };
-
 const StockItem = ({ stock, stockPrices, navigate }) => {
   const priceData = stockPrices[stock.stockCode];
+
+  const priceChange = priceData ? Number(priceData.priceChange) : null;
+  const changeRate = priceData ? Number(priceData.changeRate) : null;
 
   return (
     <div
@@ -117,17 +119,18 @@ const StockItem = ({ stock, stockPrices, navigate }) => {
         <p className="text-md font-bold">
           {priceData ? priceData.currentPrice.toLocaleString() + "원" : "-"}
         </p>
+
         <p
           className={`text-xs font-medium ${
-            priceData?.priceChange?.includes("-")
+            priceChange !== null && priceChange < 0
               ? "text-blue-500"
               : "text-red-500"
           }`}
         >
-          {priceData
-            ? `${priceData.priceChange.toLocaleString()} (${
-                priceData.changeRate
-              }%)`
+          {priceChange !== null
+            ? `${priceChange > 0 ? "+" : ""}${priceChange.toLocaleString()} (${
+                changeRate > 0 ? "+" : ""
+              }${changeRate.toLocaleString()}%)`
             : "-"}
         </p>
       </div>
