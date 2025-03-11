@@ -29,6 +29,8 @@ const TodayQuizPage = () => {
   const [answerVisible, setAnswerVisible] = useState(false);
 
   useEffect(() => {
+    if (submitted) return;
+
     const fetchQuiz = async () => {
       try {
         const response = await api.get(`/quizs?difficulty=${difficulty}`);
@@ -48,7 +50,7 @@ const TodayQuizPage = () => {
       alert("퀴즈 난이도가 없습니다.");
       navigate("/quiz");
     }
-  }, [difficulty, navigate, setQuizData, setLoading]);
+  }, [difficulty, navigate, setQuizData, setLoading, submitted]);
 
   const handleAnswerSubmit = async (answer) => {
     if (!quizData || submitted) return;
@@ -103,12 +105,12 @@ const TodayQuizPage = () => {
           )}
         </div>
 
-        <div className="fixed bottom-20 w-full mt-24 relative w-full flex flex-col items-center mt-12">
+        <div className="fixed bottom-20 w-full mt-24 relative flex flex-col items-center">
           <Answer
             text={feedback?.correct ? "정답!" : "땡!"}
             visible={answerVisible}
           />
-          <div className="fixed bottom-20 w-full mt-24">
+          <div className="fixed bottom-20">
             <OXButton onAnswer={handleAnswerSubmit} disabled={submitted} />
           </div>
         </div>
