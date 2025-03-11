@@ -56,7 +56,7 @@ const MyHeld = () => {
 
         // 전체 평가금액 계산
         const totalAccountValue = updatedStocksWithClosing.reduce(
-          (acc, stock) => acc + stock.totalValue, 0
+          (acc, stock) => acc + stock.totalValue*stock.amount, 0
         );
         setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
       } catch (error) {
@@ -94,7 +94,7 @@ const MyHeld = () => {
 
     // SSE 데이터 업데이트 후 전체 평가금액 계산
     const totalAccountValue = stocks.reduce(
-      (acc, stock) => acc + stock.totalValue, 0
+      (acc, stock) => acc + stock.totalValue*stock.amount, 0
     );
     setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
   }, [sseData, stocks]);
@@ -129,14 +129,6 @@ const MyHeld = () => {
           )}
         </>
       )}
-
-      {/* 전체 평가금액 표시 */}
-      <div className="mt-4">
-        <p className="font-semibold text-lg">전체 평가금액</p>
-        <p className="text-xl font-bold">
-          {totalAccount.toLocaleString()} 원
-        </p>
-      </div>
     </div>
   );
 };
