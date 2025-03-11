@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./common/pages/LandingPage";
-import LogInPage from "./common/pages/LoginPage";
+import LogInPage from "./common/pages/LogInPage";
 import SignUpPage from "./common/pages/SignUpPage";
+import Alert from "./common/pages/Alert";
 import TownMainPage from "./Domain/Town/pages/TownMainPage";
 import DogamPage from "./Domain/Town/pages/DogamPage";
 import EggListPage from "./Domain/Town/pages/EggListPage";
@@ -18,32 +19,69 @@ import OrderBookPage from "./Domain/Trade/pages/OrderBookPage";
 import StockPage from "./Domain/Trade/pages/StockPage";
 import StockTradePage from "./Domain/Trade/pages/StockTradePage";
 import ChatbotPage from "./Domain/Quiz/pages/ChatbotPage";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute, PublicRoute } from "./RouteGuards";
+import useAuth from "./hooks/useAuth";
+
+// public(비로그인) 사용자 전용 경로
+const publicRoutes = [
+  { path: "/login", element: <LogInPage /> },
+  { path: "/signup", element: <SignUpPage /> }
+];
+
+// 로그인한 사용자 전용 경로
+const protectedRoutes = [
+  { path: "/town", element: <TownMainPage /> },
+  { path: "/dogam", element: <DogamPage /> },
+  { path: "/egglist", element: <EggListPage /> },
+  { path: "/draw", element: <DrawPage /> },
+  { path: "/friend", element: <FriendPage /> },
+  { path: "/friendtown", element: <FriendTownPage /> },
+  { path: "/quiz", element: <QuizPage /> },
+  { path: "/todayquiz", element: <TodayQuizPage /> },
+  { path: "/trade", element: <TradeMainPage /> },
+  { path: "/mypage", element: <MyMainPage /> },
+  { path: "/mystock", element: <MyStockPage /> },
+  { path: "/mytrade", element: <MyTradePage /> },
+  { path: "/orderbook", element: <OrderBookPage /> },
+  { path: "/stock", element: <StockPage /> },
+  { path: "/stocktrade", element: <StockTradePage /> },
+  { path: "/ChatbotPage", element: <ChatbotPage /> }
+];
+
+function AppContent() {
+  const { token } = useAuth();
+
+  return (
+    <div id="frame">
+      {token && <Alert />}
+      <Routes>
+        {/* 누구나 접근 가능한 기본 페이지 */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* 로그인하지 않은 사용자 전용 라우트 */}
+        <Route element={<PublicRoute />}>
+          {publicRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+        </Route>
+
+        {/* 로그인한 사용자 전용 라우트 */}
+        <Route element={<ProtectedRoute />}>
+          {protectedRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+        </Route>
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div id="frame">
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LogInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/town" element={<TownMainPage />} />
-        <Route path="/dogam" element={<DogamPage />} />
-        <Route path="/egglist" element={<EggListPage />} />
-        <Route path="/draw" element={<DrawPage />} />
-        <Route path="/friend" element={<FriendPage />} />
-        <Route path="/friendtown" element={<FriendTownPage />} />
-        <Route path="/quiz" element={<QuizPage />} />\ -
-        <Route path="/todayquiz" element={<TodayQuizPage />} />
-        <Route path="/trade" element={<TradeMainPage />} />
-        <Route path="/mypage" element={<MyMainPage />} />
-        <Route path="/mystock" element={<MyStockPage />} />
-        <Route path="/mytrade" element={<MyTradePage />} />
-        <Route path="/orderbook" element={<OrderBookPage />} />
-        <Route path="/stock" element={<StockPage />} />
-        <Route path="/stocktrade" element={<StockTradePage />} />
-        <Route path="/ChatbotPage" element={<ChatbotPage />} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { login } from "../../utils/auth";
+import { login as loginAPI } from "../../utils/auth"; // API 호출용 login 함수
+import useAuth from "../../hooks/useAuth"; // AuthContext의 login 함수 사용을 위함
 import CustomInput from "../components/CustomInput";
 import Button from "../components/Button";
 import SectionName from "../components/SectionName";
@@ -9,6 +10,7 @@ import loginlogo from "../../assets/tradetown/loginlogo.png";
 
 const LogInPage = () => {
   const navigate = useNavigate();
+  const { login: contextLogin } = useAuth(); // AuthContext의 login 함수를 가져옴
   const [uid, setUid] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,7 +27,12 @@ const LogInPage = () => {
     try {
       sessionStorage.removeItem("loadingShown");
       setLoading(true);
-      await login(uid, password);
+      // API 호출
+      const response = await loginAPI(uid, password);
+      // API에서 토큰이 반환된다면, AuthContext의 상태도 업데이트
+      if (response?.token) {
+        contextLogin(response.token);
+      }
       console.log("로그인 성공");
       navigate("/town", { state: { from: "/login" } });
     } catch (error) {
@@ -48,12 +55,11 @@ const LogInPage = () => {
         animate={{ y: [0, -20, 0, -35, 0, -18, 0] }}
         transition={{
           duration: 1.6,
-          ease: "easeOut",
+          ease: "easeOut"
         }}
       >
         <img src={loginlogo} alt="login logo" />
       </motion.div>
-
       <div className="flex flex-col gap-2 w-[100%]">
         <CustomInput
           type="text"
@@ -74,9 +80,7 @@ const LogInPage = () => {
           비밀번호
         </CustomInput>
       </div>
-
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-
       <div className="w-full flex flex-col items-center gap-1 fixed bottom-[20px]">
         <Button
           variant="large"
