@@ -2,21 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import Heart from "../../Trade/components/Heart";
-
-const dummyInterests = [
-  {
-    id: "005930",
-    name: "삼성전자",
-    price: 57200,
-    change: -500,
-    changeRate: -0.8,
-  },
-  { id: "035420", name: "NAVER", price: 215000, change: 3200, changeRate: 1.5 },
-];
-
+import useSSE from "../../../hooks/useSSE";
 const MyInterested = () => {
   const navigate = useNavigate();
-  const [interests, setInterests] = useState(dummyInterests);
+  const [interests, setInterests] = useState([]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -24,11 +13,11 @@ const MyInterested = () => {
         const response = await api.get("/users/favorite");
         if (Array.isArray(response.data)) {
           const formattedData = response.data.map((stock) => ({
-            id: stock.stockCode,
-            name: stock.stockName,
-            price: 0,
-            change: 0,
-            changeRate: 0,
+            stockCode: stock.stockCode,
+            stockName: stock.stockName,
+            currentPrice: null,
+            priceChange: null,
+            changeRate: null,
           }));
           setInterests(formattedData);
         }
@@ -40,6 +29,25 @@ const MyInterested = () => {
     fetchFavorites();
   }, []);
 
+  const sseData = useSSE("/subscribe/interest-price");
+
+  useEffect(() => {
+    if (!sseData) return;
+
+    setInterests((prevInterests) =>
+      prevInterests.map((stock) =>
+        stock.stockCode === sseData.stockCode
+          ? {
+              ...stock,
+              currentPrice: sseData.currentPrice,
+              priceChange: sseData.priceChange,
+              changeRate: sseData.changeRate,
+            }
+          : stock
+      )
+    );
+  }, [sseData]);
+
   return (
     <div className="w-full max-w-md p-4">
       <h2 className="text-lg font-bold mb-2">나의 관심종목</h2>
@@ -49,33 +57,35 @@ const MyInterested = () => {
       ) : (
         interests.map((stock) => (
           <div
-            key={stock.id}
+            key={stock.stockCode}
             className="bg-white rounded-2xl shadow-md px-4 py-2 flex items-center justify-between mb-2"
           >
             <div>
               <p
                 className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 text-sm font-semibold"
-                onClick={() => {
-                  navigate(`/stock/${stock.id}`);
-                }}
+                onClick={() => navigate(`/stock/${stock.stockCode}`)}
               >
-                {stock.name}
+                {stock.stockName}
               </p>
               <p className="text-sm text-gray-400 font-light">
-                {stock.price ? `${stock.price.toLocaleString()}원` : "-"}{" "}
-                {/* 🔥 가격 정보 없음 */}
+                {stock.currentPrice
+                  ? `${Number(stock.currentPrice).toLocaleString()}원`
+                  : "-"}
               </p>
-              <p
-                className={`text-sm font-medium ${
-                  stock.change > 0 ? "text-red-500" : "text-blue-500"
-                }`}
-              >
-                {stock.change > 0 ? "+" : ""}
-                {stock.change.toLocaleString()} ({stock.changeRate}%)
-              </p>
+              {stock.priceChange && (
+                <p
+                  className={`text-sm font-medium ${
+                    stock.priceChange.startsWith("+")
+                      ? "text-red-500"
+                      : "text-blue-500"
+                  }`}
+                >
+                  {stock.priceChange} ({stock.changeRate}%)
+                </p>
+              )}
             </div>
 
-            <div className="flex item-center">
+            <div className="flex items-center">
               <Heart className="w-11 h-11" />
             </div>
           </div>

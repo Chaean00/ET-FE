@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 
 import cow from "../../assets/animals/cow.png";
 import dragon from "../../assets/animals/dragon.png";
-import monkey from "../../assets/animals/monkey1.png";
-import human from "../../assets/animals/monkey2.png";
+import monkey1 from "../../assets/animals/monkey1.png";
+import monkey2 from "../../assets/animals/monkey2.png";
 import rabbit from "../../assets/animals/rabbit.png";
-import siba from "../../assets/animals/dog.png";
+import dog from "../../assets/animals/dog.png";
 import tiger from "../../assets/animals/tiger.png";
 
-const characterImages = [tiger, cow, dragon, monkey, human, rabbit, siba];
+const characterImages = [tiger, cow, dragon, monkey1, monkey2, rabbit, dog];
 
 export default function ZigzagWalkingImages() {
   const [charList, setCharList] = useState([]);
