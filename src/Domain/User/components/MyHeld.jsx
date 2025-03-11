@@ -3,13 +3,17 @@ import { useNavigate } from "react-router-dom";
 import useSSE from "../../../hooks/useSSE";
 import api from "../../../utils/api";
 
-const MyHeld = () => {
+const MyHeld = ({
+  totalAccount,
+  setTotalAccount,
+  setTotalProfit,
+  setTotalProfitRate,
+}) => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState([]);
-  const [totalAccount, setTotalAccount] = useState(0);  // totalAccount 상태 추가
+
   const sseData = useSSE("/subscribe/portfolio-price");
 
-  // 주식 데이터 불러오기
   useEffect(() => {
     const fetchStockData = async () => {
       try {
@@ -21,11 +25,11 @@ const MyHeld = () => {
           totalReturn: 0,
         }));
 
-        // 첫 번째 API 요청 후 stocks 업데이트
         setStocks(updatedStocks);
 
-        // 두 번째 API 요청 (전날 종가 가져와서 값 업데이트)
-        const closingPriceResponse = await api.get("/users/stocks/closing-price");
+        const closingPriceResponse = await api.get(
+          "/users/stocks/closing-price"
+        );
 
         const updatedStocksWithClosing = updatedStocks.map((stock) => {
           const closingStock = closingPriceResponse.data.find(
@@ -33,18 +37,18 @@ const MyHeld = () => {
           );
 
           if (closingStock) {
-            const totalValue = closingStock.closingPrice; // 새로운 총 금액
+            const totalValue = closingStock.closingPrice;
             const totalReturn =
               ((closingStock.closingPrice - stock.averagePrice) /
                 stock.averagePrice) *
-              100; // 수익률 계산
+              100;
             const diffPrice = closingStock.closingPrice - stock.averagePrice;
 
             return {
               ...stock,
               closingPrice: closingStock.closingPrice,
               totalValue,
-              totalReturn: totalReturn.toFixed(2), // 소수점 2자리까지 표시
+              totalReturn: totalReturn.toFixed(2),
               diffPrice,
             };
           }
@@ -54,20 +58,22 @@ const MyHeld = () => {
 
         setStocks(updatedStocksWithClosing);
 
-        // 전체 평가금액 계산
         const totalAccountValue = updatedStocksWithClosing.reduce(
-          (acc, stock) => acc + stock.totalValue*stock.amount, 0
+          (acc, stock) => acc + stock.totalValue * stock.amount,
+          0
         );
-        setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
+        setTotalAccount(totalAccountValue);
       } catch (error) {
-        console.error("데이터 불러오기 실패:", error.response?.data || error.message);
+        console.error(
+          "데이터 불러오기 실패:",
+          error.response?.data || error.message
+        );
       }
     };
 
     fetchStockData();
   }, []);
 
-  // SSE 데이터 처리
   useEffect(() => {
     if (!sseData) return;
 
@@ -92,11 +98,23 @@ const MyHeld = () => {
       })
     );
 
-    // SSE 데이터 업데이트 후 전체 평가금액 계산
     const totalAccountValue = stocks.reduce(
-      (acc, stock) => acc + stock.totalValue*stock.amount, 0
+      (acc, stock) => acc + (stock.totalValue || 0),
+      0
     );
-    setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
+
+    const totalProfit = stocks.reduce(
+      (acc, stock) =>
+        acc + ((stock.totalValue || 0) - stock.averagePrice * stock.amount),
+      0
+    );
+
+    const totalProfitRate =
+      totalAccountValue > 0 ? (totalProfit / totalAccountValue) * 100 : 0;
+
+    setTotalAccount(totalAccountValue);
+    setTotalProfit(totalProfit);
+    setTotalProfitRate(totalProfitRate.toFixed(2));
   }, [sseData, stocks]);
 
   return (

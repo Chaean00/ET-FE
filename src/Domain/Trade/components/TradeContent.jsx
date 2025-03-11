@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import api from "../../../utils/api";
 
-const TradeContent = ({ price: initialPrice }) => {
+const TradeContent = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const stockCode = searchParams.get("code");
@@ -10,15 +10,39 @@ const TradeContent = ({ price: initialPrice }) => {
   const stockCurPrice = searchParams.get("price");
   const type = searchParams.get("type") === "sell" ? "판매" : "구매";
   const isSell = type === "판매";
+
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [isEditing, setIsEditing] = useState(true);
   const [isPriceEditing, setIsPriceEditing] = useState(false);
-  const [price, setPrice] = useState(initialPrice);
+  const [price, setPrice] = useState(stockCurPrice ? Number(stockCurPrice) : 0);
+  const [maxQuantity, setMaxQuantity] = useState(100);
+
   const textareaRef = useRef(null);
   const inputTimeout = useRef(null);
   const priceInputRef = useRef(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isSell) {
+          const response = await api.get("/users/stocks");
+          const stock = response.data.find((s) => s.stockCode === stockCode);
+          setMaxQuantity(stock ? stock.amount : 0);
+        } else {
+          const response = await api.get("/users/account");
+          const deposit = response.data.deposit || 0;
+          setMaxQuantity(price > 0 ? Math.floor(deposit / price) : 0);
+        }
+      } catch (error) {
+        console.error("최대 수량 가져오기 실패:", error);
+      }
+    };
+
+    fetchData();
+  }, [stockCode, price, isSell]);
+
+  // 🔥 총 가격 업데이트
   useEffect(() => {
     setTotalPrice(quantity && price ? quantity * price : 0);
   }, [price, quantity]);
@@ -66,12 +90,12 @@ const TradeContent = ({ price: initialPrice }) => {
 
   const handlePriceChange = (e) => {
     const newPrice = e.target.value.replace(/[^0-9]/g, "");
-    setPrice(newPrice ? Number(newPrice) : "");
+    setPrice(newPrice ? Number(newPrice) : 0);
   };
 
   const handlePriceBlur = () => {
     setIsPriceEditing(false);
-    if (!price) setPrice(initialPrice);
+    if (!price) setPrice(stockCurPrice ? Number(stockCurPrice) : 0);
   };
 
   const handleNavigateToOrderBook = () => {
@@ -116,7 +140,7 @@ const TradeContent = ({ price: initialPrice }) => {
               className="text-4xl font-bold cursor-pointer"
               onClick={handlePriceClick}
             >
-              {Number(stockCurPrice).toLocaleString()}원
+              {price.toLocaleString()}원
             </p>
           )}
 
@@ -163,28 +187,21 @@ const TradeContent = ({ price: initialPrice }) => {
         <div className="absolute bottom-[-50px] left-0 w-full flex space-x-2 mt-4">
           <button
             className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
-            onClick={() => {
-              handleQuantityChange("10");
-              setIsEditing(false);
-            }}
+            onClick={() => handleQuantityChange("10")}
           >
             10주
           </button>
           <button
             className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
-            onClick={() => {
-              handleQuantityChange("50");
-              setIsEditing(false);
-            }}
+            onClick={() => handleQuantityChange("50")}
           >
             50주
           </button>
           <button
             className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
-            onClick={() => {
-              handleQuantityChange("100");
-              setIsEditing(false);
-            }}
+            onClick={() =>
+              handleQuantityChange(parseInt(maxQuantity).toString())
+            }
           >
             최대
           </button>

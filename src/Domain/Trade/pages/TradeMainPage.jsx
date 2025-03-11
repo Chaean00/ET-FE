@@ -9,6 +9,9 @@ import Footer from "../../../common/components/Footer";
 const TradeMainPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [totalAccount, setTotalAccount] = useState(0);
+  const [totalProfit, setTotalProfit] = useState(0);
+  const [totalProfitRate, setTotalProfitRate] = useState(0);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -42,16 +45,21 @@ const TradeMainPage = () => {
       <div className="flex-1 w-full max-w-md mx-auto mt-6">
         <div className="bg-white rounded-lg">
           <MyAccount
-            accountNumber="212-23-565655"
-            evaluationAmount={1222333}
-            profit={935}
-            profitRate={4.31}
-            availableAmount={110}
+            evaluationAmount={totalAccount}
+            profit={totalProfit}
+            profitRate={totalProfitRate}
           />
         </div>
 
         <div className="mb-6">
-          <MyHeld />
+          <MyHeld
+            totalAccount={totalAccount}
+            totalProfit={totalProfit}
+            totalProfitRate={totalProfitRate}
+            setTotalAccount={setTotalAccount}
+            setTotalProfit={setTotalProfit}
+            setTotalProfitRate={setTotalProfitRate}
+          />
         </div>
 
         <div className="mb-12">
