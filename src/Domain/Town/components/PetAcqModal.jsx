@@ -1,8 +1,34 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import monkey from "../../../assets/animals/monkey1.png";
+import api from "../../../utils/api";
 import heart from "../../../assets/town/heart.png";
 
-function PetAcqModal({ isOpen, onClose, petName }) {
+function PetAcqModal({ isOpen, onClose }) {
+  const [petImg, setPetImg] = useState("");
+  const [petName, setPetName] = useState("");
+
+  useEffect(() => {
+    const fetchLatestPet = async () => {
+      try {
+        const response = await api.get("/pets");
+
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          const latestPet = response.data[response.data.length - 1];
+          setPetImg(latestPet.img);
+          setPetName(`pet ${latestPet.id}`);
+        } else {
+          console.warn("펫 데이터가 비어있습니다.");
+        }
+      } catch (error) {
+        console.error("펫 정보 불러오기 실패:", error);
+      }
+    };
+
+    if (isOpen) {
+      fetchLatestPet();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const starVariants = {
@@ -47,14 +73,16 @@ function PetAcqModal({ isOpen, onClose, petName }) {
             />
           ))}
 
-          <motion.img
-            src={monkey}
-            alt="animal"
-            className="w-20 h-20 object-contain"
-            initial={{ opacity: 0, filter: "blur(5px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 2, ease: "easeOut" }}
-          />
+          {petImg && (
+            <motion.img
+              src={petImg}
+              alt="animal"
+              className="w-18 h-18 object-contain"
+              initial={{ opacity: 0, filter: "blur(5px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 2, ease: "easeOut" }}
+            />
+          )}
         </div>
 
         <h2 className="text-xl font-bold mt-6">{petName} 획득!</h2>
