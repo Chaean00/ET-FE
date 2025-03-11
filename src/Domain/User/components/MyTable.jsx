@@ -16,16 +16,44 @@ const MyTable = () => {
           totalValue: stock.amount * stock.averagePrice,
           totalReturn: 0,
         }));
-
+  
         setStocks(updatedStocks);
+  
+        // 두 번째 API 요청 (전날 종가 가져와서 값 업데이트)
+        const closingPriceResponse = await api.get("/users/stocks/closing-price");
+  
+        const updatedStocksWithClosing = updatedStocks.map((stock) => {
+          const closingStock = closingPriceResponse.data.find(
+            (s) => s.stockCode === stock.stockCode
+          );
+  
+          if (closingStock) {
+            const totalValue = stock.amount * closingStock.closingPrice; // 새로운 총 금액
+            const totalReturn =
+              ((closingStock.closingPrice - stock.averagePrice) /
+                stock.averagePrice) *
+              100; // 수익률 계산
+  
+            return {
+              ...stock,
+              closingPrice: closingStock.closingPrice,
+              totalValue,
+              totalReturn: totalReturn.toFixed(2), // 소수점 2자리까지 표시
+            };
+          }
+  
+          return stock;
+        });
+  
+        setStocks(updatedStocksWithClosing);
       } catch (error) {
         console.error(
-          "테이블 데이터 불러오기 실패:",
+          "데이터 불러오기 실패:",
           error.response?.data || error.message
         );
       }
     };
-
+  
     fetchStockData();
   }, []);
 
