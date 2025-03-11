@@ -1,6 +1,9 @@
+import { useSearchParams } from "react-router-dom";
 import Button from "../../../common/components/Button";
 
-const TradeSuccessModal = ({ type, onClose }) => {
+const TradeSuccessModal = ({ onClose }) => {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get("type") === "sell" ? "판매" : "구매";
   const isBuy = type === "구매";
 
   return (
