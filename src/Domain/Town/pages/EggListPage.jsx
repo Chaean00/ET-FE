@@ -45,8 +45,8 @@ const EggListPage = () => {
 
       if (response.status === 200 && response.data.is_hatched) {
         setSelectedStock({
-          stockSymbol: response.data.reward.stock_symbol,
-          stockAmount: response.data.reward.stock_amount,
+          stockSymbol: response.data.stock_symbol,
+          stockAmount: response.data.stock_amount,
         });
 
         setEggList((prevEggs) => prevEggs.filter((e) => e.eggId !== egg.eggId));
