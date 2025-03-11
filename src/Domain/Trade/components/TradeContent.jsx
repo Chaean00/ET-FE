@@ -2,7 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../../utils/api";
 
-const TradeContent = () => {
+const TradeContent = ({
+  maxQuantity,
+  setMaxQuantity,
+  onQuantityChange,
+  onPriceChange,
+  onTotalPriceChange,
+}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const stockCode = searchParams.get("code");
@@ -16,11 +22,16 @@ const TradeContent = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [isPriceEditing, setIsPriceEditing] = useState(false);
   const [price, setPrice] = useState(stockCurPrice ? Number(stockCurPrice) : 0);
-  const [maxQuantity, setMaxQuantity] = useState(100);
 
   const textareaRef = useRef(null);
   const inputTimeout = useRef(null);
   const priceInputRef = useRef(null);
+
+  useEffect(() => {
+    onQuantityChange(quantity);
+    onPriceChange(price);
+    onTotalPriceChange(quantity && price ? quantity * price : 0);
+  }, [quantity, price]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +39,7 @@ const TradeContent = () => {
         if (isSell) {
           const response = await api.get("/users/stocks");
           const stock = response.data.find((s) => s.stockCode === stockCode);
-          setMaxQuantity(stock ? stock.amount : 0);
+          setMaxQuantity(stock ? Math.floor(stock.amount) : 0);
         } else {
           const response = await api.get("/users/account");
           const deposit = response.data.deposit || 0;
@@ -42,14 +53,13 @@ const TradeContent = () => {
     fetchData();
   }, [stockCode, price, isSell]);
 
-  // 🔥 총 가격 업데이트
   useEffect(() => {
     setTotalPrice(quantity && price ? quantity * price : 0);
   }, [price, quantity]);
 
   const handleQuantityChange = (value) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ""));
-    setQuantity(numValue || "");
+    const numValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+    setQuantity(numValue);
 
     if (inputTimeout.current) {
       clearTimeout(inputTimeout.current);
@@ -176,7 +186,9 @@ const TradeContent = () => {
             />
           ) : (
             <div>
-              <div className="text-4xl font-bold">{quantity}주</div>
+              <div className="text-4xl font-bold">
+                {quantity.toLocaleString()}주
+              </div>
               <div className="text-lg font-light text-gray-500">
                 {totalPrice.toLocaleString()}원
               </div>
@@ -199,9 +211,7 @@ const TradeContent = () => {
           </button>
           <button
             className="cursor-pointer bg-[#F7F8F8] text-blue-500 px-6 py-2 rounded-lg"
-            onClick={() =>
-              handleQuantityChange(parseInt(maxQuantity).toString())
-            }
+            onClick={() => handleQuantityChange(maxQuantity.toString())}
           >
             최대
           </button>
