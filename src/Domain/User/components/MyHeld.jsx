@@ -6,54 +6,98 @@ import api from "../../../utils/api";
 const MyHeld = () => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState([]);
-  const [stockPrices, setStockPrices] = useState({});
-
+  const [totalAccount, setTotalAccount] = useState(0);  // totalAccount 상태 추가
   const sseData = useSSE("/subscribe/portfolio-price");
 
+  // 주식 데이터 불러오기
   useEffect(() => {
-    const fetchStocks = async () => {
+    const fetchStockData = async () => {
       try {
         const response = await api.get("/users/stocks");
-        setStocks(response.data);
+
+        const updatedStocks = response.data.map((stock) => ({
+          ...stock,
+          totalValue: stock.amount * stock.averagePrice,
+          totalReturn: 0,
+        }));
+
+        // 첫 번째 API 요청 후 stocks 업데이트
+        setStocks(updatedStocks);
+
+        // 두 번째 API 요청 (전날 종가 가져와서 값 업데이트)
+        const closingPriceResponse = await api.get("/users/stocks/closing-price");
+
+        const updatedStocksWithClosing = updatedStocks.map((stock) => {
+          const closingStock = closingPriceResponse.data.find(
+            (s) => s.stockCode === stock.stockCode
+          );
+
+          if (closingStock) {
+            const totalValue = closingStock.closingPrice; // 새로운 총 금액
+            const totalReturn =
+              ((closingStock.closingPrice - stock.averagePrice) /
+                stock.averagePrice) *
+              100; // 수익률 계산
+            const diffPrice = closingStock.closingPrice - stock.averagePrice;
+
+            return {
+              ...stock,
+              closingPrice: closingStock.closingPrice,
+              totalValue,
+              totalReturn: totalReturn.toFixed(2), // 소수점 2자리까지 표시
+              diffPrice,
+            };
+          }
+
+          return stock;
+        });
+
+        setStocks(updatedStocksWithClosing);
+
+        // 전체 평가금액 계산
+        const totalAccountValue = updatedStocksWithClosing.reduce(
+          (acc, stock) => acc + stock.totalValue, 0
+        );
+        setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
       } catch (error) {
-        console.error("Failed to fetch stocks:", error);
+        console.error("데이터 불러오기 실패:", error.response?.data || error.message);
       }
     };
 
-    fetchStocks();
+    fetchStockData();
   }, []);
 
+  // SSE 데이터 처리
   useEffect(() => {
     if (!sseData) return;
-
-    setStockPrices((prevPrices) => ({
-      ...prevPrices,
-      [sseData.stockCode]: {
-        currentPrice: Number(sseData.currentPrice),
-        priceChange: sseData.priceChange,
-        changeRate: sseData.changeRate,
-      },
-    }));
 
     setStocks((prevStocks) =>
       prevStocks.map((stock) => {
         if (stock.stockCode === sseData.stockCode) {
           const currentPrice = Number(sseData.currentPrice);
-          const totalValue = stock.amount * currentPrice;
+          const totalValue = currentPrice * stock.amount;
           const purchasePrice = stock.amount * stock.averagePrice;
           const totalReturn =
             ((totalValue - purchasePrice) / purchasePrice) * 100;
+          const diffPrice = currentPrice - stock.averagePrice;
 
           return {
             ...stock,
             totalValue,
             totalReturn: totalReturn.toFixed(2),
+            diffPrice,
           };
         }
         return stock;
       })
     );
-  }, [sseData]);
+
+    // SSE 데이터 업데이트 후 전체 평가금액 계산
+    const totalAccountValue = stocks.reduce(
+      (acc, stock) => acc + stock.totalValue, 0
+    );
+    setTotalAccount(totalAccountValue); // 전체 평가금액 상태 업데이트
+  }, [sseData, stocks]);
 
   return (
     <div className="w-full max-w-md p-4">
@@ -69,7 +113,6 @@ const MyHeld = () => {
             <StockItem
               key={stock.stockCode}
               stock={stock}
-              stockPrices={stockPrices}
               navigate={navigate}
             />
           ))}
@@ -86,15 +129,19 @@ const MyHeld = () => {
           )}
         </>
       )}
+
+      {/* 전체 평가금액 표시 */}
+      <div className="mt-4">
+        <p className="font-semibold text-lg">전체 평가금액</p>
+        <p className="text-xl font-bold">
+          {totalAccount.toLocaleString()} 원
+        </p>
+      </div>
     </div>
   );
 };
-const StockItem = ({ stock, stockPrices, navigate }) => {
-  const priceData = stockPrices[stock.stockCode];
 
-  const priceChange = priceData ? Number(priceData.priceChange) : null;
-  const changeRate = priceData ? Number(priceData.changeRate) : null;
-
+const StockItem = ({ stock, navigate }) => {
   return (
     <div
       className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 bg-white rounded-2xl shadow-md p-4 flex items-center space-x-3 mb-2"
@@ -117,21 +164,22 @@ const StockItem = ({ stock, stockPrices, navigate }) => {
 
       <div className="text-right">
         <p className="text-md font-bold">
-          {priceData ? priceData.currentPrice.toLocaleString() + "원" : "-"}
+          {stock.totalValue ? stock.totalValue.toLocaleString() + "원" : "-"}
         </p>
 
         <p
           className={`text-xs font-medium ${
-            priceChange !== null && priceChange < 0
+            stock.totalReturn !== undefined && stock.totalReturn < 0
               ? "text-blue-500"
               : "text-red-500"
           }`}
         >
-          {priceChange !== null
-            ? `${priceChange > 0 ? "+" : ""}${priceChange.toLocaleString()} (${
-                changeRate > 0 ? "+" : ""
-              }${changeRate.toLocaleString()}%)`
+          {stock.diffPrice !== undefined
+            ? ` ${stock.diffPrice.toLocaleString()}원`
             : "-"}
+          {stock.totalReturn !== undefined
+            ? `(${stock.totalReturn > 0 ? "+" : ""}${stock.totalReturn}%)`
+            : "(-)"}
         </p>
       </div>
     </div>
