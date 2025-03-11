@@ -15,19 +15,35 @@ const TownMainPage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const fetchPets = async () => {
+    const fetchTradeHistory = async () => {
+      const count = await getUserHistory();
+      setTradeCount(count);
+    };
+
+    fetchTradeHistory();
+  }, []);
+
+  useEffect(() => {
+    const fetchAndCheckPets = async () => {
       try {
-        let pets = await getPets();
+        const pets = await getPets();
         console.log("현재 보유 펫:", pets);
 
-        if (!pets || pets.length === 0) {
-          console.log("펫 지급 요청");
-          await postPets();
-          pets = await getPets();
-          console.log("펫 지급 완료");
+        const level = Math.floor(tradeCount / 5);
+        const requiredPets = level + 1;
+        const missingPets = requiredPets - pets.length;
+
+        if (missingPets > 0) {
+          console.log(`펫이 부족합니다. ${missingPets}개 지급 요청`);
+          for (let i = 0; i < missingPets; i++) {
+            await postPets();
+          }
         }
 
-        const newChars = pets.map((pet) => ({
+        const updatedPets = await getPets();
+        console.log("펫 지급 후 보유 펫:", updatedPets);
+
+        const newChars = updatedPets.map((pet) => ({
           id: pet.petId,
           image: pet.img,
           position: getRandomPosition(),
@@ -38,8 +54,10 @@ const TownMainPage = () => {
       }
     };
 
-    fetchPets();
+    fetchAndCheckPets();
+  }, [tradeCount]);
 
+  useEffect(() => {
     if (
       location.state?.from === "/login" &&
       !sessionStorage.getItem("loadingShown")
@@ -50,12 +68,6 @@ const TownMainPage = () => {
         sessionStorage.setItem("loadingShown", "true");
       }, 2800);
     }
-
-    const fetchTradeHistory = async () => {
-      const count = await getUserHistory();
-      setTradeCount(count);
-    };
-    fetchTradeHistory();
   }, [location]);
 
   return (

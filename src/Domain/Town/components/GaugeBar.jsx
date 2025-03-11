@@ -67,7 +67,6 @@ const GaugeBar = ({ value, maxValue, level }) => {
       {isModalOpen && (
         <PetAcqModal
           isOpen={isModalOpen}
-          petName={"원숭이"}
           onClose={() => setIsModalOpen(false)}
         />
       )}

@@ -93,17 +93,18 @@ const MyTrade = () => {
                   {formattedDate}
                 </h2>
               ) : null}
-              <div className="bg-white shadow-md rounded-lg p-4 space-y-3">
+              <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-3">
                     <img
                       src={trade.img}
-                      className="w-12 h-12 object-contain rounded-4xl"
+                      className="w-14 h-14 object-contain rounded-4xl"
                     />
                     <div className="flex flex-col">
                       <p className="font-bold text-black">{trade.stockName}</p>
                       <p className={`text-sm font-light ${textColor}`}>
-                        {statusText}
+                        {statusText} <br />
+                        {trade.amount}주
                       </p>
                     </div>
                   </div>
