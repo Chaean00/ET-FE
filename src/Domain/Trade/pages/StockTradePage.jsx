@@ -25,10 +25,22 @@ const StockTradePage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleOrderCheck = () => {
+    const tradeType = searchParams.get("type");
+
     if (!quantity || quantity === "0") {
       alert("거래할 수량을 입력해주세요!");
       return;
     }
+
+    if (quantity > maxQuantity) {
+      if (tradeType === "buy") {
+        setShowBuyFailureModal(true);
+      } else {
+        setShowSellFailureModal(true);
+      }
+      return;
+    }
+
     setShowOrderModal(true);
   };
 
@@ -57,26 +69,18 @@ const StockTradePage = () => {
         stockCode: searchParams.get("code"),
       });
 
-      if (response.status !== 200) {
-        console.log("매매 성공");
+      if (response.status === 200) {
+        console.log("거래 성공!");
         setShowOrderModal(false);
         setShowSuccessModal(true);
       } else {
         setShowOrderModal(false);
-        if (tradeType === "buy") {
-          setShowBuyFailureModal(true);
-        } else {
-          setShowSellFailureModal(true);
-        }
+        alert("거래가 실패했습니다. 다시 시도해주세요!");
       }
     } catch (error) {
       console.error("거래 요청 실패:", error);
       setShowOrderModal(false);
-      if (tradeType === "buy") {
-        setShowBuyFailureModal(true);
-      } else {
-        setShowSellFailureModal(true);
-      }
+      alert("서버 오류로 거래가 실패했습니다!");
     }
   };
 
