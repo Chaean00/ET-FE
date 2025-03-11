@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Button from "../../../common/components/Button";
 import api from "../../../utils/api";
 
-const OrderCheckModal = ({ quantity, price, onConfirm }) => {
+const OrderCheckModal = ({ quantity, price, onConfirm, onClose }) => {
   const [searchParams] = useSearchParams();
   const companyName = searchParams.get("name") || "알 수 없음";
   const type = searchParams.get("type") === "sell" ? "판매" : "구매";
@@ -33,7 +33,10 @@ const OrderCheckModal = ({ quantity, price, onConfirm }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-end justify-center z-40">
+    <div
+      className="fixed inset-0 flex items-end justify-center z-40"
+      onClick={onClose}
+    >
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div
