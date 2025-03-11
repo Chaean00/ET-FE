@@ -41,7 +41,7 @@ const MyTrade = () => {
   const handleCancelTrade = async (trade) => {
     try {
       await api.post("/trades/cancel", {
-        tradeId: trade.id,
+        tradeId: trade.historyId,
         position: trade.position,
         stockCode: trade.stockCode,
         price: trade.price,
@@ -95,11 +95,17 @@ const MyTrade = () => {
               ) : null}
               <div className="bg-white shadow-md rounded-lg p-4 space-y-3">
                 <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-bold text-black">{trade.stockName}</p>
-                    <p className={`text-sm font-light ${textColor}`}>
-                      {statusText}
-                    </p>
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src="https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png"
+                      className="w-12 h-12 object-contain rounded-4xl"
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-bold text-black">{trade.stockName}</p>
+                      <p className={`text-sm font-light ${textColor}`}>
+                        {statusText}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="flex items-center space-x-4">

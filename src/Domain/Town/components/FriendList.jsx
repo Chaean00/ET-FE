@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import monkey from "../../../assets/animals/monkey1.png";
 import api from "../../../utils/api";
 
-const FriendList = ({ friends = [] }) => {
+const FriendList = ({ friends = [], onFriendAdded }) => {
   const navigate = useNavigate();
   const [friendList, setFriendList] = useState(friends);
 
@@ -18,11 +18,15 @@ const FriendList = ({ friends = [] }) => {
       });
 
       if (response.status === 200) {
+        console.log("친구 추가 성공");
+
         setFriendList((prev) =>
           prev.map((friend) =>
             friend.id === friendId ? { ...friend, isFriend: true } : friend
           )
         );
+
+        onFriendAdded();
       }
     } catch (error) {
       console.error("친구 추가 실패:", error);

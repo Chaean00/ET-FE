@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
+import useQuiz from "../../../hooks/useQuiz";
 import QuizLevelPage from "./QuizLevelPage";
 import QuizDonePage from "./QuizDonePage";
 
 const QuizPage = () => {
-  const [quizCompleted, setQuizCompleted] = useState(false);
+  const { submitted } = useQuiz();
 
-  useEffect(() => {
-    const completed = sessionStorage.getItem("quiz_completed") === "true";
-    setQuizCompleted(completed);
-  }, []);
-
-  return quizCompleted ? <QuizDonePage /> : <QuizLevelPage />;
+  return submitted ? <QuizDonePage /> : <QuizLevelPage />;
 };
 
 export default QuizPage;

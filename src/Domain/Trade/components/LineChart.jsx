@@ -31,7 +31,7 @@ const LineChart = ({ stockId }) => {
 
   const options = {
     chart: { type: "line", zoom: { enabled: false }, toolbar: { show: false } },
-    stroke: { curve: "smooth", width: 2, colors: ["#0046FF"] },
+    stroke: { curve: "smooth", width: 2.5, colors: ["#0046FF"] },
     dataLabels: { enabled: false },
     grid: { show: false },
     xaxis: {
@@ -60,7 +60,7 @@ const LineChart = ({ stockId }) => {
       options={options}
       series={series}
       width={350}
-      height={430}
+      height={360}
       type="line"
     />
   );

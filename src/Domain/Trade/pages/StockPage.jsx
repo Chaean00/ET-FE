@@ -53,7 +53,7 @@ const StockPage = () => {
       <div className="flex flex-col items-center justify-center h-screen bg-white">
         <BarLoader height={3} width={195} color="#0046FF" />
         <div className="mt-4 text-xl font-bold text-[#0046FF]">
-          {stockName} 페이지로 이동 중!
+          {stockName} 차트로 이동 중!
         </div>
       </div>
     );
@@ -73,7 +73,7 @@ const StockPage = () => {
             <StockInfo stockCode={stockId} companyName={stockName} />
           </div>
 
-          <div className="w-full max-w-md mt-5 h-[51.5vh] flex justify-center items-center">
+          <div className="w-full max-w-md mt-6.5 h-[51.5vh] flex justify-center items-center">
             <LineChart stockId={stockId} />
           </div>
 

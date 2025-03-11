@@ -17,7 +17,7 @@ const FriendTownPage = () => {
 
     const fetchPets = async () => {
       try {
-        const response = await api.get(`/pets?subscribedId=${id}`);
+        const response = await api.get(`/pets/${id}`);
 
         console.log(id + "펫 데이터 응답:", response.data);
 

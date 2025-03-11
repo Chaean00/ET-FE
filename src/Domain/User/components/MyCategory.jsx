@@ -13,21 +13,16 @@ const MyCategory = () => {
         <div
           key={category.id}
           className="bg-white shadow-md rounded-xl px-4 py-6 w-full flex items-center justify-between cursor-pointer"
-          onClick={category.onClick}
+          onClick={() => {
+            category.title == "보유 주식"
+              ? navigate("/mystock")
+              : navigate("/mytrade");
+          }}
         >
           <span className="text-md font-semibold text-black">
             {category.title}
           </span>
-          <span
-            className="text-gray-700 text-lg"
-            onClick={() => {
-              category.title == "보유 주식"
-                ? navigate("/mystock")
-                : navigate("/mytrade");
-            }}
-          >
-            {">"}
-          </span>
+          <span className="text-gray-700 text-lg">{">"}</span>
         </div>
       ))}
     </div>

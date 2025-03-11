@@ -1,49 +1,58 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useSSE from "../../../hooks/useSSE.js";
+import useSSE from "../../../hooks/useSSE";
+import api from "../../../utils/api";
 
 const MyHeld = () => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState([]);
   const [stockPrices, setStockPrices] = useState({});
 
-  useEffect(() => {
-    const dummyStocks = [
-      {
-        id: "005930",
-        name: "삼성전자",
-        quantity: 10,
-        logo: "https://via.placeholder.com/40",
-      },
-      {
-        id: "000660",
-        name: "SK하이닉스",
-        quantity: 5,
-        logo: "https://via.placeholder.com/40",
-      },
-      {
-        id: "035420",
-        name: "네이버",
-        quantity: 8,
-        logo: "https://via.placeholder.com/40",
-      },
-    ];
-    setStocks(dummyStocks);
-  }, []);
-
   const sseData = useSSE("/subscribe/portfolio-price");
 
   useEffect(() => {
-    if (sseData?.stockCode) {
-      setStockPrices((prev) => ({
-        ...prev,
-        [sseData.stockCode]: {
-          currentPrice: sseData.currentPrice,
-          priceChange: sseData.priceChange,
-          changeRate: sseData.changeRate,
-        },
-      }));
-    }
+    const fetchStocks = async () => {
+      try {
+        const response = await api.get("/users/stocks");
+        setStocks(response.data);
+      } catch (error) {
+        console.error("Failed to fetch stocks:", error);
+      }
+    };
+
+    fetchStocks();
+  }, []);
+
+  useEffect(() => {
+    if (!sseData) return;
+
+    setStockPrices((prevPrices) => ({
+      ...prevPrices,
+      [sseData.stockCode]: {
+        currentPrice: Number(sseData.currentPrice),
+        priceChange: sseData.priceChange,
+        changeRate: sseData.changeRate,
+      },
+    }));
+
+    setStocks((prevStocks) =>
+      prevStocks.map((stock) => {
+        if (stock.stockCode === sseData.stockCode) {
+          const currentPrice = Number(sseData.currentPrice);
+          const totalValue = stock.amount * currentPrice;
+          const purchasePrice = stock.amount * stock.averagePrice;
+          const totalReturn =
+            ((totalValue - purchasePrice) / purchasePrice) * 100;
+
+          return {
+            ...stock,
+            totalValue,
+            totalReturn: totalReturn.toFixed(2),
+          };
+        }
+        return stock;
+      })
+    );
   }, [sseData]);
 
   return (
@@ -58,7 +67,7 @@ const MyHeld = () => {
         <>
           {stocks.slice(0, 3).map((stock) => (
             <StockItem
-              key={stock.id}
+              key={stock.stockCode}
               stock={stock}
               stockPrices={stockPrices}
               navigate={navigate}
@@ -80,25 +89,29 @@ const MyHeld = () => {
     </div>
   );
 };
-
 const StockItem = ({ stock, stockPrices, navigate }) => {
-  const priceData = stockPrices[stock.id];
+  const priceData = stockPrices[stock.stockCode];
+
+  const priceChange = priceData ? Number(priceData.priceChange) : null;
+  const changeRate = priceData ? Number(priceData.changeRate) : null;
 
   return (
     <div
       className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 bg-white rounded-2xl shadow-md p-4 flex items-center space-x-3 mb-2"
-      onClick={() => navigate(`/stock?code=${stock.id}&name=${stock.name}`)}
+      onClick={() =>
+        navigate(`/stock?code=${stock.stockCode}&name=${stock.stockName}`)
+      }
     >
       <img
-        src={stock.logo}
-        alt={stock.name}
+        src={stock.stockImage}
+        alt={stock.stockName}
         className="rounded-3xl w-10 h-10"
       />
 
       <div className="flex-1">
-        <p className="font-semibold">{stock.name}</p>
+        <p className="font-semibold">{stock.stockName}</p>
         <p className="text-gray-400 text-sm font-light">
-          현금 {stock.quantity}주
+          현금 {stock.amount}주
         </p>
       </div>
 
@@ -106,15 +119,18 @@ const StockItem = ({ stock, stockPrices, navigate }) => {
         <p className="text-md font-bold">
           {priceData ? priceData.currentPrice.toLocaleString() + "원" : "-"}
         </p>
+
         <p
           className={`text-xs font-medium ${
-            priceData?.priceChange?.includes("-")
+            priceChange !== null && priceChange < 0
               ? "text-blue-500"
               : "text-red-500"
           }`}
         >
-          {priceData
-            ? `${priceData.priceChange} (${priceData.changeRate}%)`
+          {priceChange !== null
+            ? `${priceChange > 0 ? "+" : ""}${priceChange.toLocaleString()} (${
+                changeRate > 0 ? "+" : ""
+              }${changeRate.toLocaleString()}%)`
             : "-"}
         </p>
       </div>
