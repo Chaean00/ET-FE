@@ -38,7 +38,7 @@ const TownMainPage = () => {
         const newChars = pets.map((pet) => ({
           id: pet.petId,
           image: pet.img,
-          position: getRandomPosition(),
+          position: getRandomPosition()
         }));
         setCharList(newChars);
       } catch (error) {
@@ -50,10 +50,7 @@ const TownMainPage = () => {
   }, [tradeCount]);
 
   useEffect(() => {
-    if (
-      location.state?.from === "/login" &&
-      !sessionStorage.getItem("loadingShown")
-    ) {
+    if (!sessionStorage.getItem("loadingShown")) {
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
@@ -68,7 +65,7 @@ const TownMainPage = () => {
       if (response) {
         setAcquiredPet({
           name: response.name,
-          img: response.img,
+          img: response.img
         });
 
         setTradeCount((prev) => prev + 1);
@@ -134,6 +131,6 @@ function getRandomPosition() {
 
   return {
     x: Math.max(0, Math.random() * maxWidth),
-    y: Math.max(0, Math.random() * maxHeight),
+    y: Math.max(0, Math.random() * maxHeight)
   };
 }
