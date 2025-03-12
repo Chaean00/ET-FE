@@ -2,9 +2,10 @@ name: CI/CD Pipeline for FE
 
 on:
   workflow_dispatch:
+
   push:
     branches:
-      - main
+      - main  # 배포할 브랜치
 
 jobs:
   build-and-deploy:
@@ -13,16 +14,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Build Docker image for frontend using docker-compose
+      - name: Build Docker image for frontend 
         run: |
-          docker-compose build
+          docker build \
+          --build-arg VITE_API_BASE_URL=${{ secrets.API_GATEWAY_HOST }} \
+          --build-arg VITE_API_BASE_PORT=${{ secrets.API_GATEWAY_PORT }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest .
 
       - name: Push Docker image to Docker Hub
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
 
-      - name: Deploy to Server with docker-compose
+      - name: Deploy to Server with Nginx
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.REACT_EC2_HOST }}
@@ -30,6 +34,14 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           script: |
             cd /home/ubuntu
-            docker-compose pull
-            docker-compose down || true
-            docker-compose up -d
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
+            docker stop et-react || true
+            docker rm et-react || true
+
+            docker build \
+            --build-arg VITE_API_BASE_URL=${{ secrets.API_GATEWAY_HOST }} \
+            --build-arg VITE_API_BASE_PORT=${{ secrets.API_GATEWAY_PORT }} \
+            --build-arg VITE_API_TIMEOUT=10000 \
+            --build-arg VITE_AUTH_HEADER_KEY=Authorization \
+            --build-arg VITE_AUTH_HEADER_PREFIX=Bearer \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest .
