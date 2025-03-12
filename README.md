@@ -23,56 +23,72 @@
   - 챗봇과 대화하며 실시간으로 자유롭게 질문하고 개별 학습 수준에 맞춘 답변을 얻을 수 있음
 <br><br>
 ## 🐰 주요 기능 UI ##
-### 랜딩 페이지 ###
+### ✔ 랜딩 페이지 ###
 ![Image](https://github.com/user-attachments/assets/611ce95a-9727-4993-8fa1-e097f1540770)
 <br>
 랜딩페이지
 <br>
-### 메인 페이지 ###
+### ✔ 메인 페이지 ###
 ![Image](https://github.com/user-attachments/assets/f99bee8d-85d0-4d9c-8536-d40568403f26)
 <br>
 매수 1회 당 게이지 1칸 채워짐 -> 5칸이 채워지면 레벨이 오르고 펫을 획득
 <br>
-### 알뽑기 페이지 ###
+### ✔ 알뽑기 페이지 ###
 ![Image](https://github.com/user-attachments/assets/8955356a-b34b-443c-9199-99d4b8471855)
 <br>
 500 포인트로 알을 뽑은 후, 알이 부화되면 소수점 주식 획득
 <br>
-### 퀴즈 페이지 ###
+### ✔ 퀴즈 페이지 ###
 ![Image](https://github.com/user-attachments/assets/1151c11b-d853-4408-b60b-2f6432baec50)
 <br>
 1일 1회 단계별 퀴즈를 풀고 포인트 획득
 <br>
-### 투자 페이지 ###
+### ✔ 투자 페이지 ###
 ![Image](https://github.com/user-attachments/assets/e59b6cf3-2d4f-4ca6-bef3-a7158d924217)
 <br>
 내 주식, 보유상품, 관심종목 조회
 <br>
-### 종목 페이지 ###
+### ✔ 종목 페이지 ###
 ![Image](https://github.com/user-attachments/assets/57f9746e-0569-4254-b050-1037ad1cb698)
 <br>
 특정 종목의 현재가와 차트 조회
 <br>
-### 구매/판매 페이지 ###
+### ✔ 구매/판매 페이지 ###
 ![Image](https://github.com/user-attachments/assets/7390ae28-b2fb-4594-8fdb-fbe9d6b55b50)
 <br>
 구매/판매 수량을 입력하고 주문 확인 과정을 거친 후, 구매/판매 
 <br>
-### 호가 페이지 ###
+### ✔ 호가 페이지 ###
 ![Image](https://github.com/user-attachments/assets/05192a9b-9461-4293-8f93-106597e21e25)
 <br>
 특정 종목의 호가 조회
 <br>
-### 보유 주식 페이지 ###
+### ✔ 보유 주식 페이지 ###
 ![Image](https://github.com/user-attachments/assets/33d4a825-dd5e-423e-bccf-36402513fc64)
 <br>
 보유 주식 시각화한 원그래프 및 수익률 조회
 <br>
-### 거래 내역 페이지 ###
+### ✔ 거래 내역 페이지 ###
 ![Image](https://github.com/user-attachments/assets/2bdd1da9-f9a0-46be-8937-c26668cf8d8a)
 <br>
 거래 내역 상품 조회
 <br><br>
+## 기술 스택 ##
+### ✔ FrontEnd ###
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat-square&logo=javascript&logoColor=white"> <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/html5-E34F26?style=flat-square&logo=html5&logoColor=white">
+### ✔ BackEnd ###
+<img src="https://img.shields.io/badge/springboot-6DB33F?style=flat-square&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat-square&logo=springboot&logoColor=white">
+
+### ✔ Database ###
+<img src="https://img.shields.io/badge/mysql-4479A1?style=flat-square&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/redis-FF4438?style=flat-square&logo=redis&logoColor=white">
+
+### ✔ DevOps ###
+<img src="https://img.shields.io/badge/mysql-4479A1?style=flat-square&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/docker-2496ED?style=flat-square&logo=docker&logoColor=white"> <img src="https://img.shields.io/badge/apachekafka-231F20?style=flat-square&logo=apachekafka&logoColor=white"> <img src="https://img.shields.io/badge/amazon-FF9900?style=flat-square&logo=amazon&logoColor=white">
+
+### ✔ 협업툴 ###
+<img src="https://img.shields.io/badge/git-F05032?style=flat-square&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-181717?style=flat-square&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/slack-4A154B?style=flat-square&logo=slack&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=flat-square&logo=notion&logoColor=white"> 
+<br><br>
+
 ## 👥 팀원 소개 ##
 | 권지언 | 김정택 | 라수빈 | 박준기 | 이나민 | 장성준 |
 |--------|--------|--------|--------|--------|--------|
