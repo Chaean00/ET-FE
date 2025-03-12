@@ -3,7 +3,10 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { HttpStatusCode } from "axios";
 import useAuth from "../hooks/useAuth";
 
-const BASE_SSE_URL = import.meta.env.VITE_SSE_URL;
+// ussSSE.js
+const BASE_SSE_URL = `http://${import.meta.env.VITE_API_BASE_URL}:${
+  import.meta.env.VITE_API_BASE_PORT
+}/sse`;
 
 const useSSE = (endpoint) => {
   const [data, setData] = useState(null);
@@ -25,7 +28,7 @@ const useSSE = (endpoint) => {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: "text/event-stream"
+          Accept: "text/event-stream",
         },
         signal: controller.signal,
         onopen(response) {
@@ -60,7 +63,7 @@ const useSSE = (endpoint) => {
           if (!isCancelled) {
             setTimeout(connect, 3000);
           }
-        }
+        },
       });
     };
 
