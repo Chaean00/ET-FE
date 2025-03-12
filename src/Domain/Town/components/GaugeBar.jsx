@@ -1,7 +1,5 @@
-import { useState } from "react";
 import styled from "styled-components";
 import gauge from "../../../assets/town/gauge.png";
-import PetAcqModal from "../components/PetAcqModal";
 
 const ProgressContainer = styled.div`
   position: absolute;
@@ -57,21 +55,23 @@ const GaugeWrapper = styled.div`
   background-repeat: no-repeat;
 `;
 
-const GaugeBar = ({ value, maxValue, level }) => {
+const GaugeBar = ({
+  value,
+  maxValue,
+  level,
+  isPetNeeded,
+  onPetAcquisition,
+}) => {
   const progress = Math.floor((value / maxValue) * 100);
-  const isClickable = value == maxValue;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isClickable = isPetNeeded;
 
   return (
     <GaugeWrapper>
-      {isModalOpen && (
-        <PetAcqModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
       <LevelText>lv. {level}</LevelText>
-      <ClickText clickable={isClickable} onClick={() => setIsModalOpen(true)}>
+      <ClickText
+        clickable={isClickable}
+        onClick={isClickable ? onPetAcquisition : null}
+      >
         click!
       </ClickText>
       <ProgressContainer>
