@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import api from "../../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
 
 dayjs.locale("ko");
 
 const MyTrade = () => {
   const [tradeHistory, setTradeHistory] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const fetchTradeHistory = async () => {
@@ -49,9 +51,11 @@ const MyTrade = () => {
 
       setTradeHistory((prevTrades) =>
         prevTrades.map((t) =>
-          t.id === trade.id ? { ...t, tradeStatus: "CANCELLED" } : t
+          t.historyId === trade.historyId ? { ...t, tradeStatus: "CANCELLED" } : t
         )
       );
+
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("거래 취소 실패:", error.response?.data || error.message);
     }
@@ -129,6 +133,10 @@ const MyTrade = () => {
         })
       ) : (
         <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
+      )}
+
+      {showSuccessModal && (
+        <UnholdSuccessModal onClose={() => setShowSuccessModal(false)} />
       )}
     </div>
   );
