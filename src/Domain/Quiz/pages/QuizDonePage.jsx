@@ -27,10 +27,9 @@ const QuizDonePage = () => {
         const savedAnswer = JSON.parse(
           localStorage.getItem(`${userUid}_quiz_answer`)
         );
-        console.log("✅ 저장된 퀴즈 데이터:", savedAnswer);
 
         if (!savedAnswer || savedAnswer.quizId === undefined) {
-          console.warn("⚠️ 저장된 퀴즈 데이터 없음");
+          console.warn("저장된 퀴즈 데이터 없음");
           setQuizData(null);
           setLoading(false);
           return;
@@ -43,19 +42,12 @@ const QuizDonePage = () => {
           },
         });
 
-        console.log("✅ API 응답 데이터:", response.data);
-
         const quizResult = response.data;
 
         const earned =
-          savedAnswer.userAnswer === quizResult.quizAnswer
+          savedAnswer.userAnswer === quizResult.quizanswer
             ? pointMap[quizResult.solvedQuizDifficulty] || 0
             : 0;
-
-        console.log(
-          `✅ 정답 비교 | 유저 답: ${savedAnswer.userAnswer}, 퀴즈 정답: ${quizResult.quizAnswer}`
-        );
-        console.log(`✅ 획득 포인트: ${earned}`);
 
         setEarnedPoints(earned);
 
@@ -63,14 +55,9 @@ const QuizDonePage = () => {
           ...quizResult,
           earnedPoints: earned,
         });
-
-        console.log("✅ 최종 quizData 상태:", {
-          ...quizResult,
-          earnedPoints: earned,
-        });
       } catch (error) {
         console.error(
-          "❌ 퀴즈 결과 로딩 오류:",
+          "퀴즈 결과 로딩 오류:",
           error.response?.data || error.message
         );
       } finally {
@@ -80,9 +67,6 @@ const QuizDonePage = () => {
 
     fetchSolvedQuiz();
   }, [userUid, setQuizData, setLoading]);
-
-  console.log("🔄 현재 quizData:", quizData);
-  console.log("🔄 현재 earnedPoints:", earnedPoints);
 
   if (loading) {
     return (
@@ -115,7 +99,7 @@ const QuizDonePage = () => {
         <div className="m-auto w-[90%] bg-white px-4.5 rounded-3xl shadow-lg mt-8">
           <QuizDone
             content={quizData.solvedQuizTitle}
-            quizAnswer={quizData.quizAnswer}
+            quizAnswer={quizData.quizanswer}
             points={earnedPoints}
           />
         </div>
