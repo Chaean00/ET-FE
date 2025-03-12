@@ -12,6 +12,21 @@ const OrderBook = () => {
 
   const sseData = useSSE(code ? `/ask-bid/${code}` : null);
 
+  // 🛠️ [더미 데이터 테스트용] : 아래 데이터를 주석 해제하면 더미 데이터로 테스트 가능
+  
+  // const sseData = {
+  //   askp1: "5000", askRSQN1: "10",
+  //   askp2: "5050", askRSQN2: "15",
+  //   askp3: "5100", askRSQN3: "20",
+  //   askp4: "5150", askRSQN4: "10",
+  //   askp5: "5200", askRSQN5: "5",
+  //   bidp1: "4950", bidRSQN1: "12",
+  //   bidp2: "4900", bidRSQN2: "18",
+  //   bidp3: "4850", bidRSQN3: "25",
+  //   bidp4: "4800", bidRSQN4: "30",
+  //   bidp5: "4750", bidRSQN5: "40",
+  // };
+  
   useEffect(() => {
     if (!sseData) return;
 
