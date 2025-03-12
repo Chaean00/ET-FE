@@ -1,6 +1,6 @@
 import Button from "../../../common/components/Button";
 
-const SellFailureModal = ({ insufficientAmount, onClose }) => {
+const SellFailureModal = ({ maxQuantity, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
@@ -9,19 +9,20 @@ const SellFailureModal = ({ insufficientAmount, onClose }) => {
       ></div>
 
       <div
-        className="w-[85%] max-w-sm h-[35%] bg-white rounded-3xl shadow-lg z-50 relative flex flex-col items-center justify-around"
+        className="w-[85%] max-w-sm h-[32%] bg-white rounded-3xl shadow-lg z-50 relative flex flex-col items-center justify-around"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-center mt-2">
+        <div className="text-center mt-6">
           <p className="text-xl font-bold">
-            잔액 부족 안내 <span className="text-red-500">❗</span>
+            수량 부족 안내 <span className="text-red-500">❗</span>
           </p>
         </div>
-        <p className="text-lg font-medium">
-          <span className="font-bold">{insufficientAmount}원</span>이 부족해요.
+        <p className="text-lg font-medium mb-8">
+          최대 <span className="font-bold">{maxQuantity}주</span> 까지만 판매
+          가능합니다.
         </p>
         <div className="w-full text-center mt-[-35px]">
-          <Button variant="large" color="red" onClick={onClose}>
+          <Button variant="large" color="blue" onClick={onClose}>
             확인
           </Button>
         </div>

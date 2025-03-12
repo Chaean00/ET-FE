@@ -18,9 +18,38 @@ const MyTable = () => {
         }));
 
         setStocks(updatedStocks);
+
+        const closingPriceResponse = await api.get(
+          "/users/stocks/closing-price"
+        );
+
+        const updatedStocksWithClosing = updatedStocks.map((stock) => {
+          const closingStock = closingPriceResponse.data.find(
+            (s) => s.stockCode === stock.stockCode
+          );
+
+          if (closingStock) {
+            const totalValue = stock.amount * closingStock.closingPrice;
+            const totalReturn =
+              ((closingStock.closingPrice - stock.averagePrice) /
+                stock.averagePrice) *
+              100;
+
+            return {
+              ...stock,
+              closingPrice: closingStock.closingPrice,
+              totalValue,
+              totalReturn: totalReturn.toFixed(2),
+            };
+          }
+
+          return stock;
+        });
+
+        setStocks(updatedStocksWithClosing);
       } catch (error) {
         console.error(
-          "테이블 데이터 불러오기 실패:",
+          "데이터 불러오기 실패:",
           error.response?.data || error.message
         );
       }
@@ -54,22 +83,22 @@ const MyTable = () => {
   }, [sseData]);
 
   return (
-    <div className="space-y-3 py-5 bg-white p-4 w-full max-w-xs">
+    <div className="space-y-3 py-5 bg-white p-3 w-full max-w-xs">
       {stocks.length > 0 ? (
-        <table className="w-full text-sm text-left border-collapse">
+        <table className="w-full text-sm text-left">
           <thead>
-            <tr className="border-b">
+            <tr>
               <th className="pb-2">종목명</th>
-              <th className="pb-2 text-right">총 평가금액</th>
-              <th className="pb-2 text-right">수익률</th>
+              <th className="pb-2">총 평가금액</th>
+              <th className="pb-2">수익률</th>
             </tr>
           </thead>
           <tbody>
             {stocks.map((stock, index) => (
-              <tr key={index} className="border-b">
+              <tr key={index}>
                 <td className="py-2">{stock.stockName}</td>
-                <td className="py-2 text-right">{`${stock.totalValue.toLocaleString()} 원`}</td>
-                <td className="py-2 text-right font-bold">
+                <td className="py-2">{`${stock.totalValue.toLocaleString()} 원`}</td>
+                <td className="py-2 font-bold">
                   <span
                     className={
                       stock.totalReturn >= 0 ? "text-green-600" : "text-red-600"

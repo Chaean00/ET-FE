@@ -1,11 +1,7 @@
-import { useSearchParams } from "react-router-dom";
 import Button from "../../../common/components/Button";
 
-const TradeSuccessModal = ({ onClose }) => {
-  const [searchParams] = useSearchParams();
-  const type = searchParams.get("type") === "sell" ? "판매" : "구매";
-  const isBuy = type === "구매";
-
+const UnholdSuccessModal = ({ onClose }) => {
+  
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
@@ -18,14 +14,15 @@ const TradeSuccessModal = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex-grow flex items-center justify-center w-full">
-          <p className="text-xl font-light">{type} 완료!</p>
+          <p className="text-xl font-light">구매 취소 완료!</p>
         </div>
 
         <div className="w-full mb-4 text-center">
           <Button
             variant="large"
-            color={isBuy ? "red" : "blue"}
+            color="white"
             onClick={onClose}
+            className="border border-black text-black !text-black"
           >
             확인
           </Button>
@@ -35,4 +32,4 @@ const TradeSuccessModal = ({ onClose }) => {
   );
 };
 
-export default TradeSuccessModal;
+export default UnholdSuccessModal;

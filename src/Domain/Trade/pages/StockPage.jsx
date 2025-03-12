@@ -14,6 +14,8 @@ const StockPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [stockInfo, setStockInfo] = useState(null);
   const [ownedStocks, setOwnedStocks] = useState([]);
+  const [closingPrice, setClosingPrice] = useState(null);
+  const [currentPrice, setCurrentPrice] = useState(null);
 
   const queryParams = new URLSearchParams(location.search);
   const stockId = queryParams.get("code");
@@ -38,8 +40,23 @@ const StockPage = () => {
       }
     };
 
+    const fetchClosingPrice = async () => {
+      try {
+        const response = await api.get(
+          `/api/users/stocks/closing-price/${stockId}`
+        );
+        if (response.data && response.data.closingPrice) {
+          setClosingPrice(Number(response.data.closingPrice));
+          setCurrentPrice(Number(response.data.closingPrice));
+        }
+      } catch (error) {
+        console.error("전날 종가 요청 실패:", error);
+      }
+    };
+
     fetchStockData();
     fetchOwnedStocks();
+    fetchClosingPrice();
 
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -70,7 +87,12 @@ const StockPage = () => {
       {stockInfo && (
         <>
           <div className="w-full max-w-md mt-10.5 ml-8">
-            <StockInfo stockCode={stockId} companyName={stockName} />
+            <StockInfo
+              stockCode={stockId}
+              companyName={stockName}
+              closingPrice={closingPrice}
+              setCurrentPrice={setCurrentPrice}
+            />
           </div>
 
           <div className="w-full max-w-md mt-6.5 h-[51.5vh] flex justify-center items-center">
@@ -78,7 +100,11 @@ const StockPage = () => {
           </div>
 
           <div className="w-full max-w-md flex justify-center fixed bottom-[65px]">
-            <StockBottom stockId={stockId} ownedStocks={ownedStocks} />
+            <StockBottom
+              stockId={stockId}
+              ownedStocks={ownedStocks}
+              currentPrice={currentPrice}
+            />
           </div>
         </>
       )}

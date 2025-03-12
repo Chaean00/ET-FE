@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import api from "../../../utils/api";
 
-const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
-  const [heart, setHeart] = useState(initialFavorite);
-
+const StockBottomHeart = ({
+  className,
+  stockCode,
+  isFavorite,
+  onToggleFavorite,
+}) => {
+  const [heart, setHeart] = useState(isFavorite);
   useEffect(() => {
-    setHeart(initialFavorite);
-  }, [initialFavorite]);
+    setHeart(isFavorite);
+  }, [isFavorite]);
 
   const handleHeart = async () => {
     if (!stockCode) {
@@ -19,7 +23,7 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
       setHeart(true);
       try {
         await api.post("/users/favorite", { stockCode });
-        onFavoriteChange(stockCode, true);
+        onToggleFavorite(true);
       } catch (error) {
         console.error("관심 종목 추가 실패:", error);
         setHeart(false);
@@ -28,7 +32,7 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
       setHeart(false);
       try {
         await api.delete(`/users/favorite/${stockCode}`);
-        onFavoriteChange(stockCode, false);
+        onToggleFavorite(false);
       } catch (error) {
         console.error("관심 종목 삭제 실패:", error);
         setHeart(true);
@@ -57,4 +61,4 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
   );
 };
 
-export default Heart;
+export default StockBottomHeart;

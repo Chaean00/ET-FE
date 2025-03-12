@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import monkey from "../../../assets/animals/monkey1.png";
+import api from "../../../utils/api";
 import heart from "../../../assets/town/heart.png";
 
-function PetAcqModal({ isOpen, onClose, petName }) {
+function PetAcqModal({ isOpen, onClose, petImg, petName }) {
   if (!isOpen) return null;
 
   const starVariants = {
@@ -47,14 +48,16 @@ function PetAcqModal({ isOpen, onClose, petName }) {
             />
           ))}
 
-          <motion.img
-            src={monkey}
-            alt="animal"
-            className="w-20 h-20 object-contain"
-            initial={{ opacity: 0, filter: "blur(5px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 2, ease: "easeOut" }}
-          />
+          {petImg && (
+            <motion.img
+              src={petImg}
+              alt="animal"
+              className="w-18 h-18 object-contain"
+              initial={{ opacity: 0, filter: "blur(5px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 2, ease: "easeOut" }}
+            />
+          )}
         </div>
 
         <h2 className="text-xl font-bold mt-6">{petName} 획득!</h2>

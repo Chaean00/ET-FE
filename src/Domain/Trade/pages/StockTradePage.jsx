@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../../common/components/Footer";
@@ -8,26 +9,79 @@ import Button from "../../../common/components/Button";
 import OrderCheckModal from "../components/OrderCheckModal";
 import TradeSuccessModal from "../components/TradeSuccessModal";
 import BuyFailureModal from "../components/BuyFailureModal";
+import SellFailureModal from "../components/SellFailureModal";
+import api from "../../../utils/api";
 
 const StockTradePage = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [searchParams] = useSearchParams();
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const tradeInfo = {
-    type: "판매",
-    companyName: "삼성전자",
-    quantity: 50,
-    price: 58000,
-  };
+  const [showBuyFailureModal, setShowBuyFailureModal] = useState(false);
+  const [showSellFailureModal, setShowSellFailureModal] = useState(false);
+  const [maxQuantity, setMaxQuantity] = useState(100);
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleOrderCheck = () => {
+    const tradeType = searchParams.get("type");
+
+    if (!quantity || quantity === "0") {
+      alert("거래할 수량을 입력해주세요!");
+      return;
+    }
+
+    if (quantity > maxQuantity) {
+      if (tradeType === "buy") {
+        setShowBuyFailureModal(true);
+      } else {
+        setShowSellFailureModal(true);
+      }
+      return;
+    }
+
     setShowOrderModal(true);
   };
 
-  const handleOrderConfirm = () => {
-    setShowOrderModal(false);
-    setShowSuccessModal(true);
+  const handleOrderConfirm = async () => {
+    const tradeType = searchParams.get("type");
+    if (!tradeType) {
+      alert("거래 유형을 확인할 수 없습니다.");
+      return;
+    }
+
+    if (!quantity || quantity <= 0) {
+      alert("거래할 수량을 입력해주세요!");
+      return;
+    }
+
+    if (!price || price <= 0) {
+      alert("가격이 올바르지 않습니다.");
+      return;
+    }
+
+    try {
+      const response = await api.post(`/trades/${tradeType}`, {
+        amount: quantity,
+        position: tradeType.toUpperCase(),
+        price: price,
+        stockCode: searchParams.get("code"),
+      });
+
+      if (response.status === 200) {
+        console.log("거래 성공!");
+        setShowOrderModal(false);
+        setShowSuccessModal(true);
+      } else {
+        setShowOrderModal(false);
+        alert("거래가 실패했습니다. 다시 시도해주세요!");
+      }
+    } catch (error) {
+      console.error("거래 요청 실패:", error);
+      setShowOrderModal(false);
+      alert("서버 오류로 거래가 실패했습니다!");
+    }
   };
 
   const handleSuccessClose = () => {
@@ -36,23 +90,30 @@ const StockTradePage = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col relative pb-[100px]">
-      {showModal && (
-        <BuyFailureModal maxQuantity={3} onClose={() => setShowModal(false)} />
+      {showBuyFailureModal && (
+        <BuyFailureModal
+          totalPrice={totalPrice}
+          onClose={() => setShowBuyFailureModal(false)}
+        />
+      )}
+
+      {showSellFailureModal && (
+        <SellFailureModal
+          maxQuantity={maxQuantity}
+          onClose={() => setShowSellFailureModal(false)}
+        />
       )}
 
       {showOrderModal && (
         <OrderCheckModal
-          type={tradeInfo.type}
-          companyName={tradeInfo.companyName}
-          quantity={tradeInfo.quantity}
-          price={tradeInfo.price}
-          onClose={handleOrderConfirm}
+          quantity={quantity}
+          price={price}
+          totalPrice={totalPrice}
+          onConfirm={handleOrderConfirm}
         />
       )}
 
-      {showSuccessModal && (
-        <TradeSuccessModal type={tradeInfo.type} onClose={handleSuccessClose} />
-      )}
+      {showSuccessModal && <TradeSuccessModal onClose={handleSuccessClose} />}
 
       <div className="absolute top-0 left-0 w-full h-12 flex items-center p-2">
         <span onClick={() => navigate(-1)}>
@@ -60,13 +121,15 @@ const StockTradePage = () => {
         </span>
       </div>
 
-      <TradeHeader
-        companyName="삼성전자"
-        currentPrice={57200}
-        changePercent={2.88}
-      />
+      <TradeHeader />
 
-      <TradeContent type={tradeInfo.type} price={tradeInfo.price} />
+      <TradeContent
+        maxQuantity={maxQuantity}
+        setMaxQuantity={setMaxQuantity}
+        onQuantityChange={setQuantity}
+        onPriceChange={setPrice}
+        onTotalPriceChange={setTotalPrice}
+      />
 
       <div className="fixed bottom-[75px] w-full px-4">
         <Button

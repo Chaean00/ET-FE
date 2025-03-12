@@ -40,13 +40,13 @@ const EggListPage = () => {
 
   const handleHatchEgg = async (egg) => {
     try {
-      const response = await api.post(`/eggs/${egg.eggId}`);
+      const response = await api.get(`/eggs/hatching/${egg.eggId}`);
       console.log("부화 API 응답:", response.data);
 
-      if (response.status === 200 && response.data.is_hatched) {
+      if (response.status === 201) {
         setSelectedStock({
-          stockSymbol: response.data.reward.stock_symbol,
-          stockAmount: response.data.reward.stock_amount,
+          stockSymbol: response.data.stockName,
+          stockAmount: response.data.amount,
         });
 
         setEggList((prevEggs) => prevEggs.filter((e) => e.eggId !== egg.eggId));

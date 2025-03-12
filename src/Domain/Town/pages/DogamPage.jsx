@@ -13,7 +13,7 @@ const DogamPage = () => {
   useEffect(() => {
     const fetchPetDex = async () => {
       try {
-        const response = await api.get("/users/petdex");
+        const response = await api.get("/users/pets/unique");
 
         if (Array.isArray(response.data) && response.data.length > 0) {
           setPetList(response.data);

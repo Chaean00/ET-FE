@@ -118,9 +118,13 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
                 }}
               >
                 <img
-                  src={stock.img || DEFAULT_IMAGE}
+                  src={
+                    stock.code === "005935"
+                      ? DEFAULT_IMAGE
+                      : stock.img || DEFAULT_IMAGE
+                  }
                   alt={stock.name}
-                  className="w-6 h-6 mr-2"
+                  className="w-8 h-8 mr-1.5"
                 />
                 <div>
                   <span className="block">{stock.name}</span>
