@@ -27,7 +27,6 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        ## sse api에 대한 요청도 처리해야 함.
         location /sse/ {
             proxy_pass http://et-backend;
             proxy_http_version 1.1;

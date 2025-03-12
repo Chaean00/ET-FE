@@ -32,4 +32,4 @@ COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 # Nginx 실행
-CMD ["nginx", "-g", "daemon off;"]
+CMD envsubst '$VITE_API_BASE_URL $VITE_API_BASE_PORT' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'
