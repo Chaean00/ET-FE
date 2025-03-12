@@ -1,5 +1,36 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import landingLogo from "../../assets/tradetown/landingLogo.png";
+import FloatingEggs from "../components/FloatingEggs";
+import LandingCharacters from "../components/LandingCharacters";
+
 const LandingPage = () => {
-  return <div>이것은 test용 commit입니다.</div>;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/login");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
+  return (
+    <div
+      id="landing"
+      className="custom-cursor flex justify-center items-center h-screen"
+      onClick={() => navigate("/login")}
+    >
+      <img
+        src={landingLogo}
+        alt="Landing Logo"
+        className="w-1/2 max-w-xs mb-60 scale-115"
+      />
+      <FloatingEggs />
+      <LandingCharacters />
+    </div>
+  );
 };
 
 export default LandingPage;

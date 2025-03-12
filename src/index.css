@@ -1,1 +1,132 @@
 @import "tailwindcss";
+@layer base {
+  @font-face {
+    font-family: "TownFont";
+    src: url("/fonts/BMDOHYEON_ttf.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "GoormSans";
+    src: url("/fonts/goorm-sans-regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "GoormSans";
+    src: url("/fonts/goorm-sans-medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "GoormSans";
+    src: url("/fonts/goorm-sans-bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  body {
+    font-family: "GoormSans", sans-serif;
+    font-weight: 500;
+  }
+}
+
+.font-town {
+  font-family: "TownFont", sans-serif;
+  font-weight: extrabold;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 1025px) {
+  #frame {
+    width: 375px;
+    height: 667px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  #frame {
+    width: 100vw;
+    height: calc(var(--vh, 1vh) * 100);
+    border: none;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  #frame {
+    transform: scale(0.98);
+  }
+}
+
+#landing {
+  height: 100vh;
+  background-image: url("./assets/tradetown/landing.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.townbg {
+  background-image: url("./assets/town/townbg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+
+.drawbg {
+  background-image: url("./assets/town/drawbg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.custom-cursor {
+  cursor: url("/img/heart_purple.png"), auto;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.6);
+  border-radius: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.8);
+}
