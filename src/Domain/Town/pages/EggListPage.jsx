@@ -19,7 +19,7 @@ const EggListPage = () => {
       try {
         const response = await api.get("/eggs");
         console.log("알 리스트 응답:", response.data);
-
+        
         if (Array.isArray(response.data) && response.data.length > 0) {
           setEggList(response.data);
         } else {
