@@ -1,0 +1,40 @@
+name: CI/CD Pipeline for FE
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main  # 배포할 브랜치
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image for frontend 
+        run: |
+          docker build \
+          --build-arg VITE_API_BASE_URL=${{ secrets.API_GATEWAY_HOST }} \
+          --build-arg VITE_API_BASE_PORT=${{ secrets.API_GATEWAY_PORT }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
+
+      - name: Deploy to Server with Nginx
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.REACT_EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            cd /home/ubuntu
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
+            docker stop et-react || true
+            docker rm et-react || true
+            docker run -d --name et-react -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
