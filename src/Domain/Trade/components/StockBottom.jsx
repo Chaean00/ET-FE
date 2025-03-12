@@ -1,17 +1,13 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import StockBottomHeart from "./StockBottomHeart";
 import Button from "../../../common/components/Button";
-import useSSE from "../../../hooks/useSSE";
 import { useState, useEffect } from "react";
 import api from "../../../utils/api";
 
-const StockBottom = ({ stockId, ownedStocks = [] }) => {
+const StockBottom = ({ stockId, ownedStocks = [], currentPrice }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const stockName = searchParams.get("name");
-
-  const sseData = useSSE(stockId ? `/cur-price/${stockId}` : null);
-  const currentPrice = sseData ? Number(sseData.currentPrice) : null;
 
   const [isFavorite, setIsFavorite] = useState(null);
 
