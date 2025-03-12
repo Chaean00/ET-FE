@@ -26,8 +26,8 @@ RUN npm run build
 # Stage 2: Nginx를 통한 서비스
 FROM nginx:alpine
 
-# Nginx 템플릿 파일 복사 (환경변수 치환 전 원본 파일)
-COPY nginx.conf /etc/nginx/nginx.conf
+# 템플릿 파일을 컨테이너의 /etc/nginx/conf.d/로 복사
+COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
 # 프로젝트 루트에 위치한 docker-entrypoint.sh 복사
 COPY docker-entrypoint.sh /docker-entrypoint.sh
