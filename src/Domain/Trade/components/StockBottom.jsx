@@ -4,7 +4,12 @@ import Button from "../../../common/components/Button";
 import { useState, useEffect } from "react";
 import api from "../../../utils/api";
 
-const StockBottom = ({ stockId, ownedStocks = [], currentPrice }) => {
+const StockBottom = ({
+  stockId,
+  ownedStocks = [],
+  orders = [],
+  closingPrice,
+}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const stockName = searchParams.get("name");
@@ -41,10 +46,23 @@ const StockBottom = ({ stockId, ownedStocks = [], currentPrice }) => {
     ownedStocks.some((stock) => String(stock.stockCode) === String(stockId));
 
   const handleNavigate = (type) => {
+    if (orders.length < 2) {
+      if (closingPrice) {
+        navigate(
+          `/stocktrade?code=${stockId}&name=${encodeURIComponent(
+            stockName
+          )}&price=${closingPrice}&type=${type}`
+        );
+      }
+      return;
+    }
+
+    const price = type === "buy" ? orders[0].price : orders[1].price;
+
     navigate(
       `/stocktrade?code=${stockId}&name=${encodeURIComponent(
         stockName
-      )}&price=${currentPrice}&type=${type}`
+      )}&price=${price}&type=${type}`
     );
   };
 

@@ -167,11 +167,15 @@ const StockItem = ({ stock, navigate }) => {
         alt={stock.stockName}
         className="rounded-3xl w-10 h-10"
       />
-
       <div className="flex-1">
         <p className="font-semibold">{stock.stockName}</p>
         <p className="text-gray-400 text-sm font-light">
-          현금 {stock.amount}주
+          현금{" "}
+          {stock.amount
+            .toString()
+            .match(/^(\d+(\.\d{0,4})?)/)?.[0]
+            .toLocaleString()}
+          주
         </p>
       </div>
 
@@ -190,7 +194,9 @@ const StockItem = ({ stock, navigate }) => {
           }`}
         >
           {stock.diffPrice !== undefined
-            ? ` ${stock.diffPrice.toLocaleString()} `
+            ? `${
+                stock.diffPrice > 0 ? "+" : stock.diffPrice < 0 ? "-" : ""
+              }${Math.abs(Math.round(stock.diffPrice)).toLocaleString()} `
             : "0원 "}
           {stock.totalReturn !== undefined
             ? `(${stock.totalReturn > 0 ? "+" : ""}${stock.totalReturn.toFixed(

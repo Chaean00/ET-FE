@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import useSSE from "../../../hooks/useSSE";
 import LineChart from "../components/LineChart";
 import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
@@ -16,10 +17,13 @@ const StockPage = () => {
   const [ownedStocks, setOwnedStocks] = useState([]);
   const [closingPrice, setClosingPrice] = useState(null);
   const [currentPrice, setCurrentPrice] = useState(null);
+  const [orders, setOrders] = useState([]);
 
   const queryParams = new URLSearchParams(location.search);
   const stockId = queryParams.get("code");
   const stockName = queryParams.get("name");
+
+  const sseData = useSSE(stockId ? `/ask-bid/${stockId}` : null);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -43,7 +47,7 @@ const StockPage = () => {
     const fetchClosingPrice = async () => {
       try {
         const response = await api.get(
-          `/api/users/stocks/closing-price/${stockId}`
+          `/users/stocks/closing-price/${stockId}`
         );
         if (response.data && response.data.closingPrice) {
           setClosingPrice(Number(response.data.closingPrice));
@@ -64,6 +68,45 @@ const StockPage = () => {
 
     return () => clearTimeout(timer);
   }, [stockId]);
+
+  useEffect(() => {
+    if (!sseData || !sseData.askp1 || !sseData.bidp1) {
+      if (closingPrice) {
+        setOrders([
+          {
+            id: 1,
+            price: closingPrice,
+            sellVolume: 0,
+            buyVolume: 0,
+          },
+          {
+            id: 2,
+            price: closingPrice,
+            sellVolume: 0,
+            buyVolume: 0,
+          },
+        ]);
+      }
+      return;
+    }
+
+    const updatedOrders = [
+      {
+        id: 1,
+        price: Number(sseData.askp1),
+        sellVolume: Number(sseData.askRSQN1),
+        buyVolume: 0,
+      },
+      {
+        id: 2,
+        price: Number(sseData.bidp1),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN1),
+      },
+    ];
+
+    setOrders(updatedOrders);
+  }, [sseData, closingPrice]);
 
   if (isLoading) {
     return (
@@ -103,7 +146,8 @@ const StockPage = () => {
             <StockBottom
               stockId={stockId}
               ownedStocks={ownedStocks}
-              currentPrice={currentPrice}
+              orders={orders}
+              closingPrice={closingPrice}
             />
           </div>
         </>

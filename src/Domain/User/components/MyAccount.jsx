@@ -55,7 +55,7 @@ const MyAccount = ({ evaluationAmount, profit, profitRate }) => {
           </p>
           <p className={`text-sm font-medium ${profitColor}`}>
             {profit > 0 ? "+" : ""}
-            {profit.toLocaleString()} ({profitRate}%)
+            {Math.round(profit).toLocaleString()} ({profitRate}%)
           </p>
         </div>
 
