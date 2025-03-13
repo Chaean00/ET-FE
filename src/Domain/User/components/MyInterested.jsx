@@ -111,20 +111,28 @@ const MyInterested = () => {
                   : "-"}
               </p>
               {stock.priceChange !== null && stock.changeRate !== null && (
-                <p
-                  className={`text-sm font-medium ${
-                    stock.priceChange > 0 ? "text-red-500" : "text-blue-500"
-                  }`}
-                >
-                  {stock.priceChange > 0
-                    ? `+${stock.priceChange.toLocaleString()}`
-                    : stock.priceChange.toLocaleString()}
-                  (
-                  {stock.changeRate > 0
-                    ? `+${stock.changeRate}`
-                    : stock.changeRate}
-                  %)
-                </p>
+                <div className="flex items-center gap-x-0.5 text-sm font-medium">
+                  <span
+                    className={
+                      stock.priceChange >= 0 ? "text-red-500" : "text-blue-500"
+                    }
+                  >
+                    {stock.priceChange > 0
+                      ? `+${stock.priceChange.toLocaleString()}`
+                      : stock.priceChange.toLocaleString()}
+                  </span>
+                  <span
+                    className={
+                      stock.changeRate >= 0 ? "text-red-500" : "text-blue-500"
+                    }
+                  >
+                    (
+                    {stock.changeRate > 0
+                      ? `+${stock.changeRate}`
+                      : stock.changeRate}
+                    %)
+                  </span>
+                </div>
               )}
             </div>
 

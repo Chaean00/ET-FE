@@ -53,9 +53,6 @@ const TradeMainPage = () => {
 
         <div className="mb-6">
           <MyHeld
-            totalAccount={totalAccount}
-            totalProfit={totalProfit}
-            totalProfitRate={totalProfitRate}
             setTotalAccount={setTotalAccount}
             setTotalProfit={setTotalProfit}
             setTotalProfitRate={setTotalProfitRate}

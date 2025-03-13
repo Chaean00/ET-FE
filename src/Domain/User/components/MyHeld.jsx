@@ -3,15 +3,9 @@ import { useNavigate } from "react-router-dom";
 import useSSE from "../../../hooks/useSSE";
 import api from "../../../utils/api";
 
-const MyHeld = ({
-  totalAccount,
-  setTotalAccount,
-  setTotalProfit,
-  setTotalProfitRate,
-}) => {
+const MyHeld = ({ setTotalAccount, setTotalProfit, setTotalProfitRate }) => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState([]);
-
   const sseData = useSSE("/subscribe/portfolio-price");
 
   useEffect(() => {
@@ -35,49 +29,33 @@ const MyHeld = ({
           );
 
           if (closingStock) {
-            const totalValue = closingStock.closingPrice * stock.amount;
-            const totalReturn =
-              stock.averagePrice > 0
-                ? ((closingStock.closingPrice - stock.averagePrice) /
-                    stock.averagePrice) *
-                  100
-                : 0;
-
-            const diffPrice =
-              (closingStock.closingPrice - stock.averagePrice) * stock.amount;
-
             return {
               ...stock,
               closingPrice: closingStock.closingPrice,
-              totalValue,
-              totalReturn: totalReturn.toFixed(2),
-              diffPrice,
+              totalValue: closingStock.closingPrice * stock.amount,
+              totalReturn:
+                stock.averagePrice > 0
+                  ? ((closingStock.closingPrice - stock.averagePrice) /
+                      stock.averagePrice) *
+                    100
+                  : 0,
+              diffPrice:
+                (closingStock.closingPrice - stock.averagePrice) * stock.amount,
+              displayPrice: closingStock.closingPrice,
             };
           }
 
-          return stock;
+          return {
+            ...stock,
+            closingPrice: null,
+            totalValue: stock.amount * stock.averagePrice,
+            totalReturn: 0,
+            diffPrice: 0,
+            displayPrice: stock.averagePrice,
+          };
         });
 
         setStocks(updatedStocksWithClosing);
-
-        const totalAccountValue = updatedStocksWithClosing.reduce(
-          (acc, stock) => acc + stock.totalValue,
-          0
-        );
-        setTotalAccount(totalAccountValue);
-
-        const totalProfitValue = updatedStocksWithClosing.reduce(
-          (acc, stock) =>
-            acc + (stock.totalValue - stock.amount * stock.averagePrice),
-          0
-        );
-        setTotalProfit(totalProfitValue);
-
-        const totalProfitRateValue =
-          totalAccountValue > 0
-            ? ((totalProfitValue / totalAccountValue) * 100).toFixed(2)
-            : 0;
-        setTotalProfitRate(totalProfitRateValue);
       } catch (error) {
         console.error(
           "데이터 불러오기 실패:",
@@ -97,41 +75,50 @@ const MyHeld = ({
         if (stock.stockCode === sseData.stockCode) {
           const currentPrice = Number(sseData.currentPrice);
           const totalValue = currentPrice * stock.amount;
-          const purchasePrice = stock.amount * stock.averagePrice;
-          const totalReturn =
-            ((totalValue - purchasePrice) / purchasePrice) * 100;
-          const diffPrice = (currentPrice - stock.averagePrice) * stock.amount;
 
           return {
             ...stock,
             totalValue,
-            totalReturn: totalReturn.toFixed(2),
-            diffPrice,
+            totalReturn:
+              stock.averagePrice > 0
+                ? ((currentPrice - stock.averagePrice) / stock.averagePrice) *
+                  100
+                : 0,
+            diffPrice: (currentPrice - stock.averagePrice) * stock.amount,
+            displayPrice: totalValue,
           };
         }
         return stock;
       })
     );
+  }, [sseData]);
 
-    const updatedTotalAccount = stocks.reduce(
+  useEffect(() => {
+    if (stocks.length === 0) {
+      setTotalAccount(0);
+      setTotalProfit(0);
+      setTotalProfitRate(0);
+      return;
+    }
+
+    const totalAccountValue = stocks.reduce(
       (acc, stock) => acc + stock.totalValue,
       0
     );
-    setTotalAccount(updatedTotalAccount);
-
-    const updatedTotalProfit = stocks.reduce(
+    const totalProfitValue = stocks.reduce(
       (acc, stock) =>
         acc + (stock.totalValue - stock.amount * stock.averagePrice),
       0
     );
-    setTotalProfit(updatedTotalProfit);
-
-    const updatedTotalProfitRate =
-      updatedTotalAccount > 0
-        ? ((updatedTotalProfit / updatedTotalAccount) * 100).toFixed(2)
+    const totalProfitRateValue =
+      totalAccountValue > 0
+        ? ((totalProfitValue / totalAccountValue) * 100).toFixed(2)
         : 0;
-    setTotalProfitRate(updatedTotalProfitRate);
-  }, [sseData]);
+
+    setTotalAccount(totalAccountValue);
+    setTotalProfit(totalProfitValue);
+    setTotalProfitRate(totalProfitRateValue);
+  }, [stocks, setTotalAccount, setTotalProfit, setTotalProfitRate]);
 
   return (
     <div className="w-full max-w-md p-4">
@@ -190,7 +177,9 @@ const StockItem = ({ stock, navigate }) => {
 
       <div className="text-right">
         <p className="text-md font-bold">
-          {stock.totalValue ? stock.totalValue.toLocaleString() + "원" : "-"}
+          {stock.displayPrice
+            ? Math.round(stock.displayPrice).toLocaleString() + "원"
+            : "-"}
         </p>
 
         <p
@@ -201,10 +190,12 @@ const StockItem = ({ stock, navigate }) => {
           }`}
         >
           {stock.diffPrice !== undefined
-            ? ` ${stock.diffPrice.toLocaleString()}원`
-            : "0원"}
+            ? ` ${stock.diffPrice.toLocaleString()} `
+            : "0원 "}
           {stock.totalReturn !== undefined
-            ? `(${stock.totalReturn > 0 ? "+" : ""}${stock.totalReturn}%)`
+            ? `(${stock.totalReturn > 0 ? "+" : ""}${stock.totalReturn.toFixed(
+                2
+              )}%)`
             : "(-)"}
         </p>
       </div>
