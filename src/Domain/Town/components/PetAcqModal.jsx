@@ -1,34 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import api from "../../../utils/api";
 import heart from "../../../assets/town/heart.png";
 
-function PetAcqModal({ isOpen, onClose }) {
-  const [petImg, setPetImg] = useState("");
-  const [petName, setPetName] = useState("");
-
-  useEffect(() => {
-    const fetchLatestPet = async () => {
-      try {
-        const response = await api.get("/pets");
-
-        if (Array.isArray(response.data) && response.data.length > 0) {
-          const latestPet = response.data[response.data.length - 1];
-          setPetImg(latestPet.img);
-          setPetName(`pet ${latestPet.id}`);
-        } else {
-          console.warn("펫 데이터가 비어있습니다.");
-        }
-      } catch (error) {
-        console.error("펫 정보 불러오기 실패:", error);
-      }
-    };
-
-    if (isOpen) {
-      fetchLatestPet();
-    }
-  }, [isOpen]);
-
+function PetAcqModal({ isOpen, onClose, petImg, petName }) {
   if (!isOpen) return null;
 
   const starVariants = {

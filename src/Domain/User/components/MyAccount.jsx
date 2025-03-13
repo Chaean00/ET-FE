@@ -27,7 +27,7 @@ const MyAccount = ({ evaluationAmount, profit, profitRate }) => {
   }, []);
 
   const profitColor =
-    profit > 0
+    profit >= 0
       ? "text-red-500"
       : profit < 0
       ? "text-blue-500"
@@ -51,11 +51,11 @@ const MyAccount = ({ evaluationAmount, profit, profitRate }) => {
         <div className="mt-4">
           <p className="text-gray-500 text-sm">평가금액</p>
           <p className="text-xl font-bold">
-            {evaluationAmount.toLocaleString()}원
+            {Math.round(evaluationAmount).toLocaleString()}원
           </p>
           <p className={`text-sm font-medium ${profitColor}`}>
             {profit > 0 ? "+" : ""}
-            {profit.toLocaleString()} ({profitRate}%)
+            {Math.round(profit).toLocaleString()} ({profitRate}%)
           </p>
         </div>
 

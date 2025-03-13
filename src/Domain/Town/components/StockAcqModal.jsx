@@ -64,7 +64,11 @@ const StockAcqModal = ({ isOpen, onClose, stockName, stockAmount }) => {
           <div className="text-center mt-2">
             <h2 className="text-2xl font-bold text-black">{stockName}</h2>
             <p className="text-2xl font-semibold text-black">
-              {stockAmount}주 획득<span className="text-red-500">❗</span>
+              {stockAmount
+                .toString()
+                .match(/^(\d+(\.\d{0,5})?)/)?.[0]
+                .toLocaleString()}
+              주 획득<span className="text-red-500">❗</span>
             </p>
           </div>
         )}

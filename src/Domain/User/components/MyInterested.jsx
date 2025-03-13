@@ -7,6 +7,7 @@ import useSSE from "../../../hooks/useSSE";
 const MyInterested = () => {
   const navigate = useNavigate();
   const [interests, setInterests] = useState([]);
+  const sseData = useSSE("/subscribe/interest-price");
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -19,9 +20,31 @@ const MyInterested = () => {
             currentPrice: null,
             priceChange: null,
             changeRate: null,
+            closingPrice: null,
             isFavorite: true,
           }));
           setInterests(formattedData);
+
+          const closingPriceResponse = await api.get(
+            "/users/stocks/favorite/close-price"
+          );
+
+          const updatedStocksWithClosing = formattedData.map((stock) => {
+            const closingStock = closingPriceResponse.data.find(
+              (s) => s.stockCode === stock.stockCode
+            );
+
+            return closingStock
+              ? {
+                  ...stock,
+                  closingPrice: closingStock.closingPrice,
+                  currentPrice: closingStock.closingPrice,
+                  priceChange: 0,
+                  changeRate: 0,
+                }
+              : stock;
+          });
+          setInterests(updatedStocksWithClosing);
         }
       } catch (error) {
         console.error("관심 종목 불러오기 실패:", error);
@@ -31,19 +54,20 @@ const MyInterested = () => {
     fetchFavorites();
   }, []);
 
-  const sseData = useSSE("/subscribe/interest-price");
-
   useEffect(() => {
     if (!sseData) return;
-
     setInterests((prevInterests) =>
       prevInterests.map((stock) =>
         stock.stockCode === sseData.stockCode
           ? {
               ...stock,
               currentPrice: Number(sseData.currentPrice),
-              priceChange: Number(sseData.priceChange),
-              changeRate: Number(sseData.changeRate),
+              priceChange: Number(sseData.currentPrice) - stock.closingPrice,
+              changeRate: (
+                ((Number(sseData.currentPrice) - stock.closingPrice) /
+                  stock.closingPrice) *
+                100
+              ).toFixed(2),
             }
           : stock
       )
@@ -82,23 +106,33 @@ const MyInterested = () => {
               <p className="text-sm text-gray-400 font-light">
                 {stock.currentPrice
                   ? `${Number(stock.currentPrice).toLocaleString()}원`
+                  : stock.closingPrice
+                  ? `${Number(stock.closingPrice).toLocaleString()}원`
                   : "-"}
               </p>
               {stock.priceChange !== null && stock.changeRate !== null && (
-                <p
-                  className={`text-sm font-medium ${
-                    stock.priceChange > 0 ? "text-red-500" : "text-blue-500"
-                  }`}
-                >
-                  {stock.priceChange > 0
-                    ? `+${stock.priceChange.toLocaleString()}`
-                    : stock.priceChange.toLocaleString()}
-                  (
-                  {stock.changeRate > 0
-                    ? `+${stock.changeRate}`
-                    : stock.changeRate}
-                  %)
-                </p>
+                <div className="flex items-center gap-x-0.5 text-sm font-medium">
+                  <span
+                    className={
+                      stock.priceChange >= 0 ? "text-red-500" : "text-blue-500"
+                    }
+                  >
+                    {stock.priceChange > 0
+                      ? `+${stock.priceChange.toLocaleString()}`
+                      : stock.priceChange.toLocaleString()}
+                  </span>
+                  <span
+                    className={
+                      stock.changeRate >= 0 ? "text-red-500" : "text-blue-500"
+                    }
+                  >
+                    (
+                    {stock.changeRate > 0
+                      ? `+${stock.changeRate}`
+                      : stock.changeRate}
+                    %)
+                  </span>
+                </div>
               )}
             </div>
 

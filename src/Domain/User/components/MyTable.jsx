@@ -97,7 +97,9 @@ const MyTable = () => {
             {stocks.map((stock, index) => (
               <tr key={index}>
                 <td className="py-2">{stock.stockName}</td>
-                <td className="py-2">{`${stock.totalValue.toLocaleString()} 원`}</td>
+                <td className="py-2">{`${Math.round(
+                  stock.totalValue
+                ).toLocaleString()} 원`}</td>
                 <td className="py-2 font-bold">
                   <span
                     className={

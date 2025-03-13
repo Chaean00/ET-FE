@@ -11,6 +11,7 @@ const BASE_SSE_URL = `http://${import.meta.env.VITE_API_BASE_URL}:${
 const useSSE = (endpoint) => {
   const [data, setData] = useState(null);
   const { token, setToken } = useAuth();
+  const controller = new AbortController();
 
   useEffect(() => {
     if (!endpoint || !token) return;
@@ -22,13 +23,12 @@ const useSSE = (endpoint) => {
     const connect = () => {
       if (isCancelled) return;
       setToken(localStorage.getItem("Authorization"));
-      const controller = new AbortController();
 
       fetchEventSource(sseUrl, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: "text/event-stream",
+          Accept: "text/event-stream"
         },
         signal: controller.signal,
         onopen(response) {
@@ -63,7 +63,7 @@ const useSSE = (endpoint) => {
           if (!isCancelled) {
             setTimeout(connect, 3000);
           }
-        },
+        }
       });
     };
 
@@ -74,6 +74,7 @@ const useSSE = (endpoint) => {
     return () => {
       console.log(`🔌 SSE 연결 cleanup (${sseUrl})`);
       isCancelled = true;
+      controller.abort();
     };
   }, [endpoint, token]);
 

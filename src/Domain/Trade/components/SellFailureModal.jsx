@@ -9,15 +9,15 @@ const SellFailureModal = ({ maxQuantity, onClose }) => {
       ></div>
 
       <div
-        className="w-[85%] max-w-sm h-[35%] bg-white rounded-3xl shadow-lg z-50 relative flex flex-col items-center justify-around"
+        className="w-[85%] max-w-sm h-[32%] bg-white rounded-3xl shadow-lg z-50 relative flex flex-col items-center justify-around"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-center mt-2">
+        <div className="text-center mt-6">
           <p className="text-xl font-bold">
             수량 부족 안내 <span className="text-red-500">❗</span>
           </p>
         </div>
-        <p className="text-lg font-medium">
+        <p className="text-lg font-medium mb-8">
           최대 <span className="font-bold">{maxQuantity}주</span> 까지만 판매
           가능합니다.
         </p>

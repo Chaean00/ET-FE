@@ -19,7 +19,7 @@ const FriendPage = () => {
           id: friend.id,
           uid: friend.uid,
           name: friend.name,
-          isFriend: true,
+          isFriend: true
         }));
         setFriends(myFriends);
       } else {
@@ -34,11 +34,6 @@ const FriendPage = () => {
   const searchFriends = async (uid) => {
     const trimmedUid = uid.trim();
     setSearchTerm(trimmedUid);
-
-    if (trimmedUid.length < 2) {
-      fetchFriends();
-      return;
-    }
 
     try {
       const response = await api.get(
@@ -55,18 +50,18 @@ const FriendPage = () => {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: isExistingFriend || !!friend.subscribed,
-          },
+            isFriend: isExistingFriend
+          }
         ];
 
         setFriends(searchedFriends);
       } else {
         console.warn("검색 결과 없음");
-        fetchFriends();
+        // fetchFriends();
       }
     } catch (error) {
       console.error("검색 실패:", error.response?.data || error.message);
-      fetchFriends();
+      // fetchFriends();
     }
   };
 
