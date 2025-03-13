@@ -9,26 +9,29 @@ dayjs.locale("ko");
 const MyTrade = () => {
   const [tradeHistory, setTradeHistory] = useState([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [tradeStatus, setTradeStatus] = useState(""); // 필터링 상태 (전체, PENDING, EXECUTED, CANCELLED)
+  const [pageSize, setPageSize] = useState(10); // 한 페이지당 데이터 개수
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [tradeStatus, pageSize]);
 
   useEffect(() => {
     const fetchTradeHistory = async () => {
       try {
-        const response = await api.get("/users/history");
-        let data = response.data;
-
-        data.sort((a, b) => {
-          const dateA =
-            a.tradeStatus === "PENDING"
-              ? new Date(a.createdAt)
-              : new Date(a.updatedAt);
-          const dateB =
-            b.tradeStatus === "PENDING"
-              ? new Date(b.createdAt)
-              : new Date(b.updatedAt);
-          return dateB - dateA;
+        const response = await api.get("/users/history", {
+          params: {
+            page: currentPage,
+            size: pageSize,
+            tradeStatus: tradeStatus || null // 필터 적용
+          }
         });
 
-        setTradeHistory(data);
+        const data = response.data;
+        setTradeHistory(data.content);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error(
           "거래 내역 불러오기 실패:",
@@ -38,7 +41,7 @@ const MyTrade = () => {
     };
 
     fetchTradeHistory();
-  }, []);
+  }, [currentPage, pageSize, tradeStatus]); // 의존성 배열 추가
 
   const handleCancelTrade = async (trade) => {
     try {
@@ -46,12 +49,14 @@ const MyTrade = () => {
         tradeId: trade.historyId,
         position: trade.position,
         stockCode: trade.stockCode,
-        price: trade.price,
+        price: trade.price
       });
 
       setTradeHistory((prevTrades) =>
         prevTrades.map((t) =>
-          t.historyId === trade.historyId ? { ...t, tradeStatus: "CANCELLED" } : t
+          t.historyId === trade.historyId
+            ? { ...t, tradeStatus: "CANCELLED" }
+            : t
         )
       );
 
@@ -63,6 +68,30 @@ const MyTrade = () => {
 
   return (
     <div className="w-full max-w-md space-y-4">
+      {/* 필터링 및 페이지 크기 선택 */}
+      <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
+        <select
+          value={tradeStatus}
+          onChange={(e) => setTradeStatus(e.target.value)}
+          className="rounded p-2 text-sm"
+        >
+          <option value="">전체</option>
+          <option value="PENDING">대기 중</option>
+          <option value="EXECUTED">체결됨</option>
+          <option value="CANCELLED">취소됨</option>
+        </select>
+
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+          className="rounded p-2 text-sm"
+        >
+          <option value="5">5개씩 보기</option>
+          <option value="10">10개씩 보기</option>
+        </select>
+      </div>
+
+      {/* 거래 내역 */}
       {tradeHistory.length > 0 ? (
         tradeHistory.map((trade, index) => {
           const date =
@@ -134,6 +163,37 @@ const MyTrade = () => {
       ) : (
         <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
       )}
+
+      {/* 페이지네이션 버튼 */}
+      <div className="flex justify-center space-x-2 mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+          disabled={currentPage === 0}
+          className={`px-3 py-2 rounded ${
+            currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          이전
+        </button>
+
+        <span className="px-3 py-2 text-sm">
+          {currentPage + 1} / {totalPages}
+        </span>
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+          }
+          disabled={currentPage === totalPages - 1}
+          className={`px-3 py-2 rounded ${
+            currentPage === totalPages - 1
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+        >
+          다음
+        </button>
+      </div>
 
       {showSuccessModal && (
         <UnholdSuccessModal onClose={() => setShowSuccessModal(false)} />
