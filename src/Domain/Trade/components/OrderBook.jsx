@@ -6,7 +6,6 @@ import useSSE from "../../../hooks/useSSE";
 const OrderBook = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
-  const [orders, setOrders] = useState([]);
   const [sellOrders, setSellOrders] = useState([]);
   const [buyOrders, setBuyOrders] = useState([]);
   const [totalSellVolume, setTotalSellVolume] = useState(0);
@@ -15,8 +14,9 @@ const OrderBook = () => {
   const sseData = useSSE(code ? `/ask-bid/${code}` : null);
 
   useEffect(() => {
-    if (!sseData) return;
+   
 
+    if(!sseData) return;
     let updatedOrders = [
       { id: 1, price: Number(sseData.askp1), sellVolume: Number(sseData.askRSQN1), buyVolume: 0 },
       { id: 2, price: Number(sseData.askp2), sellVolume: Number(sseData.askRSQN2), buyVolume: 0 },
@@ -29,6 +29,7 @@ const OrderBook = () => {
       { id: 9, price: Number(sseData.bidp4), sellVolume: 0, buyVolume: Number(sseData.bidRSQN4) },
       { id: 10, price: Number(sseData.bidp5), sellVolume: 0, buyVolume: Number(sseData.bidRSQN5) },
     ];
+
 
     updatedOrders.sort((a, b) => b.price - a.price);
 
@@ -63,23 +64,26 @@ const OrderBook = () => {
               transition={{ duration: 0.2 }}
               className="flex justify-between items-center py-2 text-red-500 font-bold"
             >
-              <span className="w-14 text-right">{order.sellVolume.toLocaleString()}</span>
-              <span className="text-xl text-black">{order.price.toLocaleString()}</span>
-              <div className="w-full flex items-center space-x-2">
-                <div
+              {/* 매도량 막대 (중앙에서 시작, 왼쪽으로 확장) */}
+              <div className="w-1/3 flex items-center space-x-2 justify-end px-2">
+                <motion.div
                   style={{ width: `${(order.sellVolume / totalSellVolume) * 100}%` }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(order.sellVolume / totalSellVolume) * 100}%` }}
+                  transition={{ duration: 0.5 }}
                   className="h-2 bg-red-500 rounded"
-                ></div>
+                ></motion.div>
               </div>
-              <span className="w-14"></span>
+              {/* 현재 가격 (중앙 정렬, 좌우 회색 테두리 추가) */}
+              <span className="text-black text-center w-1/3 min-w-[60px] border-l border-r border-gray-300 px-2">
+                {order.price.toLocaleString()}
+              </span>
+              {/* 매도 주문 수량 (오른쪽 정렬) */}
+              <span className="text-red-500 w-1/3 min-w-[60px] px-2 ">
+                {order.sellVolume.toLocaleString()}
+              </span>
             </motion.li>
           ))}
-
-          <motion.li
-            className="flex justify-between items-center py-3 text-lg font-bold bg-gray-100 rounded-md"
-          >
-            {/* 중간 구분선 추가 가능 */}
-          </motion.li>
 
           {buyOrders.map((order) => (
             <motion.li
@@ -89,15 +93,24 @@ const OrderBook = () => {
               transition={{ duration: 0.2 }}
               className="flex justify-between items-center py-2 text-blue-500 font-bold"
             >
-              <span className="w-14"></span>
-              <span className="text-xl text-black">{order.price.toLocaleString()}</span>
-              <div className="w-full flex items-center space-x-2">
-                <div
+              {/* 매수량 (왼쪽에 수량, 중앙에 가격, 오른쪽에 막대) */}
+              <span className="text-blue-500 text-right w-1/3 min-w-[60px] px-2">
+                {order.buyVolume.toLocaleString()}
+              </span>
+              {/* 현재 가격 (중앙 정렬, 좌우 회색 테두리 추가) */}
+              <span className="text-black text-center w-1/3 min-w-[60px] border-l border-r border-gray-300 px-2">
+                {order.price.toLocaleString()}
+              </span>
+              {/* 매수량 막대 (중앙에서 시작, 오른쪽으로 확장) */}
+              <div className="w-1/3 flex items-center space-x-2 px-2 ">
+                <motion.div
                   style={{ width: `${(order.buyVolume / totalBuyVolume) * 100}%` }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(order.buyVolume / totalBuyVolume) * 100}%` }}
+                  transition={{ duration: 0.5 }}
                   className="h-2 bg-blue-500 rounded"
-                ></div>
+                ></motion.div>
               </div>
-              <span className="w-14 text-left">{order.buyVolume.toLocaleString()}</span>
             </motion.li>
           ))}
         </ul>
