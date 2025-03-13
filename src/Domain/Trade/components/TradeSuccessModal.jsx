@@ -18,7 +18,7 @@ const TradeSuccessModal = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex-grow flex items-center justify-center w-full">
-          <p className="text-xl font-light">{type} 완료!</p>
+          <p className="text-xl font-light">거래 완료!</p>
         </div>
 
         <div className="w-full mb-4 text-center">

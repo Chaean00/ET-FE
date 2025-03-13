@@ -34,7 +34,7 @@ const TradeHeader = () => {
   }, [stockCode]);
 
   const changeColor =
-    changeRate > 0
+    changeRate >= 0
       ? "text-red-500"
       : changeRate < 0
       ? "text-blue-500"
@@ -52,7 +52,7 @@ const TradeHeader = () => {
         </p>
         <p className={`text-md font-light ${changeColor}`}>
           {changeRate !== null
-            ? `${changeRate > 0 ? "+" : "-"}${changeRate.toFixed(2)}%`
+            ? `${changeRate > 0 ? "+" : ""}${changeRate.toFixed(2)}%`
             : "0%"}
         </p>
       </div>

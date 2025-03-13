@@ -84,6 +84,10 @@ const StockTradePage = () => {
     }
   };
 
+  const handleOrderClose = () => {
+    setShowOrderModal(false);
+  };
+
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
   };
@@ -108,8 +112,8 @@ const StockTradePage = () => {
         <OrderCheckModal
           quantity={quantity}
           price={price}
-          totalPrice={totalPrice}
           onConfirm={handleOrderConfirm}
+          onClose={handleOrderClose}
         />
       )}
 

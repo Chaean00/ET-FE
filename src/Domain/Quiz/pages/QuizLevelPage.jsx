@@ -7,11 +7,11 @@ const QuizMainPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="absolute top-10 right-10">
+      <div className="absolute flex flex-col items-center top-1 right-3 rounded-full border-gray-500 shadow-[0_20px_20px_rgba(0,0,0,0.2)] hover:opacity-65">
         <img
           src={GPTlogo}
           alt="GPT Logo"
-          className="w-15 h-15 cursor-pointer"
+          className="w-20 h-20 cursor-pointer "
           onClick={() => navigate("/ChatbotPage")}
         />
       </div>

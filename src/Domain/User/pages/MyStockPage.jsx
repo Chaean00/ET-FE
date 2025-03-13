@@ -10,6 +10,7 @@ const MyStockPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [points, setPoints] = useState(0);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -24,11 +25,22 @@ const MyStockPage = () => {
           "데이터 불러오기 실패:",
           error.response?.data || error.message
         );
+      } finally {
+        setIsLoading(false); // API 호출이 끝나면 로딩 상태 종료
       }
     };
 
     fetchUserData();
   }, []);
+
+  // 로딩 중이면 '로딩 중...' 문구 표시
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500 text-lg">로딩 중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="scrollbar-custom flex-1 overflow-y-auto flex flex-col items-center h-screen px-4 pt-6 pb-28">
