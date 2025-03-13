@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import api from "../../../utils/api";
 import heart from "../../../assets/town/heart.png";
 
 function PetAcqModal({ isOpen, onClose, petImg, petName }) {
