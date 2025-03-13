@@ -2,114 +2,79 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-const OrderBookCopy = () => {
+const OrderBook_copy = () => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    // ✅ 더미 데이터 (초기값)
-    const sseData = [
-      { id: 1, price: 5000, sellVolume: 10, buyVolume: 0 },
-      { id: 2, price: 5050, sellVolume: 15, buyVolume: 0 },
-      { id: 3, price: 5100, sellVolume: 20, buyVolume: 0 },
-      { id: 4, price: 5150, sellVolume: 10, buyVolume: 0 },
-      { id: 5, price: 5200, sellVolume: 5, buyVolume: 0 },
-      { id: 6, price: 4950, sellVolume: 0, buyVolume: 12 },
-      { id: 7, price: 4900, sellVolume: 0, buyVolume: 18 },
-      { id: 8, price: 4850, sellVolume: 0, buyVolume: 25 },
-      { id: 9, price: 4800, sellVolume: 0, buyVolume: 30 },
-      { id: 10, price: 4750, sellVolume: 0, buyVolume: 40 },
+    // 더미 데이터
+    const dummyData = {
+      askp1: 410, askRSQN1: 100,
+      askp2: 400, askRSQN2: 80,
+      askp3: 399, askRSQN3: 50,
+      askp4: 388, askRSQN4: 30,
+      askp5: 387, askRSQN5: 20,
+      bidp1: 386, bidRSQN1: 25,
+      bidp2: 385, bidRSQN2: 40,
+      bidp3: 384, bidRSQN3: 60,
+      bidp4: 383, bidRSQN4: 100,
+      bidp5: 382, bidRSQN5: 200
+    };
+
+    let mergedOrders = [
+      { id: 1, price: dummyData.askp1, sellVolume: dummyData.askRSQN1, buyVolume: 0 },
+      { id: 2, price: dummyData.askp2, sellVolume: dummyData.askRSQN2, buyVolume: 0 },
+      { id: 3, price: dummyData.askp3, sellVolume: dummyData.askRSQN3, buyVolume: 0 },
+      { id: 4, price: dummyData.askp4, sellVolume: dummyData.askRSQN4, buyVolume: 0 },
+      { id: 5, price: dummyData.askp5, sellVolume: dummyData.askRSQN5, buyVolume: 0 },
+      { id: 6, price: dummyData.bidp1, sellVolume: 0, buyVolume: dummyData.bidRSQN1 },
+      { id: 7, price: dummyData.bidp2, sellVolume: 0, buyVolume: dummyData.bidRSQN2 },
+      { id: 8, price: dummyData.bidp3, sellVolume: 0, buyVolume: dummyData.bidRSQN3 },
+      { id: 9, price: dummyData.bidp4, sellVolume: 0, buyVolume: dummyData.bidRSQN4 },
+      { id: 10, price: dummyData.bidp5, sellVolume: 0, buyVolume: dummyData.bidRSQN5 }
     ];
-    
-    setOrders(sseData);
 
-    // ✅ 테스트 코드: 1초마다 수량 랜덤 변경
-    const interval = setInterval(() => {
-      setOrders((prevOrders) =>
-        prevOrders.map((order) => ({
-          ...order,
-          sellVolume: order.sellVolume > 0 ? Math.floor(Math.random() * 40) : 0,
-          buyVolume: order.buyVolume > 0 ? Math.floor(Math.random() * 40) : 0,
-        }))
-      );
-    }, 1000); // 1초마다 업데이트
-
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 제거
+    mergedOrders.sort((a, b) => b.price - a.price);
+    setOrders(mergedOrders);
   }, []);
 
   if (!code) {
     return <p className="text-center text-red-500">📢 종목 코드가 없습니다!</p>;
   }
 
-  // ✅ 현재 최대 주문량 계산 (막대 길이 조절을 위해)
-  const maxVolume = Math.max(...orders.map(order => Math.max(order.sellVolume, order.buyVolume)), 1);
-
   return (
-    <div className="w-[90%] relative p-4 rounded-lg shadow-lg">
+    <div className="w-full h-full max-w-md mx-auto p-4 bg-white shadow-lg rounded-lg mt-4">
       <AnimatePresence>
-        <ul className="flex flex-col items-center w-full space-y-1">
-          {orders.map((order) => {
-            const sellBarWidth = order.sellVolume > 0 ? (order.sellVolume / maxVolume) * 50 : 0;
-            const buyBarWidth = order.buyVolume > 0 ? (order.buyVolume / maxVolume) * 50 : 0;
-
-            return (
-              <motion.li
-                key={order.id}
-                initial={{ scale: 1.1, opacity: 0.8 }}
-                animate={{ scale: 1.0, opacity: 1 }}
-                transition={{ duration: 0.2 }}
-                className="relative w-full flex items-center justify-center py-2"
-              >
-                {/* 매도량 막대 (중앙에서 왼쪽으로 확장) */}
-                <motion.div
-                  className="absolute left-[50%] h-[50%] bg-blue-500 opacity-30"
-                  style={{
-                    width: `${sellBarWidth}%`,
-                    transform: "translateX(-100%)",
-                    borderTopLeftRadius: "9999px",
-                    borderBottomLeftRadius: "9999px",
-                    borderTopRightRadius: "0px",
-                    borderBottomRightRadius: "0px",
-                    transition: "width 0.3s ease-in-out",
-                  }}
-                />
-
-                {/* 매도량 숫자 (왼쪽) */}
-                <span className="relative text-sm font-bold text-blue-500 w-14 text-right z-10">
-                  {order.sellVolume > 0 ? order.sellVolume.toLocaleString() : ""}
-                </span>
-
-                {/* 가격 표시 (가운데) */}
-                <span className="relative text-lg font-bold text-black z-10 w-20 text-center">
-                  {order.price.toLocaleString()}
-                </span>
-
-                {/* 매수량 숫자 (오른쪽) */}
-                <span className="relative text-sm font-bold text-red-500 w-14 text-left z-10">
-                  {order.buyVolume > 0 ? order.buyVolume.toLocaleString() : ""}
-                </span>
-
-                {/* 매수량 막대 (중앙에서 오른쪽으로 확장) */}
-                <motion.div
-                  className="absolute left-[50%] h-[50%] bg-red-500 opacity-30"
-                  style={{
-                    width: `${buyBarWidth}%`,
-                    transform: "translateX(0%)",
-                    borderTopLeftRadius: "0px",
-                    borderBottomLeftRadius: "0px",
-                    borderTopRightRadius: "9999px",
-                    borderBottomRightRadius: "9999px",
-                    transition: "width 0.3s ease-in-out",
-                  }}
-                />
-              </motion.li>
-            );
-          })}
+        <ul className="w-full text-lg font-bold">
+          {orders.map((order) => (
+            <motion.li
+              key={order.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="flex justify-between items-center py-2"
+            >
+              {/* 매도 주문 수량 (빨간색, 왼쪽 정렬) */}
+              <span className="text-red-500 text-left w-1/3 min-w-[60px]">
+                {order.sellVolume > 0 ? order.sellVolume.toLocaleString() : ""}
+              </span>
+              
+              {/* 현재 가격 (검정색, 중앙 정렬, 좌우 회색 테두리 추가) */}
+              <span className="text-black text-center w-1/3 min-w-[60px] border-l border-r border-gray-300 px-2">
+                {order.price.toLocaleString()}
+              </span>
+              
+              {/* 매수 주문 수량 (파란색, 오른쪽 정렬) */}
+              <span className="text-blue-500 text-right w-1/3 min-w-[60px]">
+                {order.buyVolume > 0 ? order.buyVolume.toLocaleString() : ""}
+              </span>
+            </motion.li>
+          ))}
         </ul>
       </AnimatePresence>
     </div>
   );
 };
 
-export default OrderBookCopy;
+export default OrderBook_copy;

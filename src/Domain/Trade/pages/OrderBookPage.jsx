@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import OrderBook from "../components/OrderBook";
-//import OrderBookCopy from "../components/OrderBook copy";
+import OrderBook_copy from "../components/OrderBook copy";
 import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import TradeHeader from "../components/TradeHeader";
@@ -23,8 +22,8 @@ const OrderBookPage = () => {
         className="w-full max-w-md text-center"
       />
 
-      <div className="w-full max-w-md flex justify-center mt-18">
-        <OrderBook />
+      <div className="flex-grow w-full max-w-md flex justify-center">
+        <OrderBook_copy/>
       </div>
 
       <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
