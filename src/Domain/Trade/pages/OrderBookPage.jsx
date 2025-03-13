@@ -22,8 +22,8 @@ const OrderBookPage = () => {
         className="w-full max-w-md text-center"
       />
 
-      <div className="w-full max-w-md flex justify-center mt-18">
-        <OrderBook />
+      <div className="flex-grow w-full max-w-md flex justify-center">
+        <OrderBook/>
       </div>
 
       <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />

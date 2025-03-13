@@ -6,9 +6,16 @@ import api from "../../../utils/api";
 const FriendList = ({ friends = [], onFriendAdded }) => {
   const navigate = useNavigate();
   const [friendList, setFriendList] = useState(friends);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
 
   useEffect(() => {
     setFriendList(friends);
+    if (friends.length > 0) {
+      setIsLoading(false); // 데이터가 들어오면 로딩 종료
+    } else {
+      setTimeout(() => setIsLoading(false), 100); // 최소한의 로딩 효과 추가
+    }
   }, [friends]);
 
   const handleAddFriend = async (friendId) => {
@@ -36,7 +43,9 @@ const FriendList = ({ friends = [], onFriendAdded }) => {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-3">
-      {friendList.length === 0 ? (
+      {isLoading ? (
+        <p className="text-center text-gray-500">로딩 중...</p>
+      ) :friendList.length === 0 ? (
         <p className="text-center text-gray-500">검색 결과가 없습니다.</p>
       ) : (
         friendList.map((friend) => (

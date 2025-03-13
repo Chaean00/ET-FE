@@ -3,6 +3,7 @@ import ShakingEgg from "./ShakingEgg";
 
 const EggList = ({ eggs = [], onHatchEgg }) => {
   const [eggTimers, setEggTimers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (eggs.length > 0) {
@@ -13,7 +14,11 @@ const EggList = ({ eggs = [], onHatchEgg }) => {
           isHatched: egg.timeRemaining === "00:00:00",
         }))
       );
+      setIsLoading(false); // 데이터가 들어오면 로딩 종료
+    } else {
+      setTimeout(() => setIsLoading(false), 100); // 최소한의 로딩 효과
     }
+    
   }, [eggs]);
 
   useEffect(() => {
@@ -30,6 +35,15 @@ const EggList = ({ eggs = [], onHatchEgg }) => {
 
     return () => clearInterval(timer);
   }, []);
+
+
+  if (isLoading) {
+    return (
+      <div className="mt-[10em] flex justify-center items-center h-full w-full">
+        <p className="text-gray-700 text-center text-lg">로딩 중...</p>
+      </div>
+    );
+  }
 
   if (eggTimers.length === 0) {
     return (
