@@ -13,18 +13,18 @@ const Footer = () => {
     home: ["/town", "/dogam", "/egglist", "/draw", "/friend", "/friendtown"],
     quiz: ["/quiz", "/todayquiz", "/quizdone"],
     trade: ["/trade", "/stock", "/stocktrade", "/orderbook", "/chatbotpage"],
-    mypage: ["/mypage", "/mystock", "/mytrade"],
+    mypage: ["/mypage", "/mystock", "/mytrade"]
   };
 
   const icons = [
     { name: "home", component: Home, paths: activePaths.home },
     { name: "quiz", component: Quiz, paths: activePaths.quiz },
     { name: "trade", component: Trade, paths: activePaths.trade },
-    { name: "mypage", component: MyPage, paths: activePaths.mypage },
+    { name: "mypage", component: MyPage, paths: activePaths.mypage }
   ];
 
   return (
-    <div className="fixed bottom-0 w-full bg-white border-t border-gray-300">
+    <div className="fixed bottom-0 w-full max-w-[375px] mx-auto bg-white border-t border-gray-300">
       <div className="flex justify-around py-4">
         {icons.map((icon) => {
           const IconComponent = icon.component;

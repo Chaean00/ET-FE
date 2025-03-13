@@ -1,4 +1,3 @@
-import Footer from "../../../common/components/Footer";
 import QuizLevel from "../components/QuizLevel";
 import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
 import { useNavigate } from "react-router-dom";
@@ -24,9 +23,6 @@ const QuizMainPage = () => {
         <div className="w-full max-w-md mt-12">
           <QuizLevel />
         </div>
-      </div>
-      <div className="w-full mt-auto">
-        <Footer />
       </div>
     </div>
   );

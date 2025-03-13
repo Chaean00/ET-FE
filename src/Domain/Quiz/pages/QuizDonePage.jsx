@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../../common/components/Footer";
 import QuizDone from "../components/QuizDone";
 import LevelPoint from "../components/LevelPoint";
 import smart from "../../../assets/tradetown/smart.png";
@@ -12,7 +11,7 @@ const pointMap = {
   TOP: 100,
   HIGH: 70,
   MEDIUM: 50,
-  LOW: 10,
+  LOW: 10
 };
 
 const QuizDonePage = () => {
@@ -41,8 +40,8 @@ const QuizDonePage = () => {
         const response = await api.get("/quizs/solved", {
           params: {
             quizId: savedAnswer.quizId,
-            userAnswer: savedAnswer.userAnswer,
-          },
+            userAnswer: savedAnswer.userAnswer
+          }
         });
 
         const quizResult = response.data;
@@ -56,7 +55,7 @@ const QuizDonePage = () => {
 
         setQuizData({
           ...quizResult,
-          earnedPoints: earned,
+          earnedPoints: earned
         });
       } catch (error) {
         console.error(
@@ -114,10 +113,6 @@ const QuizDonePage = () => {
             points={earnedPoints}
           />
         </div>
-      </div>
-
-      <div className="w-full mt-auto">
-        <Footer />
       </div>
     </div>
   );

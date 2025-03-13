@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MyChart from "../components/MyChart";
 import MyTable from "../components/MyTable";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
 
@@ -43,7 +42,7 @@ const MyStockPage = () => {
   }
 
   return (
-    <div className="scrollbar-custom flex-1 overflow-y-auto flex flex-col items-center h-screen px-4 pt-6 pb-28">
+    <div className="flex-1 overflow-x-hidden flex flex-col items-center px-4 pt-6 pb-28">
       <div className="w-full max-w-md flex items-center relative">
         <span onClick={() => navigate(-1)} className="absolute left-0">
           <BackButton className="w-8 h-8" />
@@ -68,8 +67,6 @@ const MyStockPage = () => {
           <span className="font-bold"> {points.toLocaleString()}P</span>입니다.
         </div>
       </div>
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };
