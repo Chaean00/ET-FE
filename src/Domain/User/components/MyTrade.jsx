@@ -32,6 +32,10 @@ const MyTrade = () => {
         const data = response.data;
         setTradeHistory(data.content);
         setTotalPages(data.totalPages);
+        if (data.totalPages == 0) {
+          setTotalPages(0);
+          setCurrentPage(-1);
+        }
       } catch (error) {
         console.error(
           "거래 내역 불러오기 실패:",
@@ -114,61 +118,67 @@ const MyTrade = () => {
           if (isPending) textColor = "text-gray-400";
 
           return (
-            <div key={index} className="space-y-3">
-              {index === 0 ||
-              formattedDate !==
-                dayjs(
-                  tradeHistory[index - 1].tradeStatus === "PENDING"
-                    ? tradeHistory[index - 1].createdAt
-                    : tradeHistory[index - 1].updatedAt
-                ).format("M월 D일 dddd") ? (
-                <h2 className="text-gray-700 text-md font-bold">
-                  {formattedDate}
-                </h2>
-              ) : null}
-              <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={trade.img}
-                      className="w-14 h-14 object-contain rounded-4xl"
-                    />
-                    <div className="flex flex-col">
-                      <p className="font-bold text-black">{trade.stockName}</p>
-                      <p className={`text-sm font-light ${textColor}`}>
-                        {statusText} <br />
-                        {trade.amount}주
-                      </p>
+            <>
+              <div key={index} className="space-y-3">
+                {index === 0 ||
+                formattedDate !==
+                  dayjs(
+                    tradeHistory[index - 1].tradeStatus === "PENDING"
+                      ? tradeHistory[index - 1].createdAt
+                      : tradeHistory[index - 1].updatedAt
+                  ).format("M월 D일 dddd") ? (
+                  <h2 className="text-gray-700 text-md font-bold">
+                    {formattedDate}
+                  </h2>
+                ) : null}
+                <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={trade.img}
+                        className="w-14 h-14 object-contain rounded-4xl"
+                      />
+                      <div className="flex flex-col">
+                        <p className="font-bold text-black">
+                          {trade.stockName}
+                        </p>
+                        <p className={`text-sm font-light ${textColor}`}>
+                          {statusText} <br />
+                          {trade.amount}주
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-4">
-                    <p className={`font-bold text-md ${textColor}`}>
-                      {trade.price.toLocaleString()}원
-                    </p>
-                    {isPending && (
-                      <button
-                        onClick={() => handleCancelTrade(trade)}
-                        className="cursor-pointer underline text-sm"
-                      >
-                        취소
-                      </button>
-                    )}
+                    <div className="flex items-center space-x-4">
+                      <p className={`font-bold text-md ${textColor}`}>
+                        {trade.price.toLocaleString()}원
+                      </p>
+                      {isPending && (
+                        <button
+                          onClick={() => handleCancelTrade(trade)}
+                          className="cursor-pointer underline text-sm"
+                        >
+                          취소
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           );
         })
       ) : (
-        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
+        <p className="text-center text-gray-500 min-h-[1314px]">
+          거래 내역이 없습니다.
+        </p>
       )}
 
       {/* 페이지네이션 버튼 */}
       <div className="flex justify-center space-x-2 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
+          disabled={currentPage <= 0}
           className={`px-3 py-2 rounded ${
             currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
           }`}
