@@ -8,7 +8,8 @@ export default function Alert() {
 
   useEffect(() => {
     if (data) {
-      const message = typeof data === "string" ? data : JSON.stringify(data);
+      const message =
+        typeof data === "string" ? data.split("/")[0] : JSON.stringify(data);
       toast(`🔔 거래 체결 알림: ${message}`, {
         position: "top-center",
         autoClose: 4000,
