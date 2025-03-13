@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import BackButton from "../../../common/components/BackButton";
 import FriendTop from "../components/FriendTop";
 import FriendTownCharacters from "../components/FriendTownCharacters";
-import Footer from "../../../common/components/Footer";
 import api from "../../../utils/api";
 
 const FriendTownPage = () => {
@@ -25,7 +24,7 @@ const FriendTownPage = () => {
           const newChars = response.data.map((pet) => ({
             id: pet.id,
             image: pet.img,
-            position: getRandomPosition(),
+            position: getRandomPosition()
           }));
           setPetList(newChars);
         } else {
@@ -59,10 +58,6 @@ const FriendTownPage = () => {
       <div className="flex-1 flex justify-center items-center">
         <FriendTownCharacters charList={petList} />
       </div>
-
-      <div className="w-full mt-auto">
-        <Footer />
-      </div>
     </div>
   );
 };
@@ -78,6 +73,6 @@ function getRandomPosition() {
 
   return {
     x: Math.max(0, Math.random() * maxWidth),
-    y: Math.max(0, Math.random() * maxHeight),
+    y: Math.max(0, Math.random() * maxHeight)
   };
 }

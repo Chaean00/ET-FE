@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import Button from "../../../common/components/Button";
 import DrawTop from "../components/DrawTop";
 import EggAcqModal from "../components/EggAcqModal";
 import BackButton from "../../../common/components/BackButton";
-import Footer from "../../../common/components/Footer";
 import api from "../../../utils/api";
 import draweggs from "../../../assets/egg/draweggs.png";
 import twinkle from "../../../assets/town/twinkle.png";
@@ -89,9 +87,6 @@ const DrawPage = () => {
             500 포인트로 뽑기!
           </Button>
         </span>
-      </div>
-      <div className="w-full">
-        <Footer />
       </div>
     </div>
   );

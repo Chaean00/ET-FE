@@ -2,7 +2,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useSSE from "../../../hooks/useSSE";
 import LineChart from "../components/LineChart";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import StockInfo from "../components/StockInfo";
 import StockBottom from "../components/StockBottom";
@@ -77,14 +76,14 @@ const StockPage = () => {
             id: 1,
             price: closingPrice,
             sellVolume: 0,
-            buyVolume: 0,
+            buyVolume: 0
           },
           {
             id: 2,
             price: closingPrice,
             sellVolume: 0,
-            buyVolume: 0,
-          },
+            buyVolume: 0
+          }
         ]);
       }
       return;
@@ -95,14 +94,14 @@ const StockPage = () => {
         id: 1,
         price: Number(sseData.askp1),
         sellVolume: Number(sseData.askRSQN1),
-        buyVolume: 0,
+        buyVolume: 0
       },
       {
         id: 2,
         price: Number(sseData.bidp1),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN1),
-      },
+        buyVolume: Number(sseData.bidRSQN1)
+      }
     ];
 
     setOrders(updatedOrders);
@@ -152,8 +151,6 @@ const StockPage = () => {
           </div>
         </>
       )}
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

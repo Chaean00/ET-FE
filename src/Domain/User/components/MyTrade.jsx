@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import api from "../../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
@@ -14,39 +14,64 @@ const MyTrade = () => {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
+  // tradeCache: 동일한 요청 결과를 저장하기 위한 Map (캐싱)
+  const tradeCache = useMemo(() => new Map(), []);
+
+  // tradeStatus 또는 pageSize가 변경되면 현재 페이지를 0으로 초기화
   useEffect(() => {
     setCurrentPage(0);
   }, [tradeStatus, pageSize]);
 
-  useEffect(() => {
-    const fetchTradeHistory = async () => {
-      try {
-        const response = await api.get("/users/history", {
-          params: {
-            page: currentPage,
-            size: pageSize,
-            tradeStatus: tradeStatus || null // 필터 적용
-          }
-        });
+  // fetchTradeHistory 함수: 캐싱을 적용해 API 호출 결과를 재사용
+  const fetchTradeHistory = useCallback(async () => {
+    // 캐시 키 생성 (현재 페이지, 페이지 크기, 필터 상태)
+    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
 
-        const data = response.data;
-        setTradeHistory(data.content);
-        setTotalPages(data.totalPages);
-        if (data.totalPages == 0) {
-          setTotalPages(0);
-          setCurrentPage(-1);
+    // 캐시에 저장된 데이터가 있으면 해당 데이터를 사용
+    if (tradeCache.has(cacheKey)) {
+      const cachedData = tradeCache.get(cacheKey);
+      setTradeHistory(cachedData.content);
+      setTotalPages(cachedData.totalPages);
+      return;
+    }
+
+    try {
+      const response = await api.get("/users/history", {
+        params: {
+          page: currentPage,
+          size: pageSize,
+          tradeStatus: tradeStatus || null // 필터 적용
         }
-      } catch (error) {
-        console.error(
-          "거래 내역 불러오기 실패:",
-          error.response?.data || error.message
-        );
+      });
+
+      const data = response.data;
+      // 캐시에 저장
+      tradeCache.set(cacheKey, {
+        content: data.content,
+        totalPages: data.totalPages
+      });
+
+      setTradeHistory(data.content);
+      setTotalPages(data.totalPages);
+
+      if (data.totalPages === 0) {
+        setTotalPages(0);
+        setCurrentPage(-1);
       }
-    };
+    } catch (error) {
+      console.error(
+        "거래 내역 불러오기 실패:",
+        error.response?.data || error.message
+      );
+    }
+  }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
+  // 페이지, 필터, 크기가 변경될 때마다 fetchTradeHistory 호출
+  useEffect(() => {
     fetchTradeHistory();
-  }, [currentPage, pageSize, tradeStatus]); // 의존성 배열 추가
+  }, [fetchTradeHistory]);
 
+  // 거래 취소 함수
   const handleCancelTrade = async (trade) => {
     try {
       await api.post("/trades/cancel", {
@@ -71,7 +96,7 @@ const MyTrade = () => {
   };
 
   return (
-    <div className="w-full max-w-md space-y-4">
+    <div className="w-full overflow-y max-w-md space-y-4">
       {/* 필터링 및 페이지 크기 선택 */}
       <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
         <select
@@ -118,54 +143,50 @@ const MyTrade = () => {
           if (isPending) textColor = "text-gray-400";
 
           return (
-            <>
-              <div key={index} className="space-y-3">
-                {index === 0 ||
-                formattedDate !==
-                  dayjs(
-                    tradeHistory[index - 1].tradeStatus === "PENDING"
-                      ? tradeHistory[index - 1].createdAt
-                      : tradeHistory[index - 1].updatedAt
-                  ).format("M월 D일 dddd") ? (
-                  <h2 className="text-gray-700 text-md font-bold">
-                    {formattedDate}
-                  </h2>
-                ) : null}
-                <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={trade.img}
-                        className="w-14 h-14 object-contain rounded-4xl"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-bold text-black">
-                          {trade.stockName}
-                        </p>
-                        <p className={`text-sm font-light ${textColor}`}>
-                          {statusText} <br />
-                          {trade.amount}주
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-4">
-                      <p className={`font-bold text-md ${textColor}`}>
-                        {trade.price.toLocaleString()}원
+            <div key={index} className="space-y-3">
+              {index === 0 ||
+              formattedDate !==
+                dayjs(
+                  tradeHistory[index - 1].tradeStatus === "PENDING"
+                    ? tradeHistory[index - 1].createdAt
+                    : tradeHistory[index - 1].updatedAt
+                ).format("M월 D일 dddd") ? (
+                <h2 className="text-gray-700 text-md font-bold">
+                  {formattedDate}
+                </h2>
+              ) : null}
+              <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={trade.img}
+                      className="w-14 h-14 object-contain rounded-4xl"
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-bold text-black">{trade.stockName}</p>
+                      <p className={`text-sm font-light ${textColor}`}>
+                        {statusText} <br />
+                        {trade.amount}주
                       </p>
-                      {isPending && (
-                        <button
-                          onClick={() => handleCancelTrade(trade)}
-                          className="cursor-pointer underline text-sm"
-                        >
-                          취소
-                        </button>
-                      )}
                     </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <p className={`font-bold text-md ${textColor}`}>
+                      {trade.price.toLocaleString()}원
+                    </p>
+                    {isPending && (
+                      <button
+                        onClick={() => handleCancelTrade(trade)}
+                        className="cursor-pointer underline text-sm"
+                      >
+                        취소
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           );
         })
       ) : (
