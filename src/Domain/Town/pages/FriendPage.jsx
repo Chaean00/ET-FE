@@ -11,6 +11,12 @@ const FriendPage = () => {
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    if (searchTerm == "") {
+      fetchFriends();
+    }
+  }, [searchTerm]);
+
   const fetchFriends = async () => {
     try {
       const response = await api.get(`/users/subscription`);
@@ -43,29 +49,27 @@ const FriendPage = () => {
       if (response.status === 200 && response.data) {
         const friend = response.data;
 
-        const isExistingFriend = friends.some((f) => f.id === friend.id);
-
         const searchedFriends = [
           {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: isExistingFriend
+            isFriend: friend.subscribed // 이미 구독한 상태인지 확인
           }
         ];
 
         setFriends(searchedFriends);
-      } else {
-        console.warn("검색 결과 없음");
-        // fetchFriends();
+      } else if (response.status === 500) {
+        setFriends([]);
       }
     } catch (error) {
+      setFriends([]);
       console.error("검색 실패:", error.response?.data || error.message);
-      // fetchFriends();
     }
   };
 
   const handleFriendAdded = () => {
+    setSearchTerm("");
     fetchFriends();
   };
 
@@ -80,7 +84,7 @@ const FriendPage = () => {
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />
         </span>
         <div className="w-full">
-          <SearchFriend onSearch={searchFriends} />
+          <SearchFriend onSearch={searchFriends} searchTerm={searchTerm} />
         </div>
       </div>
 

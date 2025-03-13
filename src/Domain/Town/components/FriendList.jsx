@@ -14,7 +14,7 @@ const FriendList = ({ friends = [], onFriendAdded }) => {
   const handleAddFriend = async (friendId) => {
     try {
       const response = await api.post("/users/subscription", {
-        subscribedId: friendId,
+        subscribedId: friendId
       });
 
       if (response.status === 200) {
@@ -63,7 +63,7 @@ const FriendList = ({ friends = [], onFriendAdded }) => {
                 className="cursor-pointer text-sm font-semibold bg-blue-500 text-white px-4 py-1 rounded-2xl hover:bg-blue-600"
                 onClick={() =>
                   navigate("/friendtown", {
-                    state: { name: friend.name, id: friend.id },
+                    state: { name: friend.name, id: friend.id }
                   })
                 }
               >
