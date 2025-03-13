@@ -8,6 +8,7 @@ import Answer from "../components/Answer";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
 import useQuiz from "../../../hooks/useQuiz";
+import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
 
 const TodayQuizPage = () => {
   const navigate = useNavigate();
@@ -89,9 +90,16 @@ const TodayQuizPage = () => {
           <BackButton className="w-8 h-8 object-contain" />
         </span>
       </div>
-
+      <div className="absolute flex flex-col items-center top-1 right-3 rounded-full border-gray-500 shadow-[0_20px_20px_rgba(0,0,0,0.2)] hover:opacity-65">
+        <img
+          src={GPTlogo}
+          alt="GPT Logo"
+          className="w-20 h-20 cursor-pointer "
+          onClick={() => navigate("/ChatbotPage")}
+        />
+      </div>
       <div className="flex flex-col items-center">
-        <div className="w-full flex justify-center mt-14">
+        <div className="w-full flex justify-center mt-26">
           <LevelPoint level={difficulty} />
         </div>
 
