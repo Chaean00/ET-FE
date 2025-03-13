@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../../common/components/Footer";
 import QuizDone from "../components/QuizDone";
 import LevelPoint from "../components/LevelPoint";
 import smart from "../../../assets/tradetown/smart.png";
 import api from "../../../utils/api";
 import useQuiz from "../../../hooks/useQuiz";
+import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
 
 const pointMap = {
   TOP: 100,
@@ -14,6 +16,7 @@ const pointMap = {
 };
 
 const QuizDonePage = () => {
+  const navigate = useNavigate();
   const { userUid, quizData, setQuizData, loading, setLoading } = useQuiz();
   const [earnedPoints, setEarnedPoints] = useState(0);
 
@@ -86,8 +89,16 @@ const QuizDonePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center">
+      <div className="absolute flex flex-col items-center top-1 right-3 rounded-full border-gray-500 shadow-[0_20px_20px_rgba(0,0,0,0.2)] hover:opacity-65">
+        <img
+          src={GPTlogo}
+          alt="GPT Logo"
+          className="w-20 h-20 cursor-pointer "
+          onClick={() => navigate("/ChatbotPage")}
+        />
+      </div>
       <div className="px-6">
-        <div className="m-auto mt-14 flex justify-between w-full max-w-xs">
+        <div className="m-auto mt-26 flex justify-between w-full max-w-xs">
           <LevelPoint level={quizData.solvedQuizDifficulty} />
         </div>
 
