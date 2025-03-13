@@ -8,7 +8,7 @@ const StockBottom = ({
   stockId,
   ownedStocks = [],
   orders = [],
-  closingPrice,
+  closingPrice
 }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -87,7 +87,7 @@ const StockBottom = ({
         {isOwned ? (
           <>
             <Button
-              className="p-4 text-lg rounded-2xl"
+              className="p-4 text-lg rounded-2xl fixed"
               variant={"small"}
               color={"blue"}
               onClick={() => handleNavigate("sell")}
@@ -96,7 +96,7 @@ const StockBottom = ({
             </Button>
 
             <Button
-              className="p-4 text-lg rounded-2xl"
+              className="p-4 text-lg rounded-2xl fixed"
               variant={"small"}
               color={"red"}
               onClick={() => handleNavigate("buy")}

@@ -4,7 +4,6 @@ import SearchCompany from "../components/SearchCompany";
 import MyAccount from "../../User/components/MyAccount";
 import MyHeld from "../../User/components/MyHeld";
 import MyInterested from "../../User/components/MyInterested";
-import Footer from "../../../common/components/Footer";
 
 const TradeMainPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,7 +35,7 @@ const TradeMainPage = () => {
   }, [searchQuery]);
 
   return (
-    <div className="scrollbar-custom overflow-y-auto relative w-full h-screen flex flex-col pb-15">
+    <div className="w-full flex flex-col pb-15">
       <div className="max-w-md mx-auto flex justify-between items-center mt-3 space-x-14">
         <div className="text-3xl font-bold mb-2">투자</div>
 
@@ -62,10 +61,6 @@ const TradeMainPage = () => {
         <div className="mb-12">
           <MyInterested />
         </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t z-50">
-        <Footer />
       </div>
     </div>
   );

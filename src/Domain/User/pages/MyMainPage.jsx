@@ -1,7 +1,6 @@
 import MyProfile from "../components/MyProfile";
 import MyCategory from "../components/MyCategory";
 import MyLogOutBtn from "../components/MyLogOutBtn";
-import Footer from "../../../common/components/Footer";
 
 const MyMainPage = () => {
   return (
@@ -17,8 +16,6 @@ const MyMainPage = () => {
           <MyCategory />
         </div>
       </div>
-
-      <Footer className="absolute bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

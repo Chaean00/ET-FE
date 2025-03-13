@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Footer from "../../../common/components/Footer";
 import LevelPoint from "../components/LevelPoint";
 import OXButton from "../components/OXButton";
 import QuizContent from "../components/QuizContent";
@@ -23,7 +22,7 @@ const TodayQuizPage = () => {
     loading,
     setLoading,
     submitted,
-    setSubmitted,
+    setSubmitted
   } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -62,7 +61,7 @@ const TodayQuizPage = () => {
     try {
       const response = await api.post("/quizs", {
         quizId: quizData.id,
-        userAnswer: answer,
+        userAnswer: answer
       });
 
       setFeedback(response.data);
@@ -122,10 +121,6 @@ const TodayQuizPage = () => {
             <OXButton onAnswer={handleAnswerSubmit} disabled={submitted} />
           </div>
         </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md">
-        <Footer />
       </div>
     </div>
   );

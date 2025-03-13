@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DogamTop from "../components/DogamTop";
 import Dogam from "../components/Dogam";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
 
@@ -44,10 +43,6 @@ const DogamPage = () => {
       <div className="flex-1 flex flex-col items-center gap-8 w-full mt-[65px]">
         <DogamTop>도감</DogamTop>
         <Dogam petList={petList} />
-      </div>
-
-      <div className="w-full">
-        <Footer />
       </div>
     </div>
   );

@@ -21,9 +21,12 @@ import StockTradePage from "./Domain/Trade/pages/StockTradePage";
 import ChatbotPage from "./Domain/Quiz/pages/ChatbotPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute, PublicRoute } from "./RouteGuards";
+import Footer from "./common/components/Footer";
 import useAuth from "./hooks/useAuth";
+import { useLocation } from "react-router-dom";
 
 // public(비로그인) 사용자 전용 경로
+
 const publicRoutes = [
   { path: "/login", element: <LogInPage /> },
   { path: "/signup", element: <SignUpPage /> }
@@ -78,10 +81,18 @@ function AppContent() {
 }
 
 function App() {
+  const location = useLocation();
+  const { pathname } = location;
+
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <div className="w-full max-w-[375px] h-screen mx-auto relative">
+      <AuthProvider>
+        <div className="flex-grow overflow-y-auto">
+          <AppContent />
+        </div>
+        {pathname === "/" ? null : <Footer />}
+      </AuthProvider>
+    </div>
   );
 }
 
