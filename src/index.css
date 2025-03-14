@@ -113,7 +113,7 @@ body {
 }
 
 .scrollbar-custom::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
@@ -122,11 +122,11 @@ body {
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 150, 0.6);
+  background: rgba(150, 150, 150, 0.8);
   border-radius: 10px;
   transition: background 0.3s ease-in-out;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 100, 100, 0.8);
+  background: rgba(100, 100, 100, 0.1);
 }

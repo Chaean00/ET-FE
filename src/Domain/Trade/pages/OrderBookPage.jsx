@@ -14,14 +14,9 @@ const OrderBookPage = () => {
         </span>
       </div>
 
-      <TradeHeader
-        companyName="삼성전자"
-        currentPrice={57200}
-        changePercent={2.88}
-        className="w-full max-w-md text-center"
-      />
+      <TradeHeader className="w-full max-w-md text-center" />
 
-      <div className="flex-grow w-full max-w-md flex justify-center">
+      <div className="flex-grow w-full max-w-md flex justify-center items-center">
         <OrderBook />
       </div>
     </div>

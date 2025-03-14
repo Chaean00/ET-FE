@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import debounce from "lodash/debounce";
 import BackButton from "../../../common/components/BackButton";
@@ -10,7 +10,6 @@ const FriendPage = () => {
   const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const searchTimeout = useRef(null);
 
   // 전체 친구 목록 불러오기
   const fetchFriends = useCallback(async () => {
@@ -21,7 +20,7 @@ const FriendPage = () => {
           id: friend.id,
           uid: friend.uid,
           name: friend.name,
-          isFriend: true,
+          isFriend: true
         }));
         setFriends(myFriends);
       } else {
@@ -49,8 +48,8 @@ const FriendPage = () => {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: friend.subscribed, // 이미 구독한 상태인지 확인
-          },
+            isFriend: friend.subscribed // 이미 구독한 상태인지 확인
+          }
         ];
         setFriends(searchedFriends);
       } else if (response.status === 500) {
@@ -67,13 +66,6 @@ const FriendPage = () => {
     () => debounce(searchFriendsHandler, 300),
     [searchFriendsHandler]
   );
-
-  // 검색어가 빈 문자열이면 전체 친구 목록 호출
-  useEffect(() => {
-    if (searchTerm === "") {
-      fetchFriends();
-    }
-  }, [searchTerm, fetchFriends]);
 
   // 컴포넌트 마운트 시 전체 친구 목록 호출
   useEffect(() => {
@@ -96,6 +88,7 @@ const FriendPage = () => {
           <SearchFriend
             onSearch={debouncedSearchFriends}
             searchTerm={searchTerm}
+            fetchFriends={fetchFriends}
           />
         </div>
       </div>

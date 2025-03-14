@@ -38,7 +38,7 @@ const ClickText = styled.div`
   font-weight: bold;
   color: ${({ clickable }) =>
     clickable ? "black" : "rgb(255,255,255); opacity : 0.45"};
-  pointer-events: ${({ clickable }) => (clickable ? "auto" : "none")};
+  z-index: 10;
 `;
 
 const GaugeWrapper = styled.div`
@@ -70,10 +70,17 @@ const GaugeBar = ({
       <LevelText>lv. {level}</LevelText>
       <ClickText
         clickable={isClickable}
-        onClick={isClickable ? onPetAcquisition : null}
+        onClick={
+          isClickable
+            ? () => {
+                onPetAcquisition();
+              }
+            : null
+        }
       >
         click!
       </ClickText>
+
       <ProgressContainer>
         <ProgressFill progress={progress} />
       </ProgressContainer>
