@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import debounce from "lodash/debounce";
 import BackButton from "../../../common/components/BackButton";
@@ -10,6 +10,7 @@ const FriendPage = () => {
   const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const searchTimeout = useRef(null);
 
   // 전체 친구 목록 불러오기
   const fetchFriends = useCallback(async () => {
@@ -20,7 +21,7 @@ const FriendPage = () => {
           id: friend.id,
           uid: friend.uid,
           name: friend.name,
-          isFriend: true
+          isFriend: true,
         }));
         setFriends(myFriends);
       } else {
@@ -35,7 +36,7 @@ const FriendPage = () => {
   // 검색 API 호출 (debounce 적용 전 기본 함수)
   const searchFriendsHandler = useCallback(async (uid) => {
     const trimmedUid = uid.trim();
-    setSearchTerm(trimmedUid);
+    if (!trimmedUid) return;
 
     try {
       const response = await api.get(
@@ -48,8 +49,8 @@ const FriendPage = () => {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: friend.subscribed // 이미 구독한 상태인지 확인
-          }
+            isFriend: friend.subscribed, // 이미 구독한 상태인지 확인
+          },
         ];
         setFriends(searchedFriends);
       } else if (response.status === 500) {

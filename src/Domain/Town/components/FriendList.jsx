@@ -76,7 +76,7 @@ const FriendList = ({ friends = [], onFriendAdded }) => {
                   })
                 }
               >
-                목장 보기
+                마을 보기
               </button>
             ) : (
               <button

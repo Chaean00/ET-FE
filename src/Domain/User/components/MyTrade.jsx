@@ -3,6 +3,7 @@ import api from "../../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
+import default_img from "../../../assets/trade/default_img.png";
 
 dayjs.locale("ko");
 
@@ -40,15 +41,15 @@ const MyTrade = () => {
         params: {
           page: currentPage,
           size: pageSize,
-          tradeStatus: tradeStatus || null // 필터 적용
-        }
+          tradeStatus: tradeStatus || null, // 필터 적용
+        },
       });
 
       const data = response.data;
       // 캐시에 저장
       tradeCache.set(cacheKey, {
         content: data.content,
-        totalPages: data.totalPages
+        totalPages: data.totalPages,
       });
 
       setTradeHistory(data.content);
@@ -78,7 +79,7 @@ const MyTrade = () => {
         tradeId: trade.historyId,
         position: trade.position,
         stockCode: trade.stockCode,
-        price: trade.price
+        price: trade.price,
       });
 
       setTradeHistory((prevTrades) =>

@@ -1,31 +1,6 @@
-import { useState, useEffect } from "react";
-import api from "../../../utils/api";
 import shinhan from "../../../assets/trade/shinhan.png";
 
-const MyAccount = ({ evaluationAmount, profit, profitRate }) => {
-  const [accountData, setAccountData] = useState({
-    accountNumber: "정보 없음",
-    availableAmount: 0,
-  });
-
-  useEffect(() => {
-    const fetchAccountData = async () => {
-      try {
-        const response = await api.get("/users/account");
-        const { deposit, account } = response.data;
-
-        setAccountData({
-          accountNumber: account || "정보 없음",
-          availableAmount: deposit || 0,
-        });
-      } catch (error) {
-        console.error("계좌 정보 불러오기 실패:", error);
-      }
-    };
-
-    fetchAccountData();
-  }, []);
-
+const MyAccount = ({ evaluationAmount, profit, profitRate, accountData }) => {
   const profitColor =
     profit >= 0
       ? "text-red-500"
@@ -35,7 +10,7 @@ const MyAccount = ({ evaluationAmount, profit, profitRate }) => {
 
   return (
     <div className="w-full max-w-md p-4">
-      <h2 className="text-lg font-bold mb-2">내 주식</h2>
+      <h2 className="text-lg font-bold mb-2">나의 주식</h2>
 
       <div className="bg-white rounded-2xl shadow-md p-4">
         <div className="flex items-center space-x-3">

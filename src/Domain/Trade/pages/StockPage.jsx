@@ -63,7 +63,7 @@ const StockPage = () => {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1400);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [stockId]);
