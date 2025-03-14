@@ -8,7 +8,7 @@ const StockBottom = ({
   stockId,
   ownedStocks = [],
   orders = [],
-  closingPrice,
+  closingPrice
 }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -71,9 +71,9 @@ const StockBottom = ({
   };
 
   return (
-    <div className="px-2 flex items-center justify-center space-x-1 w-full">
+    <div className="flex space-x-3">
       {isFavorite === null ? (
-        <div className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-xl bg-gray-200" />
+        <div className="w-10 h-10 flex border border-gray-300 rounded-xl bg-gray-200" />
       ) : (
         <StockBottomHeart
           className="w-15 h-15"
@@ -83,11 +83,7 @@ const StockBottom = ({
         />
       )}
 
-      <div
-        className={`flex items-center w-full justify-center ${
-          isOwned ? "space-x-2" : ""
-        }`}
-      >
+      <div className={`flex items-center w-full ${isOwned ? "space-x-2" : ""}`}>
         {isOwned ? (
           <>
             <Button
@@ -110,7 +106,7 @@ const StockBottom = ({
           </>
         ) : (
           <Button
-            className="text-lg rounded-2xl w-full py-3"
+            className="text-lg rounded-2xl py-3"
             variant={"large"}
             color={"red"}
             onClick={() => handleNavigate("buy")}

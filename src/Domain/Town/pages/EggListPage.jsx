@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import StockAcqModal from "../components/StockAcqModal";
 import EggList from "../components/EggList";
 import BackButton from "../../../common/components/BackButton";
-import Footer from "../../../common/components/Footer";
 import Button from "../../../common/components/Button";
 import api from "../../../utils/api";
 import egg from "../../../assets/egg/egg.png";
@@ -47,7 +46,7 @@ const EggListPage = () => {
         setSelectedStock({
           stockImg: response.data.stockImg,
           stockSymbol: response.data.stockName,
-          stockAmount: response.data.amount,
+          stockAmount: response.data.amount
         });
 
         setEggList((prevEggs) => prevEggs.filter((e) => e.eggId !== egg.eggId));
@@ -90,10 +89,6 @@ const EggListPage = () => {
             <img src={egg} className="h-6 object-contain" />
           </Button>
         </div>
-      </div>
-
-      <div className="w-full mt-auto">
-        <Footer />
       </div>
     </div>
   );

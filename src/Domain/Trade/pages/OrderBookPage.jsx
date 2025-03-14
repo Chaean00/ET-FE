@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import OrderBook from "../components/OrderBook";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import TradeHeader from "../components/TradeHeader";
 
@@ -22,11 +21,9 @@ const OrderBookPage = () => {
         className="w-full max-w-md text-center"
       />
 
-      <div className="w-full max-w-md flex justify-center mt-18">
+      <div className="flex-grow w-full max-w-md flex justify-center">
         <OrderBook />
       </div>
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

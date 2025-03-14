@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import TownCharacters from "../components/TownCharacters";
 import GaugeBar from "../components/GaugeBar";
 import TownBottom from "../components/TownBottom";
-import Footer from "../../../common/components/Footer";
 import LoadingScreen from "../components/LoadingScreen";
 import PetAcqModal from "../components/PetAcqModal";
 import { getUserHistory } from "../../../utils/history";
@@ -91,10 +90,10 @@ const TownMainPage = () => {
   };
 
   return (
-    <div className="custom-cursor townbg relative w-full h-screen overflow-hidden">
+    <div className="custom-cursor townbg w-full overflow-hidden">
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
 
-      <div className="absolute top-2 left-0 w-full flex justify-center px-0 z-20 py-2">
+      <div className="top-2 w-full flex justify-center px-0 z-20 py-2">
         <GaugeBar
           value={tradeCount === 0 || tradeCount % 5 !== 0 ? tradeCount % 5 : 5}
           maxValue={5}
@@ -107,12 +106,8 @@ const TownMainPage = () => {
 
       <TownCharacters charList={charList} />
 
-      <div className="w-full absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10">
+      <div className="w-full absolute bottom-16">
         <TownBottom />
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md">
-        <Footer />
       </div>
 
       {acquiredPet && (

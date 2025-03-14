@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import api from "../../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
@@ -15,35 +15,64 @@ const MyTrade = () => {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
+  // tradeCache: 동일한 요청 결과를 저장하기 위한 Map (캐싱)
+  const tradeCache = useMemo(() => new Map(), []);
+
+  // tradeStatus 또는 pageSize가 변경되면 현재 페이지를 0으로 초기화
   useEffect(() => {
     setCurrentPage(0);
   }, [tradeStatus, pageSize]);
 
-  useEffect(() => {
-    const fetchTradeHistory = async () => {
-      try {
-        const response = await api.get("/users/history", {
-          params: {
-            page: currentPage,
-            size: pageSize,
-            tradeStatus: tradeStatus || null, // 필터 적용
-          },
-        });
+  // fetchTradeHistory 함수: 캐싱을 적용해 API 호출 결과를 재사용
+  const fetchTradeHistory = useCallback(async () => {
+    // 캐시 키 생성 (현재 페이지, 페이지 크기, 필터 상태)
+    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
 
-        const data = response.data;
-        setTradeHistory(data.content);
-        setTotalPages(data.totalPages);
-      } catch (error) {
-        console.error(
-          "거래 내역 불러오기 실패:",
-          error.response?.data || error.message
-        );
+    // 캐시에 저장된 데이터가 있으면 해당 데이터를 사용
+    if (tradeCache.has(cacheKey)) {
+      const cachedData = tradeCache.get(cacheKey);
+      setTradeHistory(cachedData.content);
+      setTotalPages(cachedData.totalPages);
+      return;
+    }
+
+    try {
+      const response = await api.get("/users/history", {
+        params: {
+          page: currentPage,
+          size: pageSize,
+          tradeStatus: tradeStatus || null, // 필터 적용
+        },
+      });
+
+      const data = response.data;
+      // 캐시에 저장
+      tradeCache.set(cacheKey, {
+        content: data.content,
+        totalPages: data.totalPages,
+      });
+
+      setTradeHistory(data.content);
+      setTotalPages(data.totalPages);
+
+      if (data.totalPages === 0) {
+        setTotalPages(0);
+        setCurrentPage(-1);
       }
-    };
+    } catch (error) {
+      console.error(
+        "거래 내역 불러오기 실패:",
+        error.response?.data || error.message
+      );
+    }
+  }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
+  // 페이지, 필터, 크기가 변경될 때마다 fetchTradeHistory 호출
+  useEffect(() => {
     fetchTradeHistory();
-  }, [currentPage, pageSize, tradeStatus]); // 의존성 배열 추가
+  }, [fetchTradeHistory]);
 
+  // 거래 취소 함수
   const handleCancelTrade = async (trade) => {
     try {
       await api.post("/trades/cancel", {
@@ -68,7 +97,7 @@ const MyTrade = () => {
   };
 
   return (
-    <div className="w-full max-w-md space-y-4">
+    <div className="w-full overflow-y max-w-md space-y-4">
       {/* 필터링 및 페이지 크기 선택 */}
       <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
         <select
@@ -162,14 +191,16 @@ const MyTrade = () => {
           );
         })
       ) : (
-        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
+        <p className="text-center text-gray-500 min-h-[1314px]">
+          거래 내역이 없습니다.
+        </p>
       )}
 
       {/* 페이지네이션 버튼 */}
       <div className="flex justify-center space-x-2 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
+          disabled={currentPage <= 0}
           className={`px-3 py-2 rounded ${
             currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
           }`}

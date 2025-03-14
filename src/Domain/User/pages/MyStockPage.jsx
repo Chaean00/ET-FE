@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MyChart from "../components/MyChart";
 import MyTable from "../components/MyTable";
-import Footer from "../../../common/components/Footer";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
 
@@ -10,6 +9,7 @@ const MyStockPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [points, setPoints] = useState(0);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -24,14 +24,25 @@ const MyStockPage = () => {
           "데이터 불러오기 실패:",
           error.response?.data || error.message
         );
+      } finally {
+        setIsLoading(false); // API 호출이 끝나면 로딩 상태 종료
       }
     };
 
     fetchUserData();
   }, []);
 
+  // 로딩 중이면 '로딩 중...' 문구 표시
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500 text-lg">로딩 중...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="scrollbar-custom flex-1 overflow-y-auto flex flex-col items-center h-screen px-4 pt-6 pb-28">
+    <div className="flex-1 overflow-x-hidden flex flex-col items-center px-4 pt-6 pb-28">
       <div className="w-full max-w-md flex items-center relative">
         <span onClick={() => navigate(-1)} className="absolute left-0">
           <BackButton className="w-8 h-8" />
@@ -56,8 +67,6 @@ const MyStockPage = () => {
           <span className="font-bold"> {points.toLocaleString()}P</span>입니다.
         </div>
       </div>
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

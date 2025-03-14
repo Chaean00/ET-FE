@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../../common/components/Footer";
 import TradeContent from "../components/TradeContent";
 import BackButton from "../../../common/components/BackButton";
 import TradeHeader from "../components/TradeHeader";
@@ -66,7 +65,7 @@ const StockTradePage = () => {
         amount: quantity,
         position: tradeType.toUpperCase(),
         price: price,
-        stockCode: searchParams.get("code"),
+        stockCode: searchParams.get("code")
       });
 
       if (response.status === 200) {
@@ -135,7 +134,7 @@ const StockTradePage = () => {
         onTotalPriceChange={setTotalPrice}
       />
 
-      <div className="fixed bottom-[75px] w-full px-4">
+      <div className="absolute bottom-[75px] w-full px-4">
         <Button
           variant="large"
           color="#0046FF"
@@ -145,8 +144,6 @@ const StockTradePage = () => {
           다음
         </Button>
       </div>
-
-      <Footer className="fixed bottom-0 w-full max-w-md bg-white border-t" />
     </div>
   );
 };

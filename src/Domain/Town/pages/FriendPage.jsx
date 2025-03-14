@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import debounce from "lodash/debounce";
 import BackButton from "../../../common/components/BackButton";
 import SearchFriend from "../components/SearchFriend";
 import FriendList from "../components/FriendList";
-import Footer from "../../../common/components/Footer";
 import api from "../../../utils/api";
 
 const FriendPage = () => {
@@ -12,9 +12,10 @@ const FriendPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const searchTimeout = useRef(null);
 
-  const fetchFriends = async () => {
+  // 전체 친구 목록 불러오기
+  const fetchFriends = useCallback(async () => {
     try {
-      const response = await api.get(`/users/subscription`);
+      const response = await api.get("/users/subscription");
       if (response.data && response.data.friends) {
         const myFriends = response.data.friends.map((friend) => ({
           id: friend.id,
@@ -30,9 +31,10 @@ const FriendPage = () => {
       console.error("내 친구 목록 불러오기 실패:", error);
       setFriends([]);
     }
-  };
+  }, []);
 
-  const searchFriends = async (uid) => {
+  // 검색 API 호출 (debounce 적용 전 기본 함수)
+  const searchFriendsHandler = useCallback(async (uid) => {
     const trimmedUid = uid.trim();
     if (!trimmedUid) return;
 
@@ -40,49 +42,49 @@ const FriendPage = () => {
       const response = await api.get(
         `/users/search?uid=${encodeURIComponent(trimmedUid)}`
       );
-
       if (response.status === 200 && response.data) {
         const friend = response.data;
-        const isExistingFriend = friends.some((f) => f.id === friend.id);
-
-        setFriends([
+        const searchedFriends = [
           {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: isExistingFriend,
+            isFriend: friend.subscribed, // 이미 구독한 상태인지 확인
           },
-        ]);
-      } else {
-        console.warn("검색 결과 없음");
+        ];
+        setFriends(searchedFriends);
+      } else if (response.status === 500) {
+        setFriends([]);
       }
     } catch (error) {
+      setFriends([]);
       console.error("검색 실패:", error.response?.data || error.message);
     }
-  };
+  }, []);
 
-  const handleSearchChange = (value) => {
-    const trimmedValue = value.trim();
-    setSearchTerm(trimmedValue);
+  // searchFriendsHandler를 debounce로 감싸서 300ms 후 실행 (의존성에 searchFriendsHandler 추가)
+  const debouncedSearchFriends = useMemo(
+    () => debounce(searchFriendsHandler, 300),
+    [searchFriendsHandler]
+  );
 
-    if (searchTimeout.current) {
-      clearTimeout(searchTimeout.current);
+  // 검색어가 빈 문자열이면 전체 친구 목록 호출
+  useEffect(() => {
+    if (searchTerm === "") {
+      fetchFriends();
     }
+  }, [searchTerm, fetchFriends]);
 
-    searchTimeout.current = setTimeout(() => {
-      if (trimmedValue) {
-        searchFriends(trimmedValue);
-      }
-    }, 300);
-  };
-
-  const handleFriendAdded = () => {
-    fetchFriends();
-  };
-
+  // 컴포넌트 마운트 시 전체 친구 목록 호출
   useEffect(() => {
     fetchFriends();
-  }, []);
+  }, [fetchFriends]);
+
+  // 친구 추가 후 처리 (검색어 초기화 및 전체 친구 목록 재조회)
+  const handleFriendAdded = useCallback(() => {
+    setSearchTerm("");
+    fetchFriends();
+  }, [fetchFriends]);
 
   return (
     <div className="relative h-screen overflow-hidden custom-cursor townbg">
@@ -91,16 +93,15 @@ const FriendPage = () => {
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />
         </span>
         <div className="w-full">
-          <SearchFriend onSearch={handleSearchChange} />{" "}
+          <SearchFriend
+            onSearch={debouncedSearchFriends}
+            searchTerm={searchTerm}
+          />
         </div>
       </div>
 
       <div className="scrollbar-custom absolute top-20 left-0 right-0 bottom-20 overflow-y-auto px-4">
         <FriendList friends={friends} onFriendAdded={handleFriendAdded} />
-      </div>
-
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t z-50">
-        <Footer />
       </div>
     </div>
   );

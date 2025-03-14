@@ -4,7 +4,6 @@ import SearchCompany from "../components/SearchCompany";
 import MyAccount from "../../User/components/MyAccount";
 import MyHeld from "../../User/components/MyHeld";
 import MyInterested from "../../User/components/MyInterested";
-import Footer from "../../../common/components/Footer";
 import { BarLoader } from "react-spinners";
 
 const TradeMainPage = () => {
@@ -22,7 +21,6 @@ const TradeMainPage = () => {
   const [totalAccount, setTotalAccount] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
   const [totalProfitRate, setTotalProfitRate] = useState(0);
-
   const [interestedStocks, setInterestedStocks] = useState([]);
 
   const handleSearch = async (query) => {
@@ -178,10 +176,6 @@ const TradeMainPage = () => {
             <div className="mb-12">
               <MyInterested interestedStocks={interestedStocks} />
             </div>
-          </div>
-
-          <div className="fixed bottom-0 left-0 w-full bg-white border-t z-50">
-            <Footer />
           </div>
         </>
       )}

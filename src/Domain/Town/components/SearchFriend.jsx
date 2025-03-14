@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-const SearchFriend = ({ onSearch }) => {
-  const [searchValue, setSearchValue] = useState("");
+const SearchFriend = ({ onSearch, searchTerm }) => {
+  const [searchValue, setSearchValue] = useState(searchTerm);
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    onSearch(value);
+    setSearchValue(e.target.value);
+    onSearch(e.target.value);
   };
 
   return (
@@ -16,7 +15,9 @@ const SearchFriend = ({ onSearch }) => {
         type="text"
         placeholder="친구를 검색해보세요!"
         value={searchValue}
-        onChange={handleChange}
+        onChange={(e) => {
+          handleChange(e);
+        }}
       />
     </div>
   );

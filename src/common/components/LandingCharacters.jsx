@@ -23,7 +23,7 @@ export default function ZigzagWalkingImages() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const START_X = isMobile ? window.innerWidth + 50 : window.innerWidth * 0.25;
+  // const START_X = isMobile ? window.innerWidth + 50 : window.innerWidth * 0.25;
   const BASE_Y = isMobile
     ? window.innerHeight * 0.82
     : window.innerHeight * 0.76;
@@ -35,14 +35,14 @@ export default function ZigzagWalkingImages() {
         id: Math.random(),
         img: characterImages[index],
         y: BASE_Y + (index % 2 === 0 ? ZIGZAG_OFFSET : -ZIGZAG_OFFSET),
-        delay: index * 0.85,
+        delay: index * 0.85
       })
     );
     setCharList(newChars);
   }, [isMobile]);
 
   return (
-    <div className="fixed inset-0">
+    <div className="inset-0">
       {charList.map(({ id, img, y, delay }) => (
         <ZigzagWalkingCharacter
           key={id}
@@ -67,17 +67,17 @@ function ZigzagWalkingCharacter({ img, y, delay, isMobile }) {
         maxWidth: "80px",
         maxHeight: "80px",
         objectFit: "contain",
-        top: y,
+        top: y
       }}
       initial={{
-        x: isMobile ? window.innerWidth + 50 : window.innerWidth * 0.25,
+        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.125
       }}
-      animate={{ x: -100 }}
+      animate={{ x: -300 }}
       transition={{
         duration: isMobile ? 5.8 : 5.2,
         ease: "linear",
         repeat: Infinity,
-        delay,
+        delay
       }}
     />
   );

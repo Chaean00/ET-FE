@@ -26,7 +26,7 @@ const LoadingScreen = ({ onFinish }) => {
 
   return (
     <div
-      className="font-town fixed inset-0 flex items-center justify-center text-white text-xl font-semibold z-[100] bg-cover bg-center"
+      className="font-town absolute inset-0 flex items-center justify-center text-white text-xl font-semibold z-[100] bg-cover bg-center"
       style={{ backgroundImage: `url(${loading})` }}
     >
       <motion.p
@@ -36,7 +36,7 @@ const LoadingScreen = ({ onFinish }) => {
         transition={{ duration: 0.5 }}
         style={{
           WebkitTextStroke: "0.3px white",
-          textStroke: "0.25px white",
+          textStroke: "0.25px white"
         }}
       >
         {displayedText}
