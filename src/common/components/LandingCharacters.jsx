@@ -35,7 +35,7 @@ export default function ZigzagWalkingImages() {
         id: Math.random(),
         img: characterImages[index],
         y: BASE_Y + (index % 2 === 0 ? ZIGZAG_OFFSET : -ZIGZAG_OFFSET),
-        delay: index * 0.85
+        delay: index * 0.85,
       })
     );
     setCharList(newChars);
@@ -67,17 +67,17 @@ function ZigzagWalkingCharacter({ img, y, delay, isMobile }) {
         maxWidth: "80px",
         maxHeight: "80px",
         objectFit: "contain",
-        top: y
+        top: y,
       }}
       initial={{
-        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.125
+        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.125,
       }}
       animate={{ x: -300 }}
       transition={{
         duration: isMobile ? 5.8 : 5.2,
         ease: "linear",
         repeat: Infinity,
-        delay
+        delay,
       }}
     />
   );

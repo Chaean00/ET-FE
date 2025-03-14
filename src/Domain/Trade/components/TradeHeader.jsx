@@ -53,7 +53,7 @@ const TradeHeader = () => {
         <p className={`text-md font-light ${changeColor}`}>
           {changeRate !== null
             ? `${changeRate > 0 ? "+" : ""}${changeRate.toFixed(2)}%`
-            : "0%"}
+            : "0.00%"}
         </p>
       </div>
     </div>
