@@ -42,7 +42,7 @@ const StockBottomHeart = ({
 
   return (
     <div
-      className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded-xl cursor-pointer ${className}`}
+      className={`w-20 h-10 flex items-center justify-center border border-gray-300 rounded-xl cursor-pointer ${className}`}
       onClick={handleHeart}
     >
       {heart ? (
