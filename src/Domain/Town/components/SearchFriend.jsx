@@ -1,11 +1,14 @@
 import { useState } from "react";
 
-const SearchFriend = ({ onSearch, searchTerm }) => {
+const SearchFriend = ({ onSearch, searchTerm, fetchFriends }) => {
   const [searchValue, setSearchValue] = useState(searchTerm);
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
     onSearch(e.target.value);
+    if (e.target.value === "") {
+      fetchFriends();
+    }
   };
 
   return (
