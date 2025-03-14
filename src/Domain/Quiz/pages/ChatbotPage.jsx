@@ -79,7 +79,7 @@ const ChatbotPage = () => {
         ))}
       </div>
 
-      <div className="absolute bottom-[70px] w-full bg-white border-t p-2 flex items-center h-14">
+      <div className="absolute bottom-0 w-full bg-white border-t p-2 flex items-center h-14">
         <input
           type="text"
           value={input}

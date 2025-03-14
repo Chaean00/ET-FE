@@ -70,9 +70,9 @@ function ZigzagWalkingCharacter({ img, y, delay, isMobile }) {
         top: y
       }}
       initial={{
-        x: 30
+        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.125
       }}
-      animate={{ x: -350 }}
+      animate={{ x: -300 }}
       transition={{
         duration: isMobile ? 5.8 : 5.2,
         ease: "linear",
