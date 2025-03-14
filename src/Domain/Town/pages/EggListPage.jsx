@@ -45,6 +45,7 @@ const EggListPage = () => {
 
       if (response.status === 201) {
         setSelectedStock({
+          stockImg: response.data.stockImg,
           stockSymbol: response.data.stockName,
           stockAmount: response.data.amount,
         });
@@ -66,6 +67,7 @@ const EggListPage = () => {
         <StockAcqModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          stockImg={selectedStock.stockImg}
           stockName={selectedStock.stockSymbol}
           stockAmount={selectedStock.stockAmount}
         />

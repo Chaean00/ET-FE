@@ -19,13 +19,16 @@ const TownMainPage = () => {
 
   useEffect(() => {
     const fetchTradeHistory = async () => {
-      const count = await getUserHistory();
-      setTradeCount(count);
+      try {
+        const count = await getUserHistory();
+        setTradeCount(count);
+      } catch (error) {
+        console.error("거래내역 불러오기 실패:", error);
+      }
     };
 
     fetchTradeHistory();
   }, []);
-
   useEffect(() => {
     const checkPetRequirement = async () => {
       try {
@@ -35,12 +38,13 @@ const TownMainPage = () => {
 
         setIsPetNeeded(pets.length < requiredPets);
 
-        const newChars = pets.map((pet) => ({
-          id: pet.petId,
-          image: pet.img,
-          position: getRandomPosition()
-        }));
-        setCharList(newChars);
+        setCharList(
+          pets.map((pet) => ({
+            id: pet.petId,
+            image: pet.img,
+            position: getRandomPosition(),
+          }))
+        );
       } catch (error) {
         console.error("펫 데이터 불러오기 실패:", error);
       }
@@ -65,17 +69,20 @@ const TownMainPage = () => {
       if (response) {
         setAcquiredPet({
           name: response.name,
-          img: response.img
+          img: response.img,
         });
 
-        setTradeCount((prev) => prev + 1);
-
-        setIsPetNeeded(false);
-
         const pets = await getPets();
-        const level = Math.floor((tradeCount + 1) / 5);
+        const level = Math.floor(tradeCount / 5);
         const requiredPets = level + 1;
 
+        setCharList(
+          pets.map((pet) => ({
+            id: pet.petId,
+            image: pet.img,
+            position: getRandomPosition(),
+          }))
+        );
         setIsPetNeeded(pets.length < requiredPets);
       }
     } catch (error) {
@@ -124,13 +131,13 @@ export default TownMainPage;
 
 function getRandomPosition() {
   const container = document.querySelector(".townbg");
-  if (!container) return { x: 0, y: 0 };
+  if (!container) return { x: 100, y: 100 };
 
-  const maxWidth = container.clientWidth - 50;
-  const maxHeight = container.clientHeight - 50;
+  const maxWidth = Math.max(0, container.clientWidth - 50);
+  const maxHeight = Math.max(0, container.clientHeight - 50);
 
   return {
-    x: Math.max(0, Math.random() * maxWidth),
-    y: Math.max(0, Math.random() * maxHeight)
+    x: Math.random() * maxWidth,
+    y: Math.random() * maxHeight,
   };
 }

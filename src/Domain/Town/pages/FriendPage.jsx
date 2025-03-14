@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../../common/components/BackButton";
 import SearchFriend from "../components/SearchFriend";
@@ -10,6 +10,7 @@ const FriendPage = () => {
   const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const searchTimeout = useRef(null);
 
   const fetchFriends = async () => {
     try {
@@ -19,7 +20,7 @@ const FriendPage = () => {
           id: friend.id,
           uid: friend.uid,
           name: friend.name,
-          isFriend: true
+          isFriend: true,
         }));
         setFriends(myFriends);
       } else {
@@ -33,7 +34,7 @@ const FriendPage = () => {
 
   const searchFriends = async (uid) => {
     const trimmedUid = uid.trim();
-    setSearchTerm(trimmedUid);
+    if (!trimmedUid) return;
 
     try {
       const response = await api.get(
@@ -42,27 +43,37 @@ const FriendPage = () => {
 
       if (response.status === 200 && response.data) {
         const friend = response.data;
-
         const isExistingFriend = friends.some((f) => f.id === friend.id);
 
-        const searchedFriends = [
+        setFriends([
           {
             id: friend.id,
             uid: friend.uid,
             name: friend.name,
-            isFriend: isExistingFriend
-          }
-        ];
-
-        setFriends(searchedFriends);
+            isFriend: isExistingFriend,
+          },
+        ]);
       } else {
         console.warn("검색 결과 없음");
-        // fetchFriends();
       }
     } catch (error) {
       console.error("검색 실패:", error.response?.data || error.message);
-      // fetchFriends();
     }
+  };
+
+  const handleSearchChange = (value) => {
+    const trimmedValue = value.trim();
+    setSearchTerm(trimmedValue);
+
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
+    }
+
+    searchTimeout.current = setTimeout(() => {
+      if (trimmedValue) {
+        searchFriends(trimmedValue);
+      }
+    }, 300);
   };
 
   const handleFriendAdded = () => {
@@ -80,7 +91,7 @@ const FriendPage = () => {
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />
         </span>
         <div className="w-full">
-          <SearchFriend onSearch={searchFriends} />
+          <SearchFriend onSearch={handleSearchChange} />{" "}
         </div>
       </div>
 

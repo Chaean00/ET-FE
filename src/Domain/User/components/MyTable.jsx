@@ -11,19 +11,11 @@ const MyTable = () => {
       try {
         const response = await api.get("/users/stocks");
 
-        const updatedStocks = response.data.map((stock) => ({
-          ...stock,
-          totalValue: stock.amount * stock.averagePrice,
-          totalReturn: 0,
-        }));
-
-        setStocks(updatedStocks);
-
         const closingPriceResponse = await api.get(
           "/users/stocks/closing-price"
         );
 
-        const updatedStocksWithClosing = updatedStocks.map((stock) => {
+        const updatedStocks = response.data.map((stock) => {
           const closingStock = closingPriceResponse.data.find(
             (s) => s.stockCode === stock.stockCode
           );
@@ -43,10 +35,15 @@ const MyTable = () => {
             };
           }
 
-          return stock;
+          return {
+            ...stock,
+            closingPrice: null,
+            totalValue: stock.amount * stock.averagePrice,
+            totalReturn: null,
+          };
         });
 
-        setStocks(updatedStocksWithClosing);
+        setStocks(updatedStocks);
       } catch (error) {
         console.error(
           "데이터 불러오기 실패:",
@@ -101,13 +98,19 @@ const MyTable = () => {
                   stock.totalValue
                 ).toLocaleString()} 원`}</td>
                 <td className="py-2 font-bold">
-                  <span
-                    className={
-                      stock.totalReturn >= 0 ? "text-green-600" : "text-red-600"
-                    }
-                  >
-                    {`${stock.totalReturn}%`}
-                  </span>
+                  {stock.totalReturn !== null ? (
+                    <span
+                      className={
+                        stock.totalReturn >= 0
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }
+                    >
+                      {`${stock.totalReturn}%`}
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">0%</span>
+                  )}
                 </td>
               </tr>
             ))}
