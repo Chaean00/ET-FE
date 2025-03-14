@@ -87,7 +87,7 @@ const MyTable = () => {
             <tr>
               <th className="pb-2">종목명</th>
               <th className="pb-2">총 평가금액</th>
-              <th className="pb-2">수익률</th>
+              <th className="pb-2 text-right">수익률</th>
             </tr>
           </thead>
           <tbody>
@@ -97,13 +97,13 @@ const MyTable = () => {
                 <td className="py-2">{`${Math.round(
                   stock.totalValue
                 ).toLocaleString()} 원`}</td>
-                <td className="py-2 font-bold">
+                <td className="text-right py-2">
                   {stock.totalReturn !== null ? (
                     <span
                       className={
                         stock.totalReturn >= 0
-                          ? "text-green-600"
-                          : "text-red-600"
+                          ? "text-red-500"
+                          : "text-blue-500"
                       }
                     >
                       {`${stock.totalReturn}%`}
