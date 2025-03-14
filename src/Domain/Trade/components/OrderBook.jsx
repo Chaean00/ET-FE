@@ -14,22 +14,69 @@ const OrderBook = () => {
   const sseData = useSSE(code ? `/ask-bid/${code}` : null);
 
   useEffect(() => {
-   
-
-    if(!sseData) return;
+    if (!sseData) return;
     let updatedOrders = [
-      { id: 1, price: Number(sseData.askp1), sellVolume: Number(sseData.askRSQN1), buyVolume: 0 },
-      { id: 2, price: Number(sseData.askp2), sellVolume: Number(sseData.askRSQN2), buyVolume: 0 },
-      { id: 3, price: Number(sseData.askp3), sellVolume: Number(sseData.askRSQN3), buyVolume: 0 },
-      { id: 4, price: Number(sseData.askp4), sellVolume: Number(sseData.askRSQN4), buyVolume: 0 },
-      { id: 5, price: Number(sseData.askp5), sellVolume: Number(sseData.askRSQN5), buyVolume: 0 },
-      { id: 6, price: Number(sseData.bidp1), sellVolume: 0, buyVolume: Number(sseData.bidRSQN1) },
-      { id: 7, price: Number(sseData.bidp2), sellVolume: 0, buyVolume: Number(sseData.bidRSQN2) },
-      { id: 8, price: Number(sseData.bidp3), sellVolume: 0, buyVolume: Number(sseData.bidRSQN3) },
-      { id: 9, price: Number(sseData.bidp4), sellVolume: 0, buyVolume: Number(sseData.bidRSQN4) },
-      { id: 10, price: Number(sseData.bidp5), sellVolume: 0, buyVolume: Number(sseData.bidRSQN5) },
+      {
+        id: 1,
+        price: Number(sseData.askp1),
+        sellVolume: Number(sseData.askRSQN1),
+        buyVolume: 0,
+      },
+      {
+        id: 2,
+        price: Number(sseData.askp2),
+        sellVolume: Number(sseData.askRSQN2),
+        buyVolume: 0,
+      },
+      {
+        id: 3,
+        price: Number(sseData.askp3),
+        sellVolume: Number(sseData.askRSQN3),
+        buyVolume: 0,
+      },
+      {
+        id: 4,
+        price: Number(sseData.askp4),
+        sellVolume: Number(sseData.askRSQN4),
+        buyVolume: 0,
+      },
+      {
+        id: 5,
+        price: Number(sseData.askp5),
+        sellVolume: Number(sseData.askRSQN5),
+        buyVolume: 0,
+      },
+      {
+        id: 6,
+        price: Number(sseData.bidp1),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN1),
+      },
+      {
+        id: 7,
+        price: Number(sseData.bidp2),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN2),
+      },
+      {
+        id: 8,
+        price: Number(sseData.bidp3),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN3),
+      },
+      {
+        id: 9,
+        price: Number(sseData.bidp4),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN4),
+      },
+      {
+        id: 10,
+        price: Number(sseData.bidp5),
+        sellVolume: 0,
+        buyVolume: Number(sseData.bidRSQN5),
+      },
     ];
-
 
     updatedOrders.sort((a, b) => b.price - a.price);
 
@@ -40,16 +87,21 @@ const OrderBook = () => {
     setSellOrders(sellOrdersData);
     setBuyOrders(buyOrdersData);
 
-    // 매도/매수 총량 계산
-    const totalSell = sellOrdersData.reduce((acc, order) => acc + order.sellVolume, 0);
-    const totalBuy = buyOrdersData.reduce((acc, order) => acc + order.buyVolume, 0);
+    const totalSell = sellOrdersData.reduce(
+      (acc, order) => acc + order.sellVolume,
+      0
+    );
+    const totalBuy = buyOrdersData.reduce(
+      (acc, order) => acc + order.buyVolume,
+      0
+    );
 
     setTotalSellVolume(totalSell);
     setTotalBuyVolume(totalBuy);
   }, [sseData]);
 
   if (!code) {
-    return <p className="text-center text-red-500">📢 종목 코드가 없습니다!</p>;
+    return <p className="text-center text-red-500">종목 코드가 없습니다!</p>;
   }
 
   return (
@@ -64,27 +116,27 @@ const OrderBook = () => {
               transition={{ duration: 0.2 }}
               className="flex justify-between items-center py-2 text-red-500 font-bold"
             >
-              {/* 매도량 막대 (중앙에서 시작, 왼쪽으로 확장) */}
               <div className="w-1/3 flex items-center space-x-2 justify-end px-2">
                 <motion.div
-                  style={{ width: `${(order.sellVolume / totalSellVolume) * 100}%` }}
+                  style={{
+                    width: `${(order.sellVolume / totalSellVolume) * 100}%`,
+                  }}
                   initial={{ width: 0 }}
-                  animate={{ width: `${(order.sellVolume / totalSellVolume) * 100}%` }}
+                  animate={{
+                    width: `${(order.sellVolume / totalSellVolume) * 100}%`,
+                  }}
                   transition={{ duration: 0.5 }}
                   className="h-2 bg-red-500 rounded"
                 ></motion.div>
               </div>
-              {/* 현재 가격 (중앙 정렬, 좌우 회색 테두리 추가) */}
               <span className="text-black text-center w-1/3 min-w-[60px] border-l border-r border-gray-300 px-2">
                 {order.price.toLocaleString()}
               </span>
-              {/* 매도 주문 수량 (오른쪽 정렬) */}
               <span className="text-red-500 w-1/3 min-w-[60px] px-2 ">
                 {order.sellVolume.toLocaleString()}
               </span>
             </motion.li>
           ))}
-
           {buyOrders.map((order) => (
             <motion.li
               key={order.id}
@@ -93,20 +145,21 @@ const OrderBook = () => {
               transition={{ duration: 0.2 }}
               className="flex justify-between items-center py-2 text-blue-500 font-bold"
             >
-              {/* 매수량 (왼쪽에 수량, 중앙에 가격, 오른쪽에 막대) */}
               <span className="text-blue-500 text-right w-1/3 min-w-[60px] px-2">
                 {order.buyVolume.toLocaleString()}
               </span>
-              {/* 현재 가격 (중앙 정렬, 좌우 회색 테두리 추가) */}
               <span className="text-black text-center w-1/3 min-w-[60px] border-l border-r border-gray-300 px-2">
                 {order.price.toLocaleString()}
               </span>
-              {/* 매수량 막대 (중앙에서 시작, 오른쪽으로 확장) */}
               <div className="w-1/3 flex items-center space-x-2 px-2 ">
                 <motion.div
-                  style={{ width: `${(order.buyVolume / totalBuyVolume) * 100}%` }}
+                  style={{
+                    width: `${(order.buyVolume / totalBuyVolume) * 100}%`,
+                  }}
                   initial={{ width: 0 }}
-                  animate={{ width: `${(order.buyVolume / totalBuyVolume) * 100}%` }}
+                  animate={{
+                    width: `${(order.buyVolume / totalBuyVolume) * 100}%`,
+                  }}
                   transition={{ duration: 0.5 }}
                   className="h-2 bg-blue-500 rounded"
                 ></motion.div>
