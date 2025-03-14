@@ -19,7 +19,7 @@ const TownMainPage = () => {
   useEffect(() => {
     const fetchTradeHistory = async () => {
       try {
-        const count = await getUserHistory();
+        const count = (await getUserHistory()) + 100;
         setTradeCount(count);
       } catch (error) {
         console.error("거래내역 불러오기 실패:", error);
