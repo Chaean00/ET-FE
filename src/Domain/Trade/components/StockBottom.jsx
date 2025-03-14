@@ -79,7 +79,7 @@ const StockBottom = ({
         />
       )}
 
-      <div className="flex items-center gap-3 justify-evenly">
+      <div className={`flex items-center w-full ${isOwned ? "space-x-2" : ""}`}>
         {isOwned ? (
           <>
             <Button
@@ -102,7 +102,7 @@ const StockBottom = ({
           </>
         ) : (
           <Button
-            className="text-lg rounded-2xl w-full py-3"
+            className="text-lg rounded-2xl py-3"
             variant={"large"}
             color={"red"}
             onClick={() => handleNavigate("buy")}

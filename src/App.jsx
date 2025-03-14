@@ -90,7 +90,11 @@ function App() {
         <div className="flex-grow overflow-y-auto">
           <AppContent />
         </div>
-        {pathname === "/" ? null : <Footer />}
+        {pathname === "/" ||
+        pathname === "/login" ||
+        pathname == "/ChatbotPage" ? null : (
+          <Footer />
+        )}
       </AuthProvider>
     </div>
   );
