@@ -55,7 +55,7 @@ const LogInPage = () => {
         animate={{ y: [0, -20, 0, -35, 0, -18, 0] }}
         transition={{
           duration: 1.6,
-          ease: "easeOut"
+          ease: "easeOut",
         }}
       >
         <img src={loginlogo} alt="login logo" />
@@ -81,7 +81,7 @@ const LogInPage = () => {
         </CustomInput>
       </div>
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-      <div className="w-full flex flex-col items-center gap-1 absolute bottom-[80px]">
+      <div className="w-full flex flex-col items-center gap-1 absolute bottom-[30px]">
         <Button
           variant="large"
           color="blue"
