@@ -134,7 +134,7 @@ const StockTradePage = () => {
         onTotalPriceChange={setTotalPrice}
       />
 
-      <div className="fixed bottom-[75px] w-full px-4">
+      <div className="absolute bottom-[75px] w-full px-4">
         <Button
           variant="large"
           color="#0046FF"

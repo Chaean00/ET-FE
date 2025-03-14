@@ -67,9 +67,9 @@ const StockBottom = ({
   };
 
   return (
-    <div className="px-2 flex items-center justify-center space-x-1 w-full">
+    <div className="flex space-x-3">
       {isFavorite === null ? (
-        <div className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-xl bg-gray-200" />
+        <div className="w-10 h-10 flex border border-gray-300 rounded-xl bg-gray-200" />
       ) : (
         <StockBottomHeart
           className="w-15 h-15"
@@ -79,15 +79,11 @@ const StockBottom = ({
         />
       )}
 
-      <div
-        className={`flex items-center w-full justify-center ${
-          isOwned ? "space-x-2" : ""
-        }`}
-      >
+      <div className="flex items-center gap-3 justify-evenly">
         {isOwned ? (
           <>
             <Button
-              className="p-4 text-lg rounded-2xl fixed"
+              className="p-4 text-lg rounded-2xl"
               variant={"small"}
               color={"blue"}
               onClick={() => handleNavigate("sell")}
@@ -96,7 +92,7 @@ const StockBottom = ({
             </Button>
 
             <Button
-              className="p-4 text-lg rounded-2xl fixed"
+              className="p-4 text-lg rounded-2xl"
               variant={"small"}
               color={"red"}
               onClick={() => handleNavigate("buy")}
