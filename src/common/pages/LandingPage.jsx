@@ -19,7 +19,7 @@ const LandingPage = () => {
   return (
     <div
       id="landing"
-      className="custom-cursor flex justify-center items-center h-screen"
+      className="overflow-hidden custom-cursor flex justify-center items-center h-screen overflow-hidden"
       onClick={() => navigate("/login")}
     >
       <img
