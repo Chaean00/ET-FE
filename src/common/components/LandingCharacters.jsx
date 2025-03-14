@@ -26,7 +26,7 @@ export default function ZigzagWalkingImages() {
   // const START_X = isMobile ? window.innerWidth + 50 : window.innerWidth * 0.25;
   const BASE_Y = isMobile
     ? window.innerHeight * 0.82
-    : window.innerHeight * 0.76;
+    : window.innerHeight * 0.82;
   const ZIGZAG_OFFSET = 40;
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function ZigzagWalkingCharacter({ img, y, delay, isMobile }) {
         top: y,
       }}
       initial={{
-        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.125,
+        x: isMobile ? window.innerWidth - 100 : window.innerWidth * 0.08,
       }}
       animate={{ x: -300 }}
       transition={{
