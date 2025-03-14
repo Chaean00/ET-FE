@@ -13,7 +13,7 @@ const OrderCheckModal = ({ quantity, price, onConfirm, onClose }) => {
 
   const [accountInfo, setAccountInfo] = useState({
     accountNumber: "계좌 불러오는 중...",
-    deposit: 0,
+    deposit: 0
   });
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const OrderCheckModal = ({ quantity, price, onConfirm, onClose }) => {
         const response = await api.get("/users/account");
         setAccountInfo({
           accountNumber: response.data.account || "정보 없음",
-          deposit: response.data.deposit || 0,
+          deposit: response.data.deposit || 0
         });
       } catch (error) {
         console.error("계좌 정보 불러오기 실패:", error);
@@ -34,7 +34,7 @@ const OrderCheckModal = ({ quantity, price, onConfirm, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-end justify-center z-40"
+      className="absolute inset-0 flex items-end justify-center z-40"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-black opacity-50"></div>
