@@ -92,7 +92,8 @@ function App() {
         </div>
         {pathname === "/" ||
         pathname === "/login" ||
-        pathname == "/ChatbotPage" ? null : (
+        pathname === "/signup" ||
+        pathname === "/ChatbotPage" ? null : (
           <Footer />
         )}
       </AuthProvider>

@@ -45,8 +45,7 @@ const StockBottom = ({
     Array.isArray(ownedStocks) &&
     ownedStocks.some(
       (stock) =>
-        String(stock.stockCode) === String(stockId) &&
-        Number(stock.quantity) >= 1
+        String(stock.stockCode) === String(stockId) && Number(stock.amount) >= 1
     );
 
   const handleNavigate = (type) => {
@@ -106,7 +105,7 @@ const StockBottom = ({
           </>
         ) : (
           <Button
-            className="text-lg rounded-2xl py-3"
+            className="w-full pl-24 pr-24 text-lg rounded-2xl py-3"
             variant={"large"}
             color={"red"}
             onClick={() => handleNavigate("buy")}
