@@ -1,26 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
-
-const DEFAULT_IMAGE =
-  "https://static.toss.im/png-icons/securities/icn-sec-fill-005930.png";
+import default_img from "../../../assets/trade/default_img.png";
 
 const SearchCompany = ({ onSearch, searchResults = [] }) => {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
+  const searchTimeout = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("🔍 검색 결과 데이터:", searchResults);
-  }, [searchResults]);
-
   const handleChange = (e) => {
-    setQuery(e.target.value);
-    onSearch?.(e.target.value);
+    const value = e.target.value;
+    setQuery(value);
     setSelectedIndex(-1);
     setIsDropdownVisible(true);
+
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
+    }
+
+    searchTimeout.current = setTimeout(() => {
+      onSearch?.(value);
+    }, 300);
   };
 
   const handleKeyDown = (e) => {
@@ -47,6 +50,7 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
         }
 
         setQuery(selectedStock.name);
+        setIsDropdownVisible(false);
         handleNavigate(selectedStock.code, selectedStock.name);
       }
     }
@@ -120,8 +124,8 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
                 <img
                   src={
                     stock.code === "005935"
-                      ? DEFAULT_IMAGE
-                      : stock.img || DEFAULT_IMAGE
+                      ? default_img
+                      : stock.img || default_img
                   }
                   alt={stock.name}
                   className="w-8 h-8 mr-1.5"

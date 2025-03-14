@@ -1,73 +1,30 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../../utils/api";
-import Heart from "../../Trade/components/Heart";
 import useSSE from "../../../hooks/useSSE";
+import Heart from "../../Trade/components/Heart";
 
-const MyInterested = () => {
+const MyInterested = ({ interestedStocks }) => {
   const navigate = useNavigate();
-  const [interests, setInterests] = useState([]);
+  const [stocks, setStocks] = useState(interestedStocks);
   const sseData = useSSE("/subscribe/interest-price");
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await api.get("/users/favorite");
-        if (Array.isArray(response.data)) {
-          const formattedData = response.data.map((stock) => ({
-            stockCode: stock.stockCode,
-            stockName: stock.stockName,
-            currentPrice: null,
-            priceChange: null,
-            changeRate: null,
-            closingPrice: null,
-            isFavorite: true,
-          }));
-          setInterests(formattedData);
-
-          const closingPriceResponse = await api.get(
-            "/users/stocks/favorite/close-price"
-          );
-
-          const updatedStocksWithClosing = formattedData.map((stock) => {
-            const closingStock = closingPriceResponse.data.find(
-              (s) => s.stockCode === stock.stockCode
-            );
-
-            return closingStock
-              ? {
-                  ...stock,
-                  closingPrice: closingStock.closingPrice,
-                  currentPrice: closingStock.closingPrice,
-                  priceChange: 0,
-                  changeRate: 0,
-                }
-              : stock;
-          });
-          setInterests(updatedStocksWithClosing);
-        }
-      } catch (error) {
-        console.error("관심 종목 불러오기 실패:", error);
-      }
-    };
-
-    fetchFavorites();
-  }, []);
-
-  useEffect(() => {
     if (!sseData) return;
-    setInterests((prevInterests) =>
-      prevInterests.map((stock) =>
+
+    setStocks((prevStocks) =>
+      prevStocks.map((stock) =>
         stock.stockCode === sseData.stockCode
           ? {
               ...stock,
               currentPrice: Number(sseData.currentPrice),
               priceChange: Number(sseData.currentPrice) - stock.closingPrice,
-              changeRate: (
-                ((Number(sseData.currentPrice) - stock.closingPrice) /
-                  stock.closingPrice) *
-                100
-              ).toFixed(2),
+              changeRate: parseFloat(
+                (
+                  ((Number(sseData.currentPrice) - stock.closingPrice) /
+                    stock.closingPrice) *
+                  100
+                ).toFixed(2)
+              ),
             }
           : stock
       )
@@ -75,8 +32,8 @@ const MyInterested = () => {
   }, [sseData]);
 
   const handleFavoriteChange = (stockCode, isFavorite) => {
-    setInterests((prevInterests) =>
-      prevInterests.map((stock) =>
+    setStocks((prevStocks) =>
+      prevStocks.map((stock) =>
         stock.stockCode === stockCode ? { ...stock, isFavorite } : stock
       )
     );
@@ -86,10 +43,10 @@ const MyInterested = () => {
     <div className="w-full max-w-md p-4">
       <h2 className="text-lg font-bold mb-2">나의 관심종목</h2>
 
-      {interests.length === 0 ? (
+      {stocks.length === 0 ? (
         <p className="text-gray-400 text-center">관심 종목이 없습니다.</p>
       ) : (
-        interests.map((stock) => (
+        stocks.map((stock) => (
           <div
             key={stock.stockCode}
             className="bg-white rounded-2xl shadow-md px-4 py-2 flex items-center justify-between mb-2 cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102"
@@ -128,8 +85,8 @@ const MyInterested = () => {
                   >
                     (
                     {stock.changeRate > 0
-                      ? `+${stock.changeRate}`
-                      : stock.changeRate}
+                      ? `+${stock.changeRate.toFixed(2)}`
+                      : stock.changeRate.toFixed(2)}
                     %)
                   </span>
                 </div>

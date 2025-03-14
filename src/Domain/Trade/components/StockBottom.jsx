@@ -43,7 +43,11 @@ const StockBottom = ({
 
   const isOwned =
     Array.isArray(ownedStocks) &&
-    ownedStocks.some((stock) => String(stock.stockCode) === String(stockId));
+    ownedStocks.some(
+      (stock) =>
+        String(stock.stockCode) === String(stockId) &&
+        Number(stock.quantity) >= 1
+    );
 
   const handleNavigate = (type) => {
     if (orders.length < 2) {
