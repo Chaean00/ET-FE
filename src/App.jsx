@@ -29,7 +29,7 @@ import { useLocation } from "react-router-dom";
 
 const publicRoutes = [
   { path: "/login", element: <LogInPage /> },
-  { path: "/signup", element: <SignUpPage /> }
+  { path: "/signup", element: <SignUpPage /> },
 ];
 
 // 로그인한 사용자 전용 경로
@@ -49,7 +49,7 @@ const protectedRoutes = [
   { path: "/orderbook", element: <OrderBookPage /> },
   { path: "/stock", element: <StockPage /> },
   { path: "/stocktrade", element: <StockTradePage /> },
-  { path: "/ChatbotPage", element: <ChatbotPage /> }
+  { path: "/ChatbotPage", element: <ChatbotPage /> },
 ];
 
 function AppContent() {
@@ -85,7 +85,7 @@ function App() {
   const { pathname } = location;
 
   return (
-    <div className="w-full max-w-[375px] h-screen mx-auto relative">
+    <div className="w-full max-w-[375px] h-screen mx-auto relative overflow-x-hidden">
       <AuthProvider>
         <div className="flex-grow overflow-y-auto">
           <AppContent />

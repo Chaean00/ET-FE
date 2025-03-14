@@ -8,24 +8,24 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: `안녕하세요! 저는 주식공부를 도와줄 트레이드타운봇이에요. 어떤 것이 궁금하세요? 저에게 뭐든 물어보세요! 제가 중간에 말이 끊기면 "이어서 얘기해줘"라고 해주세요.🤗`
-    }
+      text: `안녕하세요! 저는 주식공부를 도와줄 트레이드타운봇이에요. 어떤 것이 궁금하세요? 저에게 뭐든 물어보세요! 제가 중간에 말이 끊기면 "이어서 얘기해줘"라고 해주세요.🤗`,
+    },
   ]);
   const [input, setInput] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
-
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      setTimeout(() => {
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
+      }, 100);
     }
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!input.trim() || isLoading) return; // 전송 중이면 return
+    if (!input.trim() || isLoading) return;
 
     setIsLoading(true);
     const userMessage = { sender: "user", text: input };
@@ -38,7 +38,7 @@ const ChatbotPage = () => {
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "서버 응답이 없습니다. 다시 시도해주세요." }
+        { sender: "bot", text: "서버 응답이 없습니다. 다시 시도해주세요." },
       ]);
     }
 
@@ -47,7 +47,7 @@ const ChatbotPage = () => {
   };
 
   return (
-    <div className="overflow-y-scroll flex flex-col bg-gray-100 h-screen">
+    <div className="overflow-hidden flex flex-col bg-gray-100 h-screen">
       <div className="absolute top-4 left-4">
         <span onClick={() => navigate(-1)}>
           <BackButton className="w-8 h-8 object-contain cursor-pointer" />
@@ -58,7 +58,7 @@ const ChatbotPage = () => {
         AI 챗봇과 공부하기
       </header>
 
-      <div className="flex-1 p-4 pb-30" ref={chatContainerRef}>
+      <div className="flex-1 p-4 pb-18 overflow-y-auto" ref={chatContainerRef}>
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -86,7 +86,6 @@ const ChatbotPage = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.repeat) {
-              // e.repeat 체크 추가
               e.preventDefault();
               handleSendMessage();
             }

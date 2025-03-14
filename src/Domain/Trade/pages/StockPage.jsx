@@ -76,14 +76,14 @@ const StockPage = () => {
             id: 1,
             price: closingPrice,
             sellVolume: 0,
-            buyVolume: 0
+            buyVolume: 0,
           },
           {
             id: 2,
             price: closingPrice,
             sellVolume: 0,
-            buyVolume: 0
-          }
+            buyVolume: 0,
+          },
         ]);
       }
       return;
@@ -94,14 +94,14 @@ const StockPage = () => {
         id: 1,
         price: Number(sseData.askp1),
         sellVolume: Number(sseData.askRSQN1),
-        buyVolume: 0
+        buyVolume: 0,
       },
       {
         id: 2,
         price: Number(sseData.bidp1),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN1)
-      }
+        buyVolume: Number(sseData.bidRSQN1),
+      },
     ];
 
     setOrders(updatedOrders);
@@ -137,11 +137,11 @@ const StockPage = () => {
             />
           </div>
 
-          <div className="w-full max-w-md mt-6.5 h-[60vh] flex justify-center items-center">
+          <div className="w-full max-w-md mt-[-35px] h-[65vh] flex justify-center items-center">
             <LineChart stockId={stockId} />
           </div>
 
-          <div className="w-full max-w-md flex justify-center fixed bottom-[65px]">
+          <div className="w-full max-w-md flex justify-center fixed bottom-[68px]">
             <StockBottom
               stockId={stockId}
               ownedStocks={ownedStocks}
