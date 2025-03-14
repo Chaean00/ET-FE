@@ -56,13 +56,15 @@ const LineChart = ({ stockId }) => {
   const series = [{ name: "", data: seriesData }];
 
   return (
-    <Chart
+    <div className="shadow-lg rounded-4xl bg-white">
+      <Chart
       options={options}
       series={series}
       width={350}
-      height={360}
+      height={500}
       type="line"
     />
+    </div>
   );
 };
 

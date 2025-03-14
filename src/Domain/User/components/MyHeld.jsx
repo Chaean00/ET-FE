@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useSSE from "../../../hooks/useSSE";
 import default_img from "../../../assets/trade/default_img.png";
 
-const MyHeld = ({ heldStocks }) => {
+const MyHeld = ({ heldStocks = [] }) => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState(heldStocks);
   const sseData = useSSE("/subscribe/portfolio-price");
@@ -36,7 +36,7 @@ const MyHeld = ({ heldStocks }) => {
     <div className="w-full max-w-md p-4">
       <h2 className="text-lg font-bold mb-2">나의 보유상품</h2>
 
-      {stocks.length === 0 ? (
+      {stocks?.length === 0 ? (
         <p className="font-light text-gray-400 text-center mt-4">
           보유 주식이 없습니다.
         </p>
@@ -52,7 +52,7 @@ const MyHeld = ({ heldStocks }) => {
           ))
       )}
 
-      {stocks.length > 3 && (
+      {stocks?.length > 3 && (
         <div className="text-center">
           <button
             className="cursor-pointer w-[45%] mt-3 py-1.5 text-gray-400 text-sm font-medium bg-white border-1 rounded-3xl"
@@ -75,7 +75,7 @@ const StockItem = ({ stock, navigate }) => {
       }
     >
       <img
-        src={isValidImageUrl(stock.stockImage) ? stock.stockImage : default_img}
+        src={stock.stockImage || default_img}
         alt={stock.stockName}
         className="rounded-3xl w-10 h-10"
       />
@@ -85,9 +85,10 @@ const StockItem = ({ stock, navigate }) => {
         <p className="text-gray-400 text-sm font-light">
           현금{" "}
           {stock.amount
-            .toString()
-            .match(/^(\d+(\.\d{0,4})?)/)?.[0]
-            .toLocaleString()}
+            ? Number(
+                stock.amount.toString().match(/^(\d+(\.\d{0,4})?)/)?.[0] || 0
+              ).toLocaleString()
+            : "0"}
           주
         </p>
       </div>
