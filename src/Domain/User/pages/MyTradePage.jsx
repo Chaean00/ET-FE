@@ -6,7 +6,7 @@ import api from "../../../utils/api";
 
 const MyTradePage = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [trades, setTrades] = useState([]);
 
   if (isLoading) {
