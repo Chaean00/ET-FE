@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { login as loginAPI } from "../../utils/auth"; // API 호출용 login 함수
-import useAuth from "../../hooks/useAuth"; // AuthContext의 login 함수 사용을 위함
+import { login as loginAPI } from "../../utils/auth";
+import useAuth from "../../hooks/useAuth";
 import CustomInput from "../components/CustomInput";
 import Button from "../components/Button";
 import SectionName from "../components/SectionName";
@@ -10,7 +10,7 @@ import loginlogo from "../../assets/tradetown/loginlogo.png";
 
 const LogInPage = () => {
   const navigate = useNavigate();
-  const { login: contextLogin } = useAuth(); // AuthContext의 login 함수를 가져옴
+  const { login: contextLogin } = useAuth();
   const [uid, setUid] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,13 +27,10 @@ const LogInPage = () => {
     try {
       sessionStorage.removeItem("loadingShown");
       setLoading(true);
-      // API 호출
       const response = await loginAPI(uid, password);
-      // API에서 토큰이 반환된다면, AuthContext의 상태도 업데이트
       if (response?.token) {
         contextLogin(response.token);
       }
-      console.log("로그인 성공");
       navigate("/town", { state: { from: "/login" } });
     } catch (error) {
       console.error("로그인 실패:", error);

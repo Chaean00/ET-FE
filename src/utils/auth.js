@@ -8,7 +8,6 @@ export const signup = async (uid, pwd, name) => {
       name,
     });
 
-    console.log("회원가입 성공:", response.data);
     return response.data;
   } catch (error) {
     console.error("회원가입 실패:", error.response?.data || error.message);

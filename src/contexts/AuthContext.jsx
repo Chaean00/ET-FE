@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("Authorization")
   );
 
-  // storage 이벤트 리스너로 다른 탭의 변경도 감지
   useEffect(() => {
     const handleStorageChange = () => {
       const newToken = localStorage.getItem("Authorization");

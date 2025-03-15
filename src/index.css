@@ -46,13 +46,6 @@ body {
 
 @media screen and (min-width: 1025px) {
   #frame {
-    /* width: 375px; */
-    /* height: 667px; */
-    /* overflow: hidden; */
-    /* position: absolute; */
-    /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
     background: white;
   }
 }
@@ -86,12 +79,8 @@ body {
 .townbg {
   background-image: url("./assets/town/townbg.png");
   background-size: cover;
-  /* background-position: center; */
-  /* background-repeat: no-repeat; */
   width: 100%;
   height: 100vh;
-  /* margin: 0; */
-  /* display: grid; */
   place-items: center;
 }
 

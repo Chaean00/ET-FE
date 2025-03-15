@@ -19,7 +19,6 @@ api.interceptors.request.use(
     const token = localStorage.getItem(AUTH_HEADER_KEY);
     if (token && token !== "null" && token !== "undefined") {
       config.headers[AUTH_HEADER_KEY] = `${AUTH_HEADER_PREFIX} ${token}`;
-      console.info("요청에 인증 토큰 추가됨:", config.headers[AUTH_HEADER_KEY]);
     }
     return config;
   },

@@ -18,13 +18,11 @@ const FriendTownPage = () => {
       try {
         const response = await api.get(`/pets/${id}`);
 
-        console.log(id + "펫 데이터 응답:", response.data);
-
         if (Array.isArray(response.data) && response.data.length > 0) {
           const newChars = response.data.map((pet) => ({
             id: pet.id,
             image: pet.img,
-            position: getRandomPosition()
+            position: getRandomPosition(),
           }));
           setPetList(newChars);
         } else {
@@ -73,6 +71,6 @@ function getRandomPosition() {
 
   return {
     x: Math.max(0, Math.random() * maxWidth),
-    y: Math.max(0, Math.random() * maxHeight)
+    y: Math.max(0, Math.random() * maxHeight),
   };
 }

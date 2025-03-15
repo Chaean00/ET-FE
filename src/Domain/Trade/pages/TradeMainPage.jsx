@@ -5,6 +5,7 @@ import MyAccount from "../../User/components/MyAccount";
 import MyHeld from "../../User/components/MyHeld";
 import MyInterested from "../../User/components/MyInterested";
 import { BarLoader } from "react-spinners";
+import default_img from "../../../assets/trade/default_img.png";
 
 const TradeMainPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,6 +76,10 @@ const TradeMainPage = () => {
 
             return {
               ...stock,
+              stockImage:
+                stock.stockImage && stock.stockImage.trim() !== ""
+                  ? stock.stockImage
+                  : default_img,
               closingPrice,
               totalValue: closingPrice * stock.amount,
               totalReturn:
@@ -173,7 +178,7 @@ const TradeMainPage = () => {
               <MyHeld heldStocks={heldStocks} />
             </div>
 
-            <div className="mb-12">
+            <div>
               <MyInterested interestedStocks={interestedStocks} />
             </div>
           </div>
