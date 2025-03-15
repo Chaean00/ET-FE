@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
-import api from "../../../utils/api";
+import { useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
@@ -7,93 +6,19 @@ import default_img from "../../../assets/trade/default_img.png";
 
 dayjs.locale("ko");
 
-const MyTrade = () => {
-  const [tradeHistory, setTradeHistory] = useState([]);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [tradeStatus, setTradeStatus] = useState("");
-  const [pageSize, setPageSize] = useState(10);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const tradeCache = useMemo(() => new Map(), []);
-
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [tradeStatus, pageSize]);
-
-  const fetchTradeHistory = useCallback(async () => {
-    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
-
-    if (tradeCache.has(cacheKey)) {
-      const cachedData = tradeCache.get(cacheKey);
-      setTradeHistory(cachedData.content);
-      setTotalPages(cachedData.totalPages);
-      return;
-    }
-
-    try {
-      const response = await api.get("/users/history", {
-        params: {
-          page: currentPage,
-          size: pageSize,
-          tradeStatus: tradeStatus || null,
-        },
-      });
-
-      const data = response.data;
-
-      tradeCache.set(cacheKey, {
-        content: data.content,
-        totalPages: data.totalPages,
-      });
-
-      const updatedTrades = data.content.map((trade) => ({
-        ...trade,
-        img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
-      }));
-
-      setTradeHistory(data.content);
-      setTotalPages(data.totalPages);
-
-      if (data.totalPages === 0) {
-        setTotalPages(0);
-        setCurrentPage(-1);
-      }
-    } catch (error) {
-      console.error(
-        "거래 내역 불러오기 실패:",
-        error.response?.data || error.message
-      );
-    }
-  }, [currentPage, pageSize, tradeStatus, tradeCache]);
-
-  useEffect(() => {
-    fetchTradeHistory();
-  }, [fetchTradeHistory]);
-
-  const handleCancelTrade = async (trade) => {
-    try {
-      await api.post("/trades/cancel", {
-        tradeId: trade.historyId,
-        position: trade.position,
-        stockCode: trade.stockCode,
-        price: trade.price,
-      });
-
-      setTradeHistory((prevTrades) =>
-        prevTrades.map((t) =>
-          t.historyId === trade.historyId
-            ? { ...t, tradeStatus: "CANCELLED" }
-            : t
-        )
-      );
-
-      setShowSuccessModal(true);
-    } catch (error) {
-      console.error("거래 취소 실패:", error.response?.data || error.message);
-    }
-  };
-
+const MyTrade = ({
+  trades,
+  onCancelTrade,
+  tradeStatus,
+  setTradeStatus,
+  pageSize,
+  setPageSize,
+  currentPage,
+  setCurrentPage,
+  totalPages,
+  showSuccessModal,
+  setShowSuccessModal,
+}) => {
   return (
     <div className="w-full overflow-y max-w-md space-y-4">
       <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
@@ -118,8 +43,8 @@ const MyTrade = () => {
         </select>
       </div>
 
-      {tradeHistory.length > 0 ? (
-        tradeHistory.map((trade, index) => {
+      {trades.length > 0 ? (
+        trades.map((trade, index) => {
           const date =
             trade.tradeStatus === "PENDING" ? trade.createdAt : trade.updatedAt;
           const formattedDate = dayjs(date).format("M월 D일 dddd");
@@ -144,19 +69,20 @@ const MyTrade = () => {
               {index === 0 ||
               formattedDate !==
                 dayjs(
-                  tradeHistory[index - 1].tradeStatus === "PENDING"
-                    ? tradeHistory[index - 1].createdAt
-                    : tradeHistory[index - 1].updatedAt
+                  trades[index - 1].tradeStatus === "PENDING"
+                    ? trades[index - 1].createdAt
+                    : trades[index - 1].updatedAt
                 ).format("M월 D일 dddd") ? (
                 <h2 className="text-gray-700 text-md font-bold">
                   {formattedDate}
                 </h2>
               ) : null}
+
               <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={trade.img}
+                      src={trade.img || default_img}
                       className="w-14 h-14 object-contain rounded-4xl"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -178,7 +104,7 @@ const MyTrade = () => {
                     </p>
                     {isPending && (
                       <button
-                        onClick={() => handleCancelTrade(trade)}
+                        onClick={() => onCancelTrade(trade)}
                         className="cursor-pointer underline text-sm"
                       >
                         취소
@@ -191,11 +117,8 @@ const MyTrade = () => {
           );
         })
       ) : (
-        <p className="text-center text-gray-500 min-h-[1314px]">
-          거래 내역이 없습니다.
-        </p>
+        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
       )}
-
       <div className="flex justify-center space-x-2 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}

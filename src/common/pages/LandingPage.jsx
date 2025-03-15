@@ -11,7 +11,7 @@ const LandingPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/login");
-    }, 7000);
+    }, 5600);
 
     return () => clearTimeout(timer);
   }, [navigate]);
