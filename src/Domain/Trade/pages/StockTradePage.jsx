@@ -65,11 +65,10 @@ const StockTradePage = () => {
         amount: quantity,
         position: tradeType.toUpperCase(),
         price: price,
-        stockCode: searchParams.get("code")
+        stockCode: searchParams.get("code"),
       });
 
       if (response.status === 200) {
-        console.log("거래 성공!");
         setShowOrderModal(false);
         setShowSuccessModal(true);
       } else {

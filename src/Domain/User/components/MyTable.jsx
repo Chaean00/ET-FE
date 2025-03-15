@@ -56,7 +56,6 @@ const MyTable = () => {
   }, []);
 
   useEffect(() => {
-    console.log("sseData:", sseData);
     if (!sseData) return;
 
     setStocks((prevStocks) =>

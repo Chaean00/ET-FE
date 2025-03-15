@@ -25,7 +25,6 @@ const SignUpPage = () => {
     try {
       const response = await api.post("/users/duplicate", { uid });
       setIsUidAvailable(!response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("중복 체크 실패:", error);
       setError(
@@ -71,7 +70,6 @@ const SignUpPage = () => {
     try {
       setLoading(true);
       await signup(uid, password, name);
-      console.log("회원가입 성공");
       navigate("/login");
     } catch (error) {
       console.error("회원가입 실패:", error);

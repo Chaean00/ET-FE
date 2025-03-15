@@ -25,14 +25,11 @@ import Footer from "./common/components/Footer";
 import useAuth from "./hooks/useAuth";
 import { useLocation } from "react-router-dom";
 
-// public(비로그인) 사용자 전용 경로
-
 const publicRoutes = [
   { path: "/login", element: <LogInPage /> },
   { path: "/signup", element: <SignUpPage /> },
 ];
 
-// 로그인한 사용자 전용 경로
 const protectedRoutes = [
   { path: "/town", element: <TownMainPage /> },
   { path: "/dogam", element: <DogamPage /> },
@@ -59,17 +56,14 @@ function AppContent() {
     <div id="frame">
       {token && <Alert />}
       <Routes>
-        {/* 누구나 접근 가능한 기본 페이지 */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* 로그인하지 않은 사용자 전용 라우트 */}
         <Route element={<PublicRoute />}>
           {publicRoutes.map(({ path, element }) => (
             <Route key={path} path={path} element={element} />
           ))}
         </Route>
 
-        {/* 로그인한 사용자 전용 라우트 */}
         <Route element={<ProtectedRoute />}>
           {protectedRoutes.map(({ path, element }) => (
             <Route key={path} path={path} element={element} />

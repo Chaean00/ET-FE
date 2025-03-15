@@ -33,7 +33,7 @@ const DogamPage = () => {
   }, []);
 
   return (
-    <div className="scrollbar-custom flex-1 overflow-y-auto custom-cursor townbg min-h-screen flex flex-col items-center pb-32">
+    <div className="scrollbar-custom flex-1 overflow-y-auto custom-cursor townbg min-h-screen flex flex-col items-center pb-20">
       <div className="absolute top-0 left-0 w-full h-12 flex items-center p-2">
         <span onClick={() => navigate(-1)}>
           <BackButton className="custom-cursor-pointer w-8 h-8 object-contain" />
