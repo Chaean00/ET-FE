@@ -10,25 +10,20 @@ dayjs.locale("ko");
 const MyTrade = () => {
   const [tradeHistory, setTradeHistory] = useState([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [tradeStatus, setTradeStatus] = useState(""); // 필터링 상태 (전체, PENDING, EXECUTED, CANCELLED)
-  const [pageSize, setPageSize] = useState(10); // 한 페이지당 데이터 개수
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
-  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [tradeStatus, setTradeStatus] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // tradeCache: 동일한 요청 결과를 저장하기 위한 Map (캐싱)
   const tradeCache = useMemo(() => new Map(), []);
 
-  // tradeStatus 또는 pageSize가 변경되면 현재 페이지를 0으로 초기화
   useEffect(() => {
     setCurrentPage(0);
   }, [tradeStatus, pageSize]);
 
-  // fetchTradeHistory 함수: 캐싱을 적용해 API 호출 결과를 재사용
   const fetchTradeHistory = useCallback(async () => {
-    // 캐시 키 생성 (현재 페이지, 페이지 크기, 필터 상태)
     const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
 
-    // 캐시에 저장된 데이터가 있으면 해당 데이터를 사용
     if (tradeCache.has(cacheKey)) {
       const cachedData = tradeCache.get(cacheKey);
       setTradeHistory(cachedData.content);
@@ -41,16 +36,21 @@ const MyTrade = () => {
         params: {
           page: currentPage,
           size: pageSize,
-          tradeStatus: tradeStatus || null, // 필터 적용
+          tradeStatus: tradeStatus || null,
         },
       });
 
       const data = response.data;
-      // 캐시에 저장
+
       tradeCache.set(cacheKey, {
         content: data.content,
         totalPages: data.totalPages,
       });
+
+      const updatedTrades = data.content.map((trade) => ({
+        ...trade,
+        img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
+      }));
 
       setTradeHistory(data.content);
       setTotalPages(data.totalPages);
@@ -67,12 +67,10 @@ const MyTrade = () => {
     }
   }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
-  // 페이지, 필터, 크기가 변경될 때마다 fetchTradeHistory 호출
   useEffect(() => {
     fetchTradeHistory();
   }, [fetchTradeHistory]);
 
-  // 거래 취소 함수
   const handleCancelTrade = async (trade) => {
     try {
       await api.post("/trades/cancel", {
@@ -98,7 +96,6 @@ const MyTrade = () => {
 
   return (
     <div className="w-full overflow-y max-w-md space-y-4">
-      {/* 필터링 및 페이지 크기 선택 */}
       <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
         <select
           value={tradeStatus}
@@ -121,7 +118,6 @@ const MyTrade = () => {
         </select>
       </div>
 
-      {/* 거래 내역 */}
       {tradeHistory.length > 0 ? (
         tradeHistory.map((trade, index) => {
           const date =
@@ -162,6 +158,10 @@ const MyTrade = () => {
                     <img
                       src={trade.img}
                       className="w-14 h-14 object-contain rounded-4xl"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = default_img;
+                      }}
                     />
                     <div className="flex flex-col">
                       <p className="font-bold text-black">{trade.stockName}</p>
@@ -196,7 +196,6 @@ const MyTrade = () => {
         </p>
       )}
 
-      {/* 페이지네이션 버튼 */}
       <div className="flex justify-center space-x-2 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}

@@ -37,4 +37,10 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
             docker stop et-react || true
             docker rm et-react || true
-            docker run -d --name et-react -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest
+            
+            docker run -d \
+              --name et-react \
+              -p 80:80 \
+              -e VITE_API_BASE_URL=${{ secrets.API_GATEWAY_HOST }} \
+              -e VITE_API_BASE_PORT=${{ secrets.API_GATEWAY_PORT }} \
+              ${{ secrets.DOCKERHUB_USERNAME }}/et-react:latest

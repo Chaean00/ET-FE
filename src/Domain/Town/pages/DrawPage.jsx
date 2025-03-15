@@ -22,7 +22,7 @@ const DrawPage = () => {
         if (response.data && typeof response.data.point === "number") {
           setPoint(response.data.point);
         } else {
-          console.warn("⚠ 포인트 데이터 없음");
+          console.warn("포인트 데이터 없음");
         }
       } catch (error) {
         console.error(

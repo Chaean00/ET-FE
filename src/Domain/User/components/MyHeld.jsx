@@ -67,6 +67,13 @@ const MyHeld = ({ heldStocks = [] }) => {
 };
 
 const StockItem = ({ stock, navigate }) => {
+  const [imgSrc, setImgSrc] = useState(stock.stockImage);
+
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    setImgSrc(default_img);
+  };
+
   return (
     <div
       className="cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102 bg-white rounded-2xl shadow-md p-4 flex items-center space-x-3 mb-2"
@@ -75,9 +82,10 @@ const StockItem = ({ stock, navigate }) => {
       }
     >
       <img
-        src={stock.stockImage || default_img}
+        src={imgSrc}
         alt={stock.stockName}
         className="rounded-3xl w-10 h-10"
+        onError={handleImageError}
       />
 
       <div className="flex-1">

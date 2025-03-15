@@ -19,7 +19,7 @@ export default function Alert() {
         draggable: true,
         theme: "light",
         progress: undefined,
-        transition: Zoom
+        transition: Zoom,
       });
     }
   }, [data]);

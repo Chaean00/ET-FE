@@ -17,7 +17,6 @@ const EggListPage = () => {
     const fetchEggs = async () => {
       try {
         const response = await api.get("/eggs");
-        console.log("알 리스트 응답:", response.data);
 
         if (Array.isArray(response.data) && response.data.length > 0) {
           setEggList(response.data);
@@ -40,13 +39,12 @@ const EggListPage = () => {
   const handleHatchEgg = async (egg) => {
     try {
       const response = await api.get(`/eggs/hatching/${egg.eggId}`);
-      console.log("부화 API 응답:", response.data);
 
       if (response.status === 201) {
         setSelectedStock({
           stockImg: response.data.stockImg,
           stockSymbol: response.data.stockName,
-          stockAmount: response.data.amount
+          stockAmount: response.data.amount,
         });
 
         setEggList((prevEggs) => prevEggs.filter((e) => e.eggId !== egg.eggId));
@@ -61,7 +59,7 @@ const EggListPage = () => {
   };
 
   return (
-    <div className="scrollbar-custom flex-1 overflow-y-auto custom-cursor townbg min-h-screen flex flex-col relative pb-50">
+    <div className="scrollbar-custom flex-1 overflow-y-auto custom-cursor townbg min-h-screen flex flex-col relative pb-35">
       {isModalOpen && selectedStock && (
         <StockAcqModal
           isOpen={isModalOpen}

@@ -9,7 +9,7 @@ const MyStockPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [points, setPoints] = useState(0);
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,14 +25,13 @@ const MyStockPage = () => {
           error.response?.data || error.message
         );
       } finally {
-        setIsLoading(false); // API 호출이 끝나면 로딩 상태 종료
+        setIsLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
 
-  // 로딩 중이면 '로딩 중...' 문구 표시
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -42,7 +41,7 @@ const MyStockPage = () => {
   }
 
   return (
-    <div className="flex-1 overflow-x-hidden flex flex-col items-center px-4 pt-6 pb-28">
+    <div className="flex-1 overflow-x-hidden flex flex-col items-center px-4 pt-6 pb-20">
       <div className="w-full max-w-md flex items-center relative">
         <span onClick={() => navigate(-1)} className="absolute left-0">
           <BackButton className="w-8 h-8" />
