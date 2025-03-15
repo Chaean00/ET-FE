@@ -4,6 +4,7 @@ import MyChart from "../components/MyChart";
 import MyTable from "../components/MyTable";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
+import useSSE from "../../../hooks/useSSE";
 
 const MyStockPage = () => {
   const navigate = useNavigate();

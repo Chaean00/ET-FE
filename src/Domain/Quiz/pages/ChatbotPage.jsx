@@ -25,6 +25,7 @@ const ChatbotPage = () => {
   }, [messages]);
 
   const handleSendMessage = async () => {
+    setInput("");
     if (!input.trim() || isLoading) return;
 
     setIsLoading(true);
@@ -42,7 +43,7 @@ const ChatbotPage = () => {
       ]);
     }
 
-    setInput("");
+    
     setIsLoading(false);
   };
 

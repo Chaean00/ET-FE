@@ -4,64 +4,70 @@ import { useEffect, useState } from "react";
 
 const MyTable = () => {
   const [stocks, setStocks] = useState([]);
-  const sseData = useSSE("/subscribe/portfolio-price");
+  const [stockCodes, setStockCodes] = useState("");
 
   useEffect(() => {
-    const fetchStockData = async () => {
-      try {
-        const response = await api.get("/users/stocks");
-
-        const closingPriceResponse = await api.get(
-          "/users/stocks/closing-price"
-        );
-
-        const updatedStocks = response.data.map((stock) => {
-          const closingStock = closingPriceResponse.data.find(
-            (s) => s.stockCode === stock.stockCode
-          );
-
-          if (closingStock) {
-            const totalValue = stock.amount * closingStock.closingPrice;
-            const totalReturn =
-              ((closingStock.closingPrice - stock.averagePrice) /
-                stock.averagePrice) *
-              100;
-
-            return {
-              ...stock,
-              closingPrice: closingStock.closingPrice,
-              totalValue,
-              totalReturn: totalReturn.toFixed(2),
-            };
-          }
-
-          return {
-            ...stock,
-            closingPrice: null,
-            totalValue: stock.amount * stock.averagePrice,
-            totalReturn: null,
-          };
-        });
-
-        setStocks(updatedStocks);
-      } catch (error) {
-        console.error(
-          "데이터 불러오기 실패:",
-          error.response?.data || error.message
-        );
-      }
-    };
-
     fetchStockData();
   }, []);
 
+  const fetchStockData = async () => {
+    try {
+      const response = await api.get("/users/stocks");
+      console.log(response.data);
+
+      // stockCodes 상태 업데이트: stockCode들을 쉼표로 연결한 문자열 생성
+      const codes = response.data.map((stock) => stock.stockCode).join(",");
+      setStockCodes(codes);
+
+      const closingPriceResponse = await api.get("/users/stocks/closing-price");
+
+      const updatedStocks = response.data.map((stock) => {
+        const closingStock = closingPriceResponse.data.find(
+          (s) => s.stockCode === stock.stockCode
+        );
+
+        if (closingStock) {
+          const totalValue = stock.amount * closingStock.closingPrice;
+          const totalReturn =
+            ((closingStock.closingPrice - stock.averagePrice) /
+              stock.averagePrice) *
+            100;
+
+          return {
+            ...stock,
+            closingPrice: closingStock.closingPrice,
+            totalValue,
+            totalReturn: totalReturn.toFixed(2),
+          };
+        }
+
+        return {
+          ...stock,
+          closingPrice: null,
+          totalValue: stock.amount * stock.averagePrice,
+          totalReturn: null,
+        };
+      });
+
+      setStocks(updatedStocks);
+    } catch (error) {
+      console.error(
+        "데이터 불러오기 실패:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  // stockCodes가 업데이트되어야 useSSE에서 올바른 연결 요청을 보냅니다.
+  const { current } = useSSE("/subscribe", stockCodes);
+
   useEffect(() => {
-    if (!sseData) return;
+    if (!current) return;
 
     setStocks((prevStocks) =>
       prevStocks.map((stock) => {
-        if (stock.stockCode === sseData.stockCode) {
-          const currentPrice = Number(sseData.currentPrice);
+        if (stock.stockCode === current.stockCode) {
+          const currentPrice = Number(current.currentPrice);
           const totalValue = stock.amount * currentPrice;
           const purchasePrice = stock.amount * stock.averagePrice;
           const totalReturn =
@@ -76,7 +82,7 @@ const MyTable = () => {
         return stock;
       })
     );
-  }, [sseData]);
+  }, [current]);
 
   return (
     <div className="space-y-3 py-5 bg-white p-3 w-full max-w-xs">

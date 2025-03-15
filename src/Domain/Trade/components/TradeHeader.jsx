@@ -3,16 +3,16 @@ import { useEffect, useState } from "react";
 import useSSE from "../../../hooks/useSSE";
 import api from "../../../utils/api";
 
-const TradeHeader = () => {
+const TradeHeader = ({ current }) => {
   const [searchParams] = useSearchParams();
   const companyName = searchParams.get("name") || "알 수 없음";
   const stockCode = searchParams.get("code");
 
   const [closingPrice, setClosingPrice] = useState(null);
-  const sseData = useSSE(stockCode ? `/cur-price/${stockCode}` : null);
+  // const sseData = useSSE(stockCode ? `/cur-price/${stockCode}` : null);
 
-  const currentPrice = sseData ? Number(sseData.currentPrice) : closingPrice;
-  const changeRate = sseData ? Number(sseData.changeRate) : null;
+  const currentPrice = current ? Number(current.currentPrice) : closingPrice;
+  const changeRate = current ? Number(current.changeRate) : null;
 
   useEffect(() => {
     if (!stockCode) return;

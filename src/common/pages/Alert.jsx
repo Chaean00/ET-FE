@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ToastContainer, toast, Zoom } from "react-toastify";
-import useSSE from "../../hooks/useSSE";
+import useTrade from "../../hooks/useTrade";
 
 export default function Alert() {
-  const data = useSSE("/subscribe/trade");
+  const data = useTrade("/subscribe/trade");
 
   useEffect(() => {
     if (data) {

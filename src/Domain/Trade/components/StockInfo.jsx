@@ -4,15 +4,15 @@ import useSSE from "../../../hooks/useSSE";
 import api from "../../../utils/api";
 import korea from "../../../assets/tradetown/korea.jpg";
 
-const StockInfo = ({ setCurrentPrice }) => {
+const StockInfo = ({ setCurrentPrice, current }) => {
   const [searchParams] = useSearchParams();
   const stockCode = searchParams.get("code");
   const companyName = searchParams.get("name") || "알 수 없음";
 
   const [closingPrice, setClosingPrice] = useState(null);
-  const sseData = useSSE(stockCode ? `/cur-price/${stockCode}` : null);
+  // const sseData = useSSE(stockCode ? `/cur-price/${stockCode}` : null);
 
-  const currentPrice = sseData ? Number(sseData.currentPrice) : closingPrice;
+  const currentPrice = current ? Number(current.currentPrice) : closingPrice;
 
   useEffect(() => {
     if (!stockCode) return;

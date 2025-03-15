@@ -10,6 +10,7 @@ import TradeSuccessModal from "../components/TradeSuccessModal";
 import BuyFailureModal from "../components/BuyFailureModal";
 import SellFailureModal from "../components/SellFailureModal";
 import api from "../../../utils/api";
+import useSSE from "../../../hooks/useSSE";
 
 const StockTradePage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const StockTradePage = () => {
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const { current } = useSSE("/subscribe", searchParams.get("code"));
 
   const handleOrderCheck = () => {
     const tradeType = searchParams.get("type");
@@ -123,7 +126,7 @@ const StockTradePage = () => {
         </span>
       </div>
 
-      <TradeHeader />
+      <TradeHeader current={current}/>
 
       <TradeContent
         maxQuantity={maxQuantity}
