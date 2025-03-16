@@ -42,7 +42,7 @@ const EggListPage = () => {
 
       if (response.status === 201) {
         setSelectedStock({
-          stockImg: response.data.stockImg,
+          stockImg: response.data.img,
           stockSymbol: response.data.stockName,
           stockAmount: response.data.amount,
         });
