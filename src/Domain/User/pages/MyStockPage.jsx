@@ -24,12 +24,12 @@ const MyStockPage = () => {
           userResponse,
           pointsResponse,
           stocksResponse,
-          closingPriceResponse,
+          closingPriceResponse
         ] = await Promise.all([
           api.get("/users"),
           api.get("/users/points"),
           api.get("/users/stocks"),
-          api.get("/users/stocks/closing-price"),
+          api.get("/users/stocks/closing-price")
         ]);
 
         setName(userResponse.data.name || "사용자");
@@ -51,7 +51,7 @@ const MyStockPage = () => {
               ...stock,
               closingPrice: closingStock.closingPrice,
               totalValue,
-              totalReturn: totalReturn.toFixed(2),
+              totalReturn: totalReturn.toFixed(2)
             };
           }
 
@@ -59,7 +59,7 @@ const MyStockPage = () => {
             ...stock,
             closingPrice: null,
             totalValue: stock.amount * stock.averagePrice,
-            totalReturn: null,
+            totalReturn: null
           };
         });
 
@@ -82,7 +82,6 @@ const MyStockPage = () => {
           : [];
 
         setChartData({ labels, series });
-      } catch (error) {
       } finally {
         setIsLoading(false);
       }
@@ -94,24 +93,34 @@ const MyStockPage = () => {
   useEffect(() => {
     if (!sseData) return;
 
-    setStocks((prevStocks) =>
-      prevStocks.map((stock) => {
+    setStocks((prevStocks) => {
+      let hasChanged = false;
+      const newStocks = prevStocks.map((stock) => {
         if (stock.stockCode === sseData.stockCode) {
           const currentPrice = Number(sseData.currentPrice);
           const totalValue = stock.amount * currentPrice;
           const purchasePrice = stock.amount * stock.averagePrice;
           const totalReturn =
             ((totalValue - purchasePrice) / purchasePrice) * 100;
+          const newTotalReturn = totalReturn.toFixed(2);
 
-          return {
-            ...stock,
-            totalValue,
-            totalReturn: totalReturn.toFixed(2),
-          };
+          if (
+            stock.totalValue !== totalValue ||
+            stock.totalReturn !== newTotalReturn
+          ) {
+            hasChanged = true;
+            return {
+              ...stock,
+              totalValue,
+              totalReturn: newTotalReturn
+            };
+          }
         }
         return stock;
-      })
-    );
+      });
+
+      return hasChanged ? newStocks : prevStocks;
+    });
   }, [sseData]);
 
   if (isLoading) {

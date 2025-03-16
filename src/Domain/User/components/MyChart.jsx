@@ -1,5 +1,6 @@
 import Chart from "react-apexcharts";
 import api from "../../../utils/api";
+import { useState, useEffect } from "react";
 
 const MyChart = () => {
   const [chartData, setChartData] = useState({ labels: [], series: [] });
@@ -35,7 +36,7 @@ const MyChart = () => {
   const options = {
     chart: {
       type: "donut",
-      toolbar: { show: false },
+      toolbar: { show: false }
     },
     labels: chartData.labels,
     dataLabels: { enabled: false },
@@ -43,15 +44,15 @@ const MyChart = () => {
     tooltip: {
       enabled: true,
       shared: false,
-      y: { formatter: (val) => `${val.toFixed(2)}%` },
+      y: { formatter: (val) => `${val.toFixed(2)}%` }
     },
     states: {
       active: {
         allowMultipleDataPointsSelection: false,
-        filter: { type: "none" },
-      },
+        filter: { type: "none" }
+      }
     },
-    plotOptions: { pie: { expandOnClick: false } },
+    plotOptions: { pie: { expandOnClick: false } }
   };
 
   return (
