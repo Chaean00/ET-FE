@@ -66,10 +66,7 @@ const MyInterested = ({ interestedStocks }) => {
                 className="w-11 h-11"
                 stockCode={stock.stockCode}
                 initialFavorite={stock.isFavorite}
-                onFavoriteChange={(isFavorite) =>
-                  // 부모에서 업데이트된 관심종목 데이터를 사용한다면
-                  // 별도로 로컬 상태 업데이트를 할 필요가 없음
-                }
+                onFavoriteChange={() => {}}
               />
             </div>
           </div>

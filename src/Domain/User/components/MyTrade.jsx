@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
 import default_img from "../../../assets/trade/default_img.png";
+import api from "../../../utils/api";
 
 dayjs.locale("ko");
 
@@ -51,14 +52,16 @@ const MyTrade = () => {
         img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
       }));
 
-      setTradeHistory(data.content);
+      setTradeHistory(updatedTrades); // ✅ 수정된 데이터 반영
       setTotalPages(data.totalPages);
 
       if (data.totalPages === 0) {
         setTotalPages(0);
         setCurrentPage(-1);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("❌ 거래 내역 불러오기 실패:", error);
+    }
   }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
   useEffect(() => {
@@ -110,8 +113,8 @@ const MyTrade = () => {
         </select>
       </div>
 
-      {trades.length > 0 ? (
-        trades.map((trade, index) => {
+      {tradeHistory.length > 0 ? (
+        tradeHistory.map((trade, index) => {
           const date =
             trade.tradeStatus === "PENDING" ? trade.createdAt : trade.updatedAt;
           const formattedDate = dayjs(date).format("M월 D일 dddd");
@@ -136,9 +139,9 @@ const MyTrade = () => {
               {index === 0 ||
               formattedDate !==
                 dayjs(
-                  trades[index - 1].tradeStatus === "PENDING"
-                    ? trades[index - 1].createdAt
-                    : trades[index - 1].updatedAt
+                  tradeHistory[index - 1].tradeStatus === "PENDING"
+                    ? tradeHistory[index - 1].createdAt
+                    : tradeHistory[index - 1].updatedAt
                 ).format("M월 D일 dddd") ? (
                 <h2 className="text-gray-700 text-md font-bold">
                   {formattedDate}
@@ -171,7 +174,7 @@ const MyTrade = () => {
                     </p>
                     {isPending && (
                       <button
-                        onClick={() => onCancelTrade(trade)}
+                        onClick={() => handleCancelTrade(trade)}
                         className="cursor-pointer underline text-sm"
                       >
                         취소
