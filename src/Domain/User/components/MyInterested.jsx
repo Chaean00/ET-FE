@@ -1,79 +1,229 @@
-import { useNavigate } from "react-router-dom";
-import Heart from "../../Trade/components/Heart";
+import { useMemo, useState, useEffect, useCallback } from "react";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
+import default_img from "../../../assets/trade/default_img.png";
+import api from "../../../utils/api";
 
-const MyInterested = ({ interestedStocks }) => {
-  const navigate = useNavigate();
+dayjs.locale("ko");
+
+const MyTrade = () => {
+  const [tradeHistory, setTradeHistory] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [tradeStatus, setTradeStatus] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const tradeCache = useMemo(() => new Map(), []);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [tradeStatus, pageSize]);
+
+  const fetchTradeHistory = useCallback(async () => {
+    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
+
+    if (tradeCache.has(cacheKey)) {
+      const cachedData = tradeCache.get(cacheKey);
+      setTradeHistory(cachedData.content);
+      setTotalPages(cachedData.totalPages);
+      return;
+    }
+
+    try {
+      const response = await api.get("/users/history", {
+        params: {
+          page: currentPage,
+          size: pageSize,
+          tradeStatus: tradeStatus || null,
+        },
+      });
+
+      const data = response.data;
+
+      tradeCache.set(cacheKey, {
+        content: data.content,
+        totalPages: data.totalPages,
+      });
+
+      const updatedTrades = data.content.map((trade) => ({
+        ...trade,
+        img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
+      }));
+
+      setTradeHistory(updatedTrades); // ✅ 수정된 데이터 반영
+      setTotalPages(data.totalPages);
+
+      if (data.totalPages === 0) {
+        setTotalPages(0);
+        setCurrentPage(-1);
+      }
+    } catch (error) {
+      console.error("❌ 거래 내역 불러오기 실패:", error);
+    }
+  }, [currentPage, pageSize, tradeStatus, tradeCache]);
+
+  useEffect(() => {
+    fetchTradeHistory();
+  }, [fetchTradeHistory]);
+
+  const handleCancelTrade = async (trade) => {
+    try {
+      await api.post("/trades/cancel", {
+        tradeId: trade.historyId,
+        position: trade.position,
+        stockCode: trade.stockCode,
+        price: trade.price,
+      });
+
+      setTradeHistory((prevTrades) =>
+        prevTrades.map((t) =>
+          t.historyId === trade.historyId
+            ? { ...t, tradeStatus: "CANCELLED" }
+            : t
+        )
+      );
+
+      setShowSuccessModal(true);
+    } catch (error) {}
+  };
 
   return (
-    <div className="w-full max-w-md p-4">
-      <h2 className="text-lg font-bold mb-2">나의 관심종목</h2>
+    <div className="w-full overflow-y max-w-md space-y-4">
+      <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
+        <select
+          value={tradeStatus}
+          onChange={(e) => setTradeStatus(e.target.value)}
+          className="rounded p-2 text-sm"
+        >
+          <option value="">전체</option>
+          <option value="PENDING">대기 중</option>
+          <option value="EXECUTED">체결됨</option>
+          <option value="CANCELLED">취소됨</option>
+        </select>
 
-      {interestedStocks.length === 0 ? (
-        <p className="text-gray-400 text-center">관심 종목이 없습니다.</p>
-      ) : (
-        interestedStocks.map((stock) => (
-          <div
-            key={stock.stockCode}
-            className="bg-white rounded-2xl shadow-md px-4 py-2 flex items-center justify-between mb-2 cursor-pointer transition-transform duration-300 ease-in-out scale-100 hover:scale-102"
-            onClick={() =>
-              navigate(
-                `/stock?code=${stock.stockCode}&name=${encodeURIComponent(
-                  stock.stockName
-                )}`
-              )
-            }
-          >
-            <div>
-              <p className="text-sm font-semibold">{stock.stockName}</p>
-              <p className="text-sm text-gray-400 font-light">
-                {stock.currentPrice
-                  ? `${Number(stock.currentPrice).toLocaleString()}원`
-                  : stock.closingPrice
-                  ? `${Number(stock.closingPrice).toLocaleString()}원`
-                  : "-"}
-              </p>
-              {stock.priceChange !== null && stock.changeRate !== null && (
-                <div className="flex items-center gap-x-0.5 text-sm font-medium">
-                  <span
-                    className={
-                      stock.priceChange >= 0 ? "text-red-500" : "text-blue-500"
-                    }
-                  >
-                    {stock.priceChange > 0
-                      ? `+${stock.priceChange.toLocaleString()}`
-                      : stock.priceChange.toLocaleString()}
-                  </span>
-                  <span
-                    className={
-                      stock.changeRate >= 0 ? "text-red-500" : "text-blue-500"
-                    }
-                  >
-                    (
-                    {stock.changeRate > 0
-                      ? `+${stock.changeRate.toFixed(2)}`
-                      : stock.changeRate.toFixed(2)}
-                    %)
-                  </span>
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+          className="rounded p-2 text-sm"
+        >
+          <option value="5">5개씩 보기</option>
+          <option value="10">10개씩 보기</option>
+        </select>
+      </div>
+
+      {tradeHistory.length > 0 ? (
+        tradeHistory.map((trade, index) => {
+          const date =
+            trade.tradeStatus === "PENDING" ? trade.createdAt : trade.updatedAt;
+          const formattedDate = dayjs(date).format("M월 D일 dddd");
+
+          const isBuy = trade.position === "BUY";
+          const isExecuted = trade.tradeStatus === "EXECUTED";
+          const isCancelled = trade.tradeStatus === "CANCELLED";
+          const isPending = trade.tradeStatus === "PENDING";
+
+          let statusText = "";
+          if (isExecuted) statusText = isBuy ? "구매 체결" : "판매 체결";
+          if (isCancelled) statusText = isBuy ? "구매 취소" : "판매 취소";
+          if (isPending) statusText = isBuy ? "구매 대기" : "판매 대기";
+
+          let textColor = "text-black";
+          if (isExecuted) textColor = isBuy ? "text-red-500" : "text-blue-500";
+          if (isCancelled) textColor = "text-black line-through";
+          if (isPending) textColor = "text-gray-400";
+
+          return (
+            <div key={index} className="space-y-3">
+              {index === 0 ||
+              formattedDate !==
+                dayjs(
+                  tradeHistory[index - 1].tradeStatus === "PENDING"
+                    ? tradeHistory[index - 1].createdAt
+                    : tradeHistory[index - 1].updatedAt
+                ).format("M월 D일 dddd") ? (
+                <h2 className="text-gray-700 text-md font-bold">
+                  {formattedDate}
+                </h2>
+              ) : null}
+
+              <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={trade.img || default_img}
+                      className="w-14 h-14 object-contain rounded-4xl"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = default_img;
+                      }}
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-bold text-black">{trade.stockName}</p>
+                      <p className={`text-sm font-light ${textColor}`}>
+                        {statusText} <br />
+                        {trade.amount}주
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <p className={`font-bold text-md ${textColor}`}>
+                      {trade.price.toLocaleString()}원
+                    </p>
+                    {isPending && (
+                      <button
+                        onClick={() => handleCancelTrade(trade)}
+                        className="cursor-pointer underline text-sm"
+                      >
+                        취소
+                      </button>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
+          );
+        })
+      ) : (
+        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
+      )}
+      <div className="flex justify-center space-x-2 mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+          disabled={currentPage <= 0}
+          className={`px-3 py-2 rounded ${
+            currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          이전
+        </button>
 
-            <div
-              className="flex items-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Heart
-                className="w-11 h-11"
-                stockCode={stock.stockCode}
-                initialFavorite={stock.isFavorite}
-                onFavoriteChange={() => {}}
-              />
-            </div>
-          </div>
-        ))
+        <span className="px-3 py-2 text-sm">
+          {currentPage + 1} / {totalPages}
+        </span>
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+          }
+          disabled={currentPage === totalPages - 1}
+          className={`px-3 py-2 rounded ${
+            currentPage === totalPages - 1
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+        >
+          다음
+        </button>
+      </div>
+
+      {showSuccessModal && (
+        <UnholdSuccessModal onClose={() => setShowSuccessModal(false)} />
       )}
     </div>
   );
 };
 
-export default MyInterested;
+export default MyTrade;
