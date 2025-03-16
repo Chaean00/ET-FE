@@ -1,10 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderBook from "../components/OrderBook";
 import BackButton from "../../../common/components/BackButton";
 import TradeHeader from "../components/TradeHeader";
+import useSSE from "../../../hooks/useSSE";
 
 const OrderBookPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const { current, askBid } = useSSE("/subscribe", searchParams.get("code"));
 
   return (
     <div className="flex flex-col items-center min-h-screen ">
@@ -14,10 +18,10 @@ const OrderBookPage = () => {
         </span>
       </div>
 
-      <TradeHeader className="w-full max-w-md text-center" />
+      <TradeHeader className="w-full max-w-md text-center" current={current}/>
 
       <div className="flex-grow w-full max-w-md flex justify-center items-center">
-        <OrderBook />
+        <OrderBook askBid={askBid}/>
       </div>
     </div>
   );

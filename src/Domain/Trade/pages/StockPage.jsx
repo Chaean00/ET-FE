@@ -22,7 +22,9 @@ const StockPage = () => {
   const stockId = queryParams.get("code");
   const stockName = queryParams.get("name");
 
-  const sseData = useSSE(stockId ? `/ask-bid/${stockId}` : null);
+  const { current, askBid } = useSSE("/subscribe", stockId);
+
+  // console.log(current)
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -69,7 +71,7 @@ const StockPage = () => {
   }, [stockId]);
 
   useEffect(() => {
-    if (!sseData || !sseData.askp1 || !sseData.bidp1) {
+    if (!current || !askBid) {
       if (closingPrice) {
         setOrders([
           {
@@ -92,20 +94,20 @@ const StockPage = () => {
     const updatedOrders = [
       {
         id: 1,
-        price: Number(sseData.askp1),
-        sellVolume: Number(sseData.askRSQN1),
+        price: Number(askBid.askp1),
+        sellVolume: Number(askBid.askRSQN1),
         buyVolume: 0,
       },
       {
         id: 2,
-        price: Number(sseData.bidp1),
+        price: Number(askBid.bidp1),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN1),
+        buyVolume: Number(askBid.bidRSQN1),
       },
     ];
 
     setOrders(updatedOrders);
-  }, [sseData, closingPrice]);
+  }, [current, closingPrice]);
 
   if (isLoading) {
     return (
@@ -133,6 +135,7 @@ const StockPage = () => {
               stockCode={stockId}
               companyName={stockName}
               closingPrice={closingPrice}
+              current={current}
               setCurrentPrice={setCurrentPrice}
             />
           </div>

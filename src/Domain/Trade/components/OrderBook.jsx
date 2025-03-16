@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import useSSE from "../../../hooks/useSSE";
+// import useSSE from "../../../hooks/useSSE";
 
-const OrderBook = () => {
+const OrderBook = ({askBid}) => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
   const [sellOrders, setSellOrders] = useState([]);
@@ -11,70 +11,68 @@ const OrderBook = () => {
   const [totalSellVolume, setTotalSellVolume] = useState(0);
   const [totalBuyVolume, setTotalBuyVolume] = useState(0);
 
-  const sseData = useSSE(code ? `/ask-bid/${code}` : null);
-
   useEffect(() => {
-    if (!sseData) return;
+    if (!askBid) return;
     let updatedOrders = [
       {
         id: 1,
-        price: Number(sseData.askp1),
-        sellVolume: Number(sseData.askRSQN1),
+        price: Number(askBid.askp1),
+        sellVolume: Number(askBid.askRSQN1),
         buyVolume: 0,
       },
       {
         id: 2,
-        price: Number(sseData.askp2),
-        sellVolume: Number(sseData.askRSQN2),
+        price: Number(askBid.askp2),
+        sellVolume: Number(askBid.askRSQN2),
         buyVolume: 0,
       },
       {
         id: 3,
-        price: Number(sseData.askp3),
-        sellVolume: Number(sseData.askRSQN3),
+        price: Number(askBid.askp3),
+        sellVolume: Number(askBid.askRSQN3),
         buyVolume: 0,
       },
       {
         id: 4,
-        price: Number(sseData.askp4),
-        sellVolume: Number(sseData.askRSQN4),
+        price: Number(askBid.askp4),
+        sellVolume: Number(askBid.askRSQN4),
         buyVolume: 0,
       },
       {
         id: 5,
-        price: Number(sseData.askp5),
-        sellVolume: Number(sseData.askRSQN5),
+        price: Number(askBid.askp5),
+        sellVolume: Number(askBid.askRSQN5),
         buyVolume: 0,
       },
       {
         id: 6,
-        price: Number(sseData.bidp1),
+        price: Number(askBid.bidp1),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN1),
+        buyVolume: Number(askBid.bidRSQN1),
       },
       {
         id: 7,
-        price: Number(sseData.bidp2),
+        price: Number(askBid.bidp2),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN2),
+        buyVolume: Number(askBid.bidRSQN2),
       },
       {
         id: 8,
-        price: Number(sseData.bidp3),
+        price: Number(askBid.bidp3),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN3),
+        buyVolume: Number(askBid.bidRSQN3),
       },
       {
         id: 9,
-        price: Number(sseData.bidp4),
+        price: Number(askBid.bidp4),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN4),
+        buyVolume: Number(askBid.bidRSQN4),
       },
       {
         id: 10,
-        price: Number(sseData.bidp5),
+        price: Number(askBid.bidp5),
         sellVolume: 0,
-        buyVolume: Number(sseData.bidRSQN5),
+        buyVolume: Number(askBid.bidRSQN5),
       },
     ];
 
@@ -98,7 +96,7 @@ const OrderBook = () => {
 
     setTotalSellVolume(totalSell);
     setTotalBuyVolume(totalBuy);
-  }, [sseData]);
+  }, [askBid]);
 
   if (!code) {
     return <p className="text-center text-red-500">종목 코드가 없습니다!</p>;
