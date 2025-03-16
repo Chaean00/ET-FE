@@ -1,9 +1,9 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
-import api from "../../../utils/api";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import UnholdSuccessModal from "../../Trade/components/UnholdSuccessModal";
 import default_img from "../../../assets/trade/default_img.png";
+import api from "../../../utils/api";
 
 dayjs.locale("ko");
 
@@ -52,7 +52,7 @@ const MyTrade = () => {
         img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
       }));
 
-      setTradeHistory(data.content);
+      setTradeHistory(updatedTrades); // ✅ 수정된 데이터 반영
       setTotalPages(data.totalPages);
 
       if (data.totalPages === 0) {
@@ -60,6 +60,7 @@ const MyTrade = () => {
         setCurrentPage(-1);
       }
     } catch (error) {
+      console.error("❌ 거래 내역 불러오기 실패:", error);
     }
   }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
@@ -85,8 +86,7 @@ const MyTrade = () => {
       );
 
       setShowSuccessModal(true);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
@@ -147,11 +147,12 @@ const MyTrade = () => {
                   {formattedDate}
                 </h2>
               ) : null}
+
               <div className="bg-white shadow-md rounded-2xl p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={trade.img}
+                      src={trade.img || default_img}
                       className="w-14 h-14 object-contain rounded-4xl"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -186,11 +187,8 @@ const MyTrade = () => {
           );
         })
       ) : (
-        <p className="text-center text-gray-500 min-h-[1314px]">
-          거래 내역이 없습니다.
-        </p>
+        <p className="text-center text-gray-500">거래 내역이 없습니다.</p>
       )}
-
       <div className="flex justify-center space-x-2 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}

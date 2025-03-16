@@ -8,6 +8,7 @@ import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
 import useQuiz from "../../../hooks/useQuiz";
 import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
+import { BarLoader } from "react-spinners";
 
 const TodayQuizPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const TodayQuizPage = () => {
     loading,
     setLoading,
     submitted,
-    setSubmitted
+    setSubmitted,
   } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -60,7 +61,7 @@ const TodayQuizPage = () => {
     try {
       const response = await api.post("/quizs", {
         quizId: quizData.id,
-        userAnswer: answer
+        userAnswer: answer,
       });
 
       setFeedback(response.data);
@@ -79,6 +80,17 @@ const TodayQuizPage = () => {
       alert("정답 제출 중 오류가 발생했습니다.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-white">
+        <BarLoader height={3} width={195} color="#0046FF" />
+        <div className="mt-4 text-xl font-bold text-[#0046FF]">
+          오늘의 퀴즈 불러오는 중!
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -101,13 +113,9 @@ const TodayQuizPage = () => {
         </div>
 
         <div className="w-[85%] mt-8">
-          {loading ? (
-            <p className="text-center text-lg font-bold">퀴즈 로딩 중...</p>
-          ) : (
-            <QuizContent>
-              {quizData?.title || "퀴즈를 불러오지 못했습니다."}
-            </QuizContent>
-          )}
+          <QuizContent>
+            {quizData?.title || "퀴즈를 불러오지 못했습니다."}
+          </QuizContent>
         </div>
 
         <div className="fixed bottom-20 w-full mt-24 relative flex flex-col items-center">

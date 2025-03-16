@@ -39,6 +39,7 @@ const useSSE = (endpoint, stockCodes) => {
             retryCountRef.current = 0;
           } else {
           }
+          console.log(`SSE 연결 성공: ${sseUrl}`, response);
         },
         onmessage(event) {
           try {
@@ -51,8 +52,7 @@ const useSSE = (endpoint, stockCodes) => {
               setAskBid(parsedData);
             } else {
             }
-          } catch (error) {
-          }
+          } catch (error) {}
         },
         onerror(error) {
           controllerRef.current.abort();
@@ -66,8 +66,7 @@ const useSSE = (endpoint, stockCodes) => {
             }, delay);
           }
         },
-        onclose() {
-        },
+        onclose() {},
       });
     };
 

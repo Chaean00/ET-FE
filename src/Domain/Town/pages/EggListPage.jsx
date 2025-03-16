@@ -12,6 +12,7 @@ const EggListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState(null);
   const [eggList, setEggList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchEggs = async () => {
@@ -25,6 +26,8 @@ const EggListPage = () => {
         }
       } catch (error) {
         setEggList([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -68,7 +71,12 @@ const EggListPage = () => {
       </div>
 
       <div className="mt-16 z-0 w-full flex flex-col items-center gap-0">
-        <EggList eggs={eggList} onHatchEgg={handleHatchEgg} />{" "}
+        {isLoading ? (
+          <p className="text-lg font-bold text-gray-700 mt-10">로딩 중...</p>
+        ) : (
+          <EggList eggs={eggList} onHatchEgg={handleHatchEgg} />
+        )}
+
         <div className="z-10 w-full flex justify-center fixed bottom-[75px]">
           <Button
             variant="medium"

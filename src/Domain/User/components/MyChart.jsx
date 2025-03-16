@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import api from "../../../utils/api";
 
@@ -27,8 +26,7 @@ const MyChart = () => {
         );
 
         setChartData({ labels, series });
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     fetchStockData();

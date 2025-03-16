@@ -1,18 +1,103 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import MyTrade from "../components/MyTrade";
 import BackButton from "../../../common/components/BackButton";
 import api from "../../../utils/api";
+import { BarLoader } from "react-spinners";
 
 const MyTradePage = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [trades, setTrades] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [tradeHistory, setTradeHistory] = useState([]);
+  const [tradeStatus, setTradeStatus] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const tradeCache = useMemo(() => new Map(), []);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [tradeStatus, pageSize]);
+
+  const fetchTradeHistory = useCallback(async () => {
+    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
+
+    if (tradeCache.has(cacheKey)) {
+      const cachedData = tradeCache.get(cacheKey);
+      setTradeHistory(cachedData.content);
+      setTotalPages(cachedData.totalPages);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await api.get("/users/history", {
+        params: {
+          page: currentPage,
+          size: pageSize,
+          tradeStatus: tradeStatus || null,
+        },
+      });
+
+      const data = response.data;
+
+      tradeCache.set(cacheKey, {
+        content: data.content,
+        totalPages: data.totalPages,
+      });
+
+      setTradeHistory(data.content);
+      setTotalPages(data.totalPages);
+
+      if (data.totalPages === 0) {
+        setTotalPages(0);
+        setCurrentPage(-1);
+      }
+    } catch (error) {
+      console.error(
+        "거래 내역 불러오기 실패:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, pageSize, tradeStatus, tradeCache]);
+
+  useEffect(() => {
+    fetchTradeHistory();
+  }, [fetchTradeHistory]);
+
+  const handleCancelTrade = async (trade) => {
+    try {
+      await api.post("/trades/cancel", {
+        tradeId: trade.historyId,
+        position: trade.position,
+        stockCode: trade.stockCode,
+        price: trade.price,
+      });
+
+      setTradeHistory((prevTrades) =>
+        prevTrades.map((t) =>
+          t.historyId === trade.historyId
+            ? { ...t, tradeStatus: "CANCELLED" }
+            : t
+        )
+      );
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("거래 취소 실패:", error.response?.data || error.message);
+    }
+  };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500 text-lg">로딩 중...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-white">
+        <BarLoader height={3} width={195} color="#0046FF" />
+        <div className="mt-4 text-xl font-bold text-[#0046FF]">
+          나의 거래 내역으로 이동 중!
+        </div>
       </div>
     );
   }
@@ -30,7 +115,19 @@ const MyTradePage = () => {
       </h1>
 
       <div className="mt-5 w-full max-w-md px-2 space-y-4 mx-auto mb-10">
-        <MyTrade trades={trades} />
+        <MyTrade
+          trades={tradeHistory}
+          onCancelTrade={handleCancelTrade}
+          tradeStatus={tradeStatus}
+          setTradeStatus={setTradeStatus}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          showSuccessModal={showSuccessModal}
+          setShowSuccessModal={setShowSuccessModal}
+        />
       </div>
     </div>
   );

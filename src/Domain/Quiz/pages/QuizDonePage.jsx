@@ -6,12 +6,13 @@ import smart from "../../../assets/tradetown/smart.png";
 import api from "../../../utils/api";
 import useQuiz from "../../../hooks/useQuiz";
 import GPTlogo from "../../../assets/tradetown/GPTlogo.png";
+import { BarLoader } from "react-spinners";
 
 const pointMap = {
   TOP: 100,
   HIGH: 70,
   MEDIUM: 50,
-  LOW: 10
+  LOW: 10,
 };
 
 const QuizDonePage = () => {
@@ -39,8 +40,8 @@ const QuizDonePage = () => {
         const response = await api.get("/quizs/solved", {
           params: {
             quizId: savedAnswer.quizId,
-            userAnswer: savedAnswer.userAnswer
-          }
+            userAnswer: savedAnswer.userAnswer,
+          },
         });
 
         const quizResult = response.data;
@@ -54,7 +55,7 @@ const QuizDonePage = () => {
 
         setQuizData({
           ...quizResult,
-          earnedPoints: earned
+          earnedPoints: earned,
         });
       } catch (error) {
       } finally {
@@ -67,8 +68,11 @@ const QuizDonePage = () => {
 
   if (loading) {
     return (
-      <div className="text-center text-lg font-bold mt-10">
-        퀴즈 결과 불러오는 중...
+      <div className="flex flex-col items-center justify-center h-screen bg-white">
+        <BarLoader height={3} width={195} color="#0046FF" />
+        <div className="mt-4 text-xl font-bold text-[#0046FF]">
+          오늘 풀었던 퀴즈 불러오는 중!
+        </div>
       </div>
     );
   }
