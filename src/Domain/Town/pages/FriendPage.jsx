@@ -26,7 +26,6 @@ const FriendPage = () => {
         setFriends([]);
       }
     } catch (error) {
-      console.error("내 친구 목록 불러오기 실패:", error);
       setFriends([]);
     }
   }, []);
@@ -55,7 +54,6 @@ const FriendPage = () => {
       }
     } catch (error) {
       setFriends([]);
-      console.error("검색 실패:", error.response?.data || error.message);
     }
   }, []);
 

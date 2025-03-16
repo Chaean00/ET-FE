@@ -33,7 +33,7 @@ const LogInPage = () => {
       }
       navigate("/town", { state: { from: "/login" } });
     } catch (error) {
-      console.error("로그인 실패:", error);
+
       setError(error.response?.data?.message || "로그인 실패");
     } finally {
       setLoading(false);

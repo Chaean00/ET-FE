@@ -60,10 +60,6 @@ const MyTrade = () => {
         setCurrentPage(-1);
       }
     } catch (error) {
-      console.error(
-        "거래 내역 불러오기 실패:",
-        error.response?.data || error.message
-      );
     }
   }, [currentPage, pageSize, tradeStatus, tradeCache]);
 
@@ -90,7 +86,6 @@ const MyTrade = () => {
 
       setShowSuccessModal(true);
     } catch (error) {
-      console.error("거래 취소 실패:", error.response?.data || error.message);
     }
   };
 

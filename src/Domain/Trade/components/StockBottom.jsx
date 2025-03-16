@@ -27,7 +27,6 @@ const StockBottom = ({
           setIsFavorite(isStockFavorite);
         }
       } catch (error) {
-        console.error("관심 종목 불러오기 실패:", error);
         setIsFavorite(false);
       }
     };

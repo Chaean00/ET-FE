@@ -21,9 +21,7 @@ const TownMainPage = () => {
       try {
         const count = await getUserHistory();
         setTradeCount(count);
-      } catch (error) {
-        console.error("거래내역 불러오기 실패:", error);
-      }
+      } catch (error) {}
     };
 
     fetchTradeHistory();
@@ -45,7 +43,6 @@ const TownMainPage = () => {
           }))
         );
       } catch (error) {
-        console.error("펫 데이터 불러오기 실패:", error);
       }
     };
 
@@ -85,7 +82,6 @@ const TownMainPage = () => {
         setIsPetNeeded(pets.length < requiredPets);
       }
     } catch (error) {
-      console.error("펫 지급 실패:", error);
     }
   };
 

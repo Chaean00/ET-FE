@@ -13,7 +13,6 @@ const MyLogOutBtn = () => {
       await logout();
       navigate("/login");
     } catch (error) {
-      console.error("로그아웃 실패:", error);
       setError(
         error.response?.data?.message || error.message || "로그아웃 실패"
       );

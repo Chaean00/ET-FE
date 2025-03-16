@@ -21,14 +21,9 @@ const EggListPage = () => {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setEggList(response.data);
         } else {
-          console.warn("알 데이터 없음");
           setEggList([]);
         }
       } catch (error) {
-        console.error(
-          "알 목록 불러오기 실패:",
-          error.response?.data || error.message
-        );
         setEggList([]);
       }
     };
@@ -51,10 +46,8 @@ const EggListPage = () => {
 
         setIsModalOpen(true);
       } else {
-        console.warn("부화 실패");
       }
     } catch (error) {
-      console.error("알 부화 실패:", error.response?.data || error.message);
     }
   };
 

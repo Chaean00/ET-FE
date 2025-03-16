@@ -7,7 +7,6 @@ const useQuiz = () => {
   const [submitted, setSubmitted] = useState(false);
 
   if (!userUid) {
-    console.error("로그인 필요: userUid 없음");
     return { quizData, loading, submitted };
   }
 

@@ -26,14 +26,9 @@ const FriendTownPage = () => {
           }));
           setPetList(newChars);
         } else {
-          console.warn("펫 데이터 없음");
           setPetList([]);
         }
       } catch (error) {
-        console.error(
-          "펫 목록 불러오기 실패:",
-          error.response?.data || error.message
-        );
         setPetList([]);
       }
     };

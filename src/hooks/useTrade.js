@@ -26,11 +26,8 @@ export default function useTrade(endpoint) {
 
       // 최대 재시도 횟수를 넘어가면 중단
       if (retryCountRef.current >= RETRY_DELAYS.length) {
-        console.warn('최대 재시도 횟수를 초과했습니다.');
         return;
       }
-
-      console.log(`SSE 연결 시도 (${retryCountRef.current + 1}회): ${sseUrl}`);
 
       controllerRef.current = new AbortController();
 
@@ -46,30 +43,24 @@ export default function useTrade(endpoint) {
             response.status === HttpStatusCode.Forbidden ||
             response.status === HttpStatusCode.Unauthorized
           ) {
-            console.log("로그인이 만료되었거나 권한이 없습니다. SSE 중단.");
             controllerRef.current.abort();
             return;
           }
-          console.log(`SSE 연결 성공: ${sseUrl}`, response);
           retryCountRef.current = 0;
         },
         onmessage(event) {
-          console.log(`SSE 데이터 수신 (${sseUrl}):`, event.data);
           try {
             setData(JSON.parse(event.data));
           } catch (err) {
-            console.error('SSE 데이터 파싱 실패:', err);
             setData(event.data);
           }
         },
         onerror(error) {
           // 서버가 아예 안 떠 있거나, CORS 문제 등으로 FetchError가 발생할 수도 있음
-          console.error(`SSE 오류 발생 (${sseUrl}):`, error);
           if (
             error?.status === HttpStatusCode.Forbidden ||
             error?.status === HttpStatusCode.Unauthorized
           ) {
-            console.log("로그인이 만료되었거나 권한이 없습니다. 재시도 중단.");
             controllerRef.current.abort();
             return;
           }
@@ -77,7 +68,6 @@ export default function useTrade(endpoint) {
           retry();
         },
         onclose() {
-          console.log(`SSE 연결 종료 (${sseUrl})`);
           if (!isCancelled) {
             retry();
           }
@@ -89,7 +79,6 @@ export default function useTrade(endpoint) {
       // 연결 중단 상태가 아니고, 아직 재시도 횟수가 남았다면 재연결
       if (retryCountRef.current < RETRY_DELAYS.length) {
         const delay = RETRY_DELAYS[retryCountRef.current];
-        console.log(`${delay}ms 후 재시도 예정...`);
         setTimeout(() => {
           retryCountRef.current += 1;
           connect();

@@ -28,10 +28,6 @@ const MyChart = () => {
 
         setChartData({ labels, series });
       } catch (error) {
-        console.error(
-          "차트 데이터 불러오기 실패:",
-          error.response?.data || error.message
-        );
       }
     };
 

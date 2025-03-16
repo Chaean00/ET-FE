@@ -21,10 +21,6 @@ const MyStockPage = () => {
         const pointsResponse = await api.get("/users/points");
         setPoints(pointsResponse.data.point || 0);
       } catch (error) {
-        console.error(
-          "데이터 불러오기 실패:",
-          error.response?.data || error.message
-        );
       } finally {
         setIsLoading(false);
       }

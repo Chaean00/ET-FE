@@ -36,10 +36,8 @@ const useSSE = (endpoint, stockCodes) => {
         signal: controllerRef.current.signal,
         onopen(response) {
           if (response.status === 200) {
-            console.log("✅ SSE 연결 성공");
             retryCountRef.current = 0;
           } else {
-            console.log("❌ SSE 연결 실패", response.status);
           }
         },
         onmessage(event) {
@@ -48,25 +46,19 @@ const useSSE = (endpoint, stockCodes) => {
             retryCountRef.current = 0;
 
             if (event.event === "currentPrice") {
-              // console.log("CUR = " + JSON.stringify(parsedData))
               setCurrent(parsedData);
             } else if (event.event === "askBid") {
-              // console.log("ASK = " + JSON.stringify(parsedData))
               setAskBid(parsedData);
             } else {
-              console.warn("⚠️ 알 수 없는 이벤트 타입:", event.event);
             }
           } catch (error) {
-            console.error("❌ SSE 데이터 파싱 실패:", error);
           }
         },
         onerror(error) {
-          console.error("❌ SSE 오류 발생:", error);
           controllerRef.current.abort();
 
           if (!isCancelled && retryCountRef.current < RETRY_DELAYS.length) {
             const delay = RETRY_DELAYS[retryCountRef.current];
-            console.warn(`⏳ ${delay / 1000}초 후 SSE 재연결...`);
             retryCountRef.current += 1;
             setTimeout(() => {
               controllerRef.current = new AbortController();
@@ -75,7 +67,6 @@ const useSSE = (endpoint, stockCodes) => {
           }
         },
         onclose() {
-          console.warn("🔌 SSE 연결 종료");
         },
       });
     };
@@ -83,7 +74,6 @@ const useSSE = (endpoint, stockCodes) => {
     connect();
 
     return () => {
-      console.log(`🔌 SSE 연결 cleanup (${sseUrl})`);
       isCancelled = true;
       controllerRef.current.abort();
     };

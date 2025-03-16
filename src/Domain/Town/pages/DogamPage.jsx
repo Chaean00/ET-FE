@@ -17,14 +17,9 @@ const DogamPage = () => {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setPetList(response.data);
         } else {
-          console.warn("도감 데이터 없음");
           setPetList([]);
         }
       } catch (error) {
-        console.error(
-          "도감 불러오기 실패:",
-          error.response?.data || error.message
-        );
         setPetList([]);
       }
     };

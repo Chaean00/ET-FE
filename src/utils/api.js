@@ -23,7 +23,6 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("요청 인터셉터 오류:", error);
     return Promise.reject(error);
   }
 );
@@ -32,10 +31,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    console.error(`응답 오류 (${status}):`, error);
 
     if (status === 401) {
-      console.warn("인증 실패 - 로그아웃 처리 중...");
       localStorage.removeItem(AUTH_HEADER_KEY);
       alert("세션이 만료되었습니다. 다시 로그인해주세요.");
       window.location.href = "/login";
