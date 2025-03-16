@@ -83,10 +83,6 @@ const MyStockPage = () => {
 
         setChartData({ labels, series });
       } catch (error) {
-        console.error(
-          "데이터 불러오기 실패:",
-          error.response?.data || error.message
-        );
       } finally {
         setIsLoading(false);
       }

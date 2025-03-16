@@ -7,7 +7,6 @@ export const getUserHistory = async () => {
 
     return executedCount;
   } catch (error) {
-    console.error("거래 내역 조회 실패:", error);
     return 0;
   }
 };

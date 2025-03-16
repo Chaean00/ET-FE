@@ -45,7 +45,6 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
         const selectedStock = searchResults[selectedIndex];
 
         if (!selectedStock || !selectedStock.code) {
-          console.warn("선택한 주식 데이터 없음:", selectedStock);
           return;
         }
 
@@ -58,7 +57,6 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
 
   const handleNavigate = (stockCode, stockName) => {
     if (!stockCode || !stockName) {
-      console.error("잘못된 주식 정보:", stockCode, stockName);
       return;
     }
 
@@ -95,7 +93,6 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
           if (stock && stock.code) {
             handleNavigate(stock.code, stock.name);
           } else {
-            console.warn("검색 결과 없음");
           }
         }}
       />
@@ -112,7 +109,6 @@ const SearchCompany = ({ onSearch, searchResults = [] }) => {
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => {
                   if (!stock.code || !stock.name) {
-                    console.warn("잘못된 주식 데이터:", stock);
                     return;
                   }
 

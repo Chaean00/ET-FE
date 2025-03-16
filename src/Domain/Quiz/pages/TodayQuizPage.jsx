@@ -37,7 +37,6 @@ const TodayQuizPage = () => {
         const response = await api.get(`/quizs?difficulty=${difficulty}`);
         setQuizData(response.data);
       } catch (error) {
-        console.error("퀴즈 로딩 오류:", error.response?.data || error.message);
         alert("퀴즈 데이터를 가져오는 중 오류가 발생했습니다.");
         navigate("/quiz");
       } finally {
@@ -78,7 +77,6 @@ const TodayQuizPage = () => {
         navigate("/quiz");
       }, 1500);
     } catch (error) {
-      console.error("정답 제출 오류:", error.response?.data || error.message);
       alert("정답 제출 중 오류가 발생했습니다.");
     }
   };

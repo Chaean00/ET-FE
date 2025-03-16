@@ -26,7 +26,6 @@ const StockInfo = ({ setCurrentPrice, current }) => {
           setClosingPrice(Number(response.data.closingPrice));
         }
       } catch (error) {
-        console.error("전날 종가를 불러오는 데 실패했습니다:", error);
       }
     };
 

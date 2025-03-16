@@ -24,15 +24,12 @@ const StockPage = () => {
 
   const { current, askBid } = useSSE("/subscribe", stockId);
 
-  // console.log(current)
-
   useEffect(() => {
     const fetchStockData = async () => {
       try {
         const response = await api.get(`/charts/${stockId}`);
         setStockInfo(response.data);
       } catch (error) {
-        console.error("주식 정보 요청 실패:", error);
       }
     };
 
@@ -41,7 +38,6 @@ const StockPage = () => {
         const response = await api.get("/users/stocks");
         setOwnedStocks(response.data);
       } catch (error) {
-        console.error("보유 주식 요청 실패:", error);
       }
     };
 
@@ -55,7 +51,6 @@ const StockPage = () => {
           setCurrentPrice(Number(response.data.closingPrice));
         }
       } catch (error) {
-        console.error("전날 종가 요청 실패:", error);
       }
     };
 

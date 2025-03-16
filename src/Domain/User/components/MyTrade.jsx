@@ -6,19 +6,86 @@ import default_img from "../../../assets/trade/default_img.png";
 
 dayjs.locale("ko");
 
-const MyTrade = ({
-  trades,
-  onCancelTrade,
-  tradeStatus,
-  setTradeStatus,
-  pageSize,
-  setPageSize,
-  currentPage,
-  setCurrentPage,
-  totalPages,
-  showSuccessModal,
-  setShowSuccessModal,
-}) => {
+const MyTrade = () => {
+  const [tradeHistory, setTradeHistory] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [tradeStatus, setTradeStatus] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const tradeCache = useMemo(() => new Map(), []);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [tradeStatus, pageSize]);
+
+  const fetchTradeHistory = useCallback(async () => {
+    const cacheKey = `${currentPage}-${pageSize}-${tradeStatus || "all"}`;
+
+    if (tradeCache.has(cacheKey)) {
+      const cachedData = tradeCache.get(cacheKey);
+      setTradeHistory(cachedData.content);
+      setTotalPages(cachedData.totalPages);
+      return;
+    }
+
+    try {
+      const response = await api.get("/users/history", {
+        params: {
+          page: currentPage,
+          size: pageSize,
+          tradeStatus: tradeStatus || null,
+        },
+      });
+
+      const data = response.data;
+
+      tradeCache.set(cacheKey, {
+        content: data.content,
+        totalPages: data.totalPages,
+      });
+
+      const updatedTrades = data.content.map((trade) => ({
+        ...trade,
+        img: trade.img && trade.img.trim() !== "" ? trade.img : default_img,
+      }));
+
+      setTradeHistory(data.content);
+      setTotalPages(data.totalPages);
+
+      if (data.totalPages === 0) {
+        setTotalPages(0);
+        setCurrentPage(-1);
+      }
+    } catch (error) {}
+  }, [currentPage, pageSize, tradeStatus, tradeCache]);
+
+  useEffect(() => {
+    fetchTradeHistory();
+  }, [fetchTradeHistory]);
+
+  const handleCancelTrade = async (trade) => {
+    try {
+      await api.post("/trades/cancel", {
+        tradeId: trade.historyId,
+        position: trade.position,
+        stockCode: trade.stockCode,
+        price: trade.price,
+      });
+
+      setTradeHistory((prevTrades) =>
+        prevTrades.map((t) =>
+          t.historyId === trade.historyId
+            ? { ...t, tradeStatus: "CANCELLED" }
+            : t
+        )
+      );
+
+      setShowSuccessModal(true);
+    } catch (error) {}
+  };
+
   return (
     <div className="w-full overflow-y max-w-md space-y-4">
       <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">

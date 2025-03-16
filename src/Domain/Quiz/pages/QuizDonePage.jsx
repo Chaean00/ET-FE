@@ -32,7 +32,6 @@ const QuizDonePage = () => {
         );
 
         if (!savedAnswer || savedAnswer.quizId === undefined) {
-          console.warn("저장된 퀴즈 데이터 없음");
           setQuizData(null);
           setLoading(false);
           return;
@@ -59,10 +58,6 @@ const QuizDonePage = () => {
           earnedPoints: earned,
         });
       } catch (error) {
-        console.error(
-          "퀴즈 결과 로딩 오류:",
-          error.response?.data || error.message
-        );
       } finally {
         setLoading(false);
       }

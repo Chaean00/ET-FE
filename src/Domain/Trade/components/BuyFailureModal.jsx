@@ -13,7 +13,6 @@ const BuyFailureModal = ({ totalPrice, onClose }) => {
         const shortfall = Math.max(totalPrice - deposit, 0);
         setInsufficientAmount(shortfall);
       } catch (error) {
-        console.error("예치금 정보 불러오기 실패:", error);
         setInsufficientAmount(totalPrice);
       }
     };

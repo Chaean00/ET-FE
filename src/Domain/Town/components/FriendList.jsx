@@ -33,7 +33,6 @@ const FriendList = ({ friends = [], onFriendAdded }) => {
         onFriendAdded();
       }
     } catch (error) {
-      console.error("친구 추가 실패:", error);
       alert("친구 추가에 실패했습니다.");
     }
   };

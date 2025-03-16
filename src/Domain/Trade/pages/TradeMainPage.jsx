@@ -141,7 +141,6 @@ const TradeMainPage = () => {
       const codes = [...new Set([...heldCodes, ...interestedCodes])].join(",");
       setStockCodes(codes);
     } catch (error) {
-      console.error("데이터 불러오기 실패:", error);
       setError("데이터를 불러오는 중 문제가 발생했습니다.");
     } finally {
       setLoading(false);
@@ -202,13 +201,6 @@ const TradeMainPage = () => {
       setInterestedStocks((prevStocks) =>
         prevStocks.map((stock) => {
           if (String(stock.stockCode) === String(stockCode)) {
-            // console.log("업데이트 관심종목:", stock.stockCode);
-            // console.log(
-            //   "전달받은 SSE 데이터:",
-            //   currentPrice,
-            //   priceChange,
-            //   changeRate
-            // );
             return {
               ...stock,
               // SSE 데이터가 있다면 무조건 덮어씁니다.

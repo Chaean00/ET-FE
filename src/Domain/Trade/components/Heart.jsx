@@ -11,7 +11,6 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
 
   const handleHeart = async () => {
     if (!stockCode) {
-      console.error("Stock code is missing!");
       return;
     }
 
@@ -21,7 +20,6 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
         await api.post("/users/favorite", { stockCode });
         onFavoriteChange(stockCode, true);
       } catch (error) {
-        console.error("관심 종목 추가 실패:", error);
         setHeart(false);
       }
     } else {
@@ -30,7 +28,6 @@ const Heart = ({ className, stockCode, initialFavorite, onFavoriteChange }) => {
         await api.delete(`/users/favorite/${stockCode}`);
         onFavoriteChange(stockCode, false);
       } catch (error) {
-        console.error("관심 종목 삭제 실패:", error);
         setHeart(true);
       }
     }

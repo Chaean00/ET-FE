@@ -79,7 +79,6 @@ const StockTradePage = () => {
         alert("거래가 실패했습니다. 다시 시도해주세요!");
       }
     } catch (error) {
-      console.error("거래 요청 실패:", error);
       setShowOrderModal(false);
       alert("서버 오류로 거래가 실패했습니다!");
     }

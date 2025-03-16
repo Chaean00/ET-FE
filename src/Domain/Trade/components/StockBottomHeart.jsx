@@ -15,7 +15,6 @@ const StockBottomHeart = ({
 
   const handleHeart = async () => {
     if (!stockCode) {
-      console.error("Stock code is missing!");
       return;
     }
 
@@ -25,7 +24,6 @@ const StockBottomHeart = ({
         await api.post("/users/favorite", { stockCode });
         onToggleFavorite(true);
       } catch (error) {
-        console.error("관심 종목 추가 실패:", error);
         setHeart(false);
       }
     } else {
@@ -34,7 +32,6 @@ const StockBottomHeart = ({
         await api.delete(`/users/favorite/${stockCode}`);
         onToggleFavorite(false);
       } catch (error) {
-        console.error("관심 종목 삭제 실패:", error);
         setHeart(true);
       }
     }

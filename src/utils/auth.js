@@ -10,7 +10,6 @@ export const signup = async (uid, pwd, name) => {
 
     return response.data;
   } catch (error) {
-    console.error("회원가입 실패:", error.response?.data || error.message);
     throw error;
   }
 };
@@ -30,7 +29,6 @@ export const login = async (uid, password) => {
       throw new Error("로그인 실패: 토큰이 없습니다.");
     }
   } catch (error) {
-    console.error("로그인 오류:", error.response?.data || error.message);
     throw error;
   }
 };

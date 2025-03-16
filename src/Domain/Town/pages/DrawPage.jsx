@@ -22,13 +22,9 @@ const DrawPage = () => {
         if (response.data && typeof response.data.point === "number") {
           setPoint(response.data.point);
         } else {
-          console.warn("포인트 데이터 없음");
+
         }
       } catch (error) {
-        console.error(
-          "포인트 불러오기 실패:",
-          error.response?.data || error.message
-        );
       }
     };
 
@@ -49,10 +45,8 @@ const DrawPage = () => {
         setIsModalOpen(true);
         setPoint((prev) => prev - 500);
       } else {
-        console.warn("알 뽑기 실패");
       }
     } catch (error) {
-      console.error("알 뽑기 실패:", error.response?.data || error.message);
     }
   };
 

@@ -25,7 +25,6 @@ const OrderCheckModal = ({ quantity, price, onConfirm, onClose }) => {
           deposit: response.data.deposit || 0
         });
       } catch (error) {
-        console.error("계좌 정보 불러오기 실패:", error);
       }
     };
 

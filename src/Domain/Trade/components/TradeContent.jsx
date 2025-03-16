@@ -46,7 +46,6 @@ const TradeContent = ({
           setMaxQuantity(price > 0 ? Math.floor(deposit / price) : 0);
         }
       } catch (error) {
-        console.error("최대 수량 가져오기 실패:", error);
       }
     };
 

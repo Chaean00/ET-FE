@@ -20,7 +20,6 @@ const LineChart = ({ stockId }) => {
         }));
         setSeriesData(priceInfos);
       } catch (error) {
-        console.error("차트 데이터 요청 실패:", error);
       }
     };
 

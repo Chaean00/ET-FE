@@ -13,7 +13,6 @@ const MyTable = () => {
   const fetchStockData = async () => {
     try {
       const response = await api.get("/users/stocks");
-      console.log(response.data);
 
       // stockCodes 상태 업데이트: stockCode들을 쉼표로 연결한 문자열 생성
       const codes = response.data.map((stock) => stock.stockCode).join(",");
@@ -51,10 +50,6 @@ const MyTable = () => {
 
       setStocks(updatedStocks);
     } catch (error) {
-      console.error(
-        "데이터 불러오기 실패:",
-        error.response?.data || error.message
-      );
     }
   };
 
