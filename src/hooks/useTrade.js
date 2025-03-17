@@ -43,12 +43,14 @@ export default function useTrade(endpoint) {
             response.status === HttpStatusCode.Forbidden ||
             response.status === HttpStatusCode.Unauthorized
           ) {
+            console.log("open에서 연결 실패")
             controllerRef.current.abort();
             return;
           }
           retryCountRef.current = 0;
         },
         onmessage(event) {
+          console.log("message까지는 들어옴")
           try {
             setData(JSON.parse(event.data));
           } catch (err) {
@@ -64,10 +66,12 @@ export default function useTrade(endpoint) {
           //   controllerRef.current.abort();
           //   return;
           // }
+          console.log("Error 및 재시도")
           
           retry();
         },
         onclose() {
+          console.log("close")
           if (!isCancelled) {
             retry();
           }
