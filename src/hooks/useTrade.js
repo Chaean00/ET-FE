@@ -57,13 +57,13 @@ export default function useTrade(endpoint) {
         },
         onerror(error) {
           // 서버가 아예 안 떠 있거나, CORS 문제 등으로 FetchError가 발생할 수도 있음
-          if (
-            error?.status === HttpStatusCode.Forbidden ||
-            error?.status === HttpStatusCode.Unauthorized
-          ) {
-            controllerRef.current.abort();
-            return;
-          }
+          // if (
+          //   error?.status === HttpStatusCode.Forbidden ||
+          //   error?.status === HttpStatusCode.Unauthorized
+          // ) {
+          //   controllerRef.current.abort();
+          //   return;
+          // }
           
           retry();
         },
