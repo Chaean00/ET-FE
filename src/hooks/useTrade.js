@@ -1,10 +1,12 @@
 // hooks/useTrade.jsx
-import { useEffect, useState, useRef } from 'react';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { HttpStatusCode } from 'axios';
-import useAuth from '../hooks/useAuth';
+import { useEffect, useState, useRef } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { HttpStatusCode } from "axios";
+import useAuth from "../hooks/useAuth";
 
-const BASE_SSE_URL = `http://${import.meta.env.VITE_API_BASE_URL}:${import.meta.env.VITE_API_BASE_PORT}/sse`;
+const BASE_SSE_URL = `http://${import.meta.env.VITE_API_BASE_URL}:${
+  import.meta.env.VITE_API_BASE_PORT
+}/sse`;
 const RETRY_DELAYS = [1000, 3000, 5000, 10000]; // 1초, 3초, 5초, 10초
 
 export default function useTrade(endpoint) {
@@ -19,10 +21,15 @@ export default function useTrade(endpoint) {
     if (!endpoint || !token) return;
 
     let isCancelled = false;
+
     const sseUrl = `${BASE_SSE_URL}${endpoint}`;
 
     function connect() {
       if (isCancelled) return;
+
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
 
       // 최대 재시도 횟수를 넘어가면 중단
       if (retryCountRef.current >= RETRY_DELAYS.length) {
@@ -32,10 +39,10 @@ export default function useTrade(endpoint) {
       controllerRef.current = new AbortController();
 
       fetchEventSource(sseUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: 'text/event-stream',
+          Accept: "text/event-stream"
         },
         signal: controllerRef.current.signal,
         onopen(response) {
@@ -43,14 +50,12 @@ export default function useTrade(endpoint) {
             response.status === HttpStatusCode.Forbidden ||
             response.status === HttpStatusCode.Unauthorized
           ) {
-            console.log("open에서 연결 실패")
             controllerRef.current.abort();
             return;
           }
           retryCountRef.current = 0;
         },
         onmessage(event) {
-          console.log("message까지는 들어옴")
           try {
             setData(JSON.parse(event.data));
           } catch (err) {
@@ -66,16 +71,14 @@ export default function useTrade(endpoint) {
           //   controllerRef.current.abort();
           //   return;
           // }
-          console.log("Error 및 재시도")
-          
+
           retry();
         },
         onclose() {
-          console.log("close")
           if (!isCancelled) {
             retry();
           }
-        },
+        }
       });
     }
 
@@ -95,9 +98,9 @@ export default function useTrade(endpoint) {
 
     return () => {
       isCancelled = true;
-      if (controllerRef.current) {
-        controllerRef.current.abort();
-      }
+      // if (controllerRef.current) {
+      //   controllerRef.current.abort();
+      // }
     };
   }, [endpoint, token]);
 
