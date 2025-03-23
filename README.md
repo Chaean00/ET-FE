@@ -118,9 +118,6 @@
 ### ✔ 협업툴 ###
 <img src="https://img.shields.io/badge/git-F05032?style=flat-square&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-181717?style=flat-square&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/slack-4A154B?style=flat-square&logo=slack&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=flat-square&logo=notion&logoColor=white">
 <br><br>
-## 🔧 아키텍처 ##
-<img src="https://github.com/user-attachments/assets/f1dcf0aa-a049-4969-b46a-28b6f1b67853">
-<br><br>
 
 ## 👥 팀원 소개 ##
 | 권지언 | 김정택 | 라수빈 | 박준기 | 이나민 | 장성준 |
